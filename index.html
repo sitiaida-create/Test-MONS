@@ -100,14 +100,7 @@ function parseRow(row,index,source){
             'Type'
         ])) || 'Tidak Dinyatakan',
 
-        penyelidik: clean(findVal(row,[
-            'Ketua_Penyelidik',
-            'Ketua Penyelidik',
-            'Principal Investigator',
-            'PI',
-            'Researcher',
-            'Nama Ketua Projek'
-        ])) || 'Tidak Dinyatakan',
+        penyelidik: clean(Object.values(row)[5]) || 'Tidak Dinyatakan',
 
         peruntukan: number(findVal(row,[
             'Peruntukan',
