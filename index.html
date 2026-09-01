@@ -1,1047 +1,1249 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import {
-  RotateCcw,
-  Download,
-  ListFilter,
-  DollarSign,
-  Clock,
-  Info,
-  AlertTriangle,
-  Award,
-  BarChart3,
-  X,
-  Loader2,
-  Search,
-  CheckCircle2,
-  ChevronRight,
-  FileSpreadsheet
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Geran Penyelidikan - Sistem Pemantauan Prestasi & Analisis Statistik</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- PapaParse untuk membaca CSV Google Sheets -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-const GOOGLE_SHEET_CSV_URL =
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqpPENTFIzT-l9tEdvytJSgI4TXReZVYs3KGsL8xuzT9NA8LPWFoGnVrf_uIeEAw0F87U64VcTiCnI/pub?output=csv';
-
-// Data lalai (fallback) yang sepadan dengan paparan sebenar jika pautan luar mengalami isu rangkaian/CORS
-const FALLBACK_PROJECTS = [
-  {
-    id: 1,
-    code: '1',
-    title: 'Pemindahan Ilmu Penyelenggaraan Sistem Tenaga Elektrik Solar Komuniti Luar Bandar',
-    grantType: 'CCIN',
-    pi: 'Prof. Madya Ir. Dr. Yusof bin Ahmad',
-    endDate: '08 2026',
-    month: 'Ogos',
-    year: '2026',
-    milestone: 3,
-    prJun2026: 'NOT COMPLETED',
-    quartile: 'Non-Indexed',
-    amount: 50000,
-    status: 'Perlu Perhatian'
-  },
-  {
-    id: 2,
-    code: '2',
-    title: 'KTP-MRUN FASA 1/2025: Memperkasa Pedagogi Berasaskan Teknologi Pintar Sekolah Rendah',
-    grantType: 'CCIN',
-    pi: 'Dr. Yuzwan bin Mohamad',
-    endDate: '05 2026',
-    month: 'Mei',
-    year: '2026',
-    milestone: 1,
-    prJun2026: 'NOT COMPLETED',
-    quartile: 'Non-Indexed',
-    amount: 50000,
-    status: 'Perlu Perhatian'
-  },
-  {
-    id: 3,
-    code: '3',
-    title: 'Pembangunan Kerangka Kerja AI Berkelanjutan bagi Diagnosis Pintar Hasil Tanaman',
-    grantType: 'FRGS',
-    pi: 'Prof. Dr. Ahmad Faiz',
-    endDate: '12 2026',
-    month: 'Disember',
-    year: '2026',
-    milestone: 18,
-    prJun2026: 'NOT COMPLETED',
-    quartile: 'Q1',
-    amount: 85000,
-    status: 'Aktif'
-  },
-  {
-    id: 4,
-    code: '4',
-    title: 'Penghasilan Membran Penapis Biopolimer Mesra Alam Berasaskan Sisa Kelapa Sawit',
-    grantType: 'PRGS',
-    pi: 'Prof. Dr. Siti Norhaliza',
-    endDate: '11 2026',
-    month: 'November',
-    year: '2026',
-    milestone: 45,
-    prJun2026: 'COMPLETED',
-    quartile: 'Q2',
-    amount: 120000,
-    status: 'Aktif'
-  },
-  {
-    id: 5,
-    code: '5',
-    title: 'Sistem Sensor IoT Pengawasan Hakisan Cerun Lebuhraya Pintar',
-    grantType: 'CCIN',
-    pi: 'Dr. Zainal Abidin',
-    endDate: '09 2026',
-    month: 'September',
-    year: '2026',
-    milestone: 8,
-    prJun2026: 'NOT COMPLETED',
-    quartile: 'Non-Indexed',
-    amount: 50000,
-    status: 'Perlu Perhatian'
-  }
-];
-
-// Parser CSV natif tanpa kebergantungan perpustakaan luar (zero external dependencies)
-function parseCSV(csvText) {
-  const lines = [];
-  let row = [];
-  let inQuotes = false;
-  let currentStr = '';
-
-  for (let i = 0; i < csvText.length; i++) {
-    const char = csvText[i];
-    const nextChar = csvText[i + 1];
-
-    if (char === '"') {
-      if (inQuotes && nextChar === '"') {
-        currentStr += '"';
-        i++;
-      } else {
-        inQuotes = !inQuotes;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+            }
+          }
+        }
       }
-    } else if (char === ',' && !inQuotes) {
-      row.push(currentStr.trim());
-      currentStr = '';
-    } else if ((char === '\r' || char === '\n') && !inQuotes) {
-      if (char === '\r' && nextChar === '\n') {
-        i++;
-      }
-      row.push(currentStr.trim());
-      if (row.some((field) => field.length > 0)) {
-        lines.push(row);
-      }
-      row = [];
-      currentStr = '';
-    } else {
-      currentStr += char;
     }
-  }
-
-  if (currentStr.length > 0 || row.length > 0) {
-    row.push(currentStr.trim());
-    if (row.some((field) => field.length > 0)) {
-      lines.push(row);
+  </script>
+  <style>
+    body {
+      background-color: #f6f8fa;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
-  }
-
-  if (lines.length === 0) return [];
-  const headers = lines[0].map((h) => h.replace(/^["']|["']$/g, '').trim());
-  const result = [];
-
-  for (let i = 1; i < lines.length; i++) {
-    const values = lines[i];
-    const rowObj = {};
-    headers.forEach((h, idx) => {
-      rowObj[h] = values[idx] !== undefined ? values[idx].replace(/^["']|["']$/g, '').trim() : '';
-    });
-    result.push(rowObj);
-  }
-  return result;
-}
-
-export default function App() {
-  const [activeTab, setActiveTab] = useState('ringkasan');
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [isLiveConnected, setIsLiveConnected] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Penapis States
-  const [grantTypeFilter, setGrantTypeFilter] = useState('Semua Jenis Geran');
-  const [monthFilter, setMonthFilter] = useState('Semua Bulan');
-  const [yearFilter, setYearFilter] = useState('Semua Tahun');
-  const [quartileFilter, setQuartileFilter] = useState('Semua Quartile');
-  const [milestoneFilter, setMilestoneFilter] = useState('Semua Pencapaian');
-  const [prStatusFilter, setPrStatusFilter] = useState('Semua Status PR');
-
-  // Fungsi Fetch & Parse Data Google Sheets
-  const fetchDataFromSheet = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(GOOGLE_SHEET_CSV_URL);
-      if (!response.ok) {
-        throw new Error('Gagal mengambil data daripada Google Sheets.');
-      }
-      const text = await response.text();
-      const rawRows = parseCSV(text);
-
-      if (rawRows.length > 0) {
-        const parsed = rawRows.map((row, index) => {
-          // Normalisasi nama lajur yang fleksibel mengikut format Google Sheet
-          const code =
-            row['KOD'] || row['Kod'] || row['NO'] || row['No'] || row['Bil'] || String(index + 1);
-          const title =
-            row['TAJUK PROJEK'] ||
-            row['Tajuk Projek'] ||
-            row['TAJUK'] ||
-            row['Tajuk'] ||
-            row['Project Title'] ||
-            `Geran Penyelidikan #${index + 1}`;
-          const grantType =
-            row['GRANT TYPE'] ||
-            row['Grant Type'] ||
-            row['JENIS GERAN'] ||
-            row['SKIM'] ||
-            'CCIN';
-          const pi =
-            row['KETUA PENYELIDIK'] ||
-            row['Ketua Penyelidik'] ||
-            row['PI'] ||
-            row['Nama PI'] ||
-            'Y';
-          const endDate =
-            row['TAMAT'] ||
-            row['Tamat'] ||
-            row['TARIKH TAMAT'] ||
-            row['Tarikh Tamat'] ||
-            '08 2026';
-          const milestoneRaw =
-            row['% MILESTONE'] ||
-            row['% Milestone'] ||
-            row['MILESTONE'] ||
-            row['Milestone'] ||
-            '0';
-          const milestone = parseFloat(String(milestoneRaw).replace(/[^0-9.-]+/g, '')) || 0;
-          const prJun2026 =
-            row['PR JUN 2026'] ||
-            row['PR Jun 2026'] ||
-            row['STATUS PR'] ||
-            (milestone >= 100 ? 'COMPLETED' : 'NOT COMPLETED');
-          const quartile =
-            row['QUARTILE'] ||
-            row['Quartile'] ||
-            row['QUARTILE MONITORED'] ||
-            'Non-Indexed';
-          const amountRaw =
-            row['PERUNTUKAN'] ||
-            row['Peruntukan'] ||
-            row['JUMLAH (RM)'] ||
-            row['JUMLAH'] ||
-            '50000';
-          const amount = parseFloat(String(amountRaw).replace(/[^0-9.-]+/g, '')) || 50000;
-
-          // Ekstrak bulan dan tahun jika ada
-          const parts = endDate.split(' ');
-          const month = parts.length > 1 ? parts[0] : 'Ogos';
-          const year = parts.length > 1 ? parts[1] : '2026';
-
-          return {
-            id: index + 1,
-            code,
-            title,
-            grantType,
-            pi,
-            endDate,
-            month,
-            year,
-            milestone,
-            prJun2026: prJun2026.toUpperCase(),
-            quartile,
-            amount
-          };
-        });
-
-        setProjects(parsed);
-        setIsLiveConnected(true);
-      } else {
-        setProjects(FALLBACK_PROJECTS);
-      }
-    } catch (err) {
-      console.warn('Menggunakan data awal kerana pautan luar dihadkan:', err);
-      setProjects(FALLBACK_PROJECTS);
-      setIsLiveConnected(false);
-    } finally {
-      setLoading(false);
+    .scrollbar-thin::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
     }
-  };
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .tab-active {
+      color: #0284c7;
+      border-bottom: 2px solid #0284c7;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-  useEffect(() => {
-    fetchDataFromSheet();
-  }, []);
-
-  // Penapisan Data
-  const filteredProjects = useMemo(() => {
-    return projects.filter((p) => {
-      const matchSearch =
-        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.pi.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.code.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const matchGrant =
-        grantTypeFilter === 'Semua Jenis Geran' || p.grantType === grantTypeFilter;
-      const matchQuartile =
-        quartileFilter === 'Semua Quartile' || p.quartile === quartileFilter;
-      const matchPR =
-        prStatusFilter === 'Semua Status PR' || p.prJun2026 === prStatusFilter;
-      const matchYear =
-        yearFilter === 'Semua Tahun' || String(p.endDate).includes(yearFilter);
-
-      let matchMilestone = true;
-      if (milestoneFilter === '< 10%') matchMilestone = p.milestone < 10;
-      else if (milestoneFilter === '10% - 50%')
-        matchMilestone = p.milestone >= 10 && p.milestone <= 50;
-      else if (milestoneFilter === '> 50%') matchMilestone = p.milestone > 50;
-
-      return matchSearch && matchGrant && matchQuartile && matchPR && matchYear && matchMilestone;
-    });
-  }, [
-    projects,
-    searchQuery,
-    grantTypeFilter,
-    quartileFilter,
-    prStatusFilter,
-    yearFilter,
-    milestoneFilter
-  ]);
-
-  // Statistik & Metrik Pengiraan (sepadan dengan visual dashboard rasmi)
-  const stats = useMemo(() => {
-    const totalCount = filteredProjects.length || (isLiveConnected ? projects.length : 1092);
-    const totalPeruntukan =
-      filteredProjects.reduce((acc, p) => acc + p.amount, 0) || (totalCount * 50000);
-    const avgMilestone =
-      filteredProjects.length > 0
-        ? Math.round(
-            filteredProjects.reduce((acc, p) => acc + p.milestone, 0) / filteredProjects.length
-          )
-        : 11;
-    const count2026 = filteredProjects.filter((p) => String(p.endDate).includes('2026')).length || totalCount;
-
-    // Kira taburan quartile
-    const q1Count = filteredProjects.filter((p) => p.quartile === 'Q1').length;
-    const q2Count = filteredProjects.filter((p) => p.quartile === 'Q2').length;
-    const q3Count = filteredProjects.filter((p) => p.quartile === 'Q3').length;
-    const q4Count = filteredProjects.filter((p) => p.quartile === 'Q4').length;
-    const nonIndexedCount = filteredProjects.filter(
-      (p) => p.quartile === 'Non-Indexed' || !['Q1', 'Q2', 'Q3', 'Q4'].includes(p.quartile)
-    ).length;
-
-    return {
-      totalCount,
-      totalPeruntukan,
-      avgMilestone,
-      count2026,
-      quartiles: { q1Count, q2Count, q3Count, q4Count, nonIndexedCount }
-    };
-  }, [filteredProjects, projects, isLiveConnected]);
-
-  // Senarai jenis geran unik untuk menu pilihan
-  const uniqueGrantTypes = useMemo(() => {
-    const types = [...new Set(projects.map((p) => p.grantType).filter(Boolean))];
-    return ['Semua Jenis Geran', ...(types.length ? types : ['CCIN', 'FRGS', 'PRGS'])];
-  }, [projects]);
-
-  const handleResetFilters = () => {
-    setGrantTypeFilter('Semua Jenis Geran');
-    setMonthFilter('Semua Bulan');
-    setYearFilter('Semua Tahun');
-    setQuartileFilter('Semua Quartile');
-    setMilestoneFilter('Semua Pencapaian');
-    setPrStatusFilter('Semua Status PR');
-    setSearchQuery('');
-  };
-
-  const exportCSV = () => {
-    const headers = [
-      'KOD / TAJUK',
-      'GRANT TYPE',
-      'KETUA PENYELIDIK',
-      'TAMAT',
-      '% MILESTONE',
-      'PR JUN 2026',
-      'QUARTILE'
-    ];
-    const rows = filteredProjects.map((p) => [
-      `"${p.code} - ${p.title.replace(/"/g, '""')}"`,
-      `"${p.grantType}"`,
-      `"${p.pi}"`,
-      `"${p.endDate}"`,
-      `${p.milestone}%`,
-      `"${p.prJun2026}"`,
-      `"${p.quartile}"`
-    ]);
-    const csvContent =
-      'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `Dashboard_Geran_Penyelidikan_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  return (
-    <div className="min-h-screen bg-[#F5F2EB] text-slate-800 font-sans antialiased">
-      {/* 1. Header Atas */}
-      <header className="bg-[#FAF8F5] border-b border-[#E6E1D6] px-4 sm:px-6 py-3.5 sticky top-0 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-[#0084C7] text-white flex items-center justify-center font-bold text-xl shadow-xs">
-              📊
-            </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <h1 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
-                  Dashboard Geran Penyelidikan
-                </h1>
-                <span
-                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                    isLiveConnected
-                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                      : 'bg-blue-100 text-blue-800 border-blue-300'
-                  }`}
-                >
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full mr-1 ${
-                      isLiveConnected ? 'bg-emerald-600 animate-pulse' : 'bg-blue-600'
-                    }`}
-                  ></span>
-                  Google Sheet Live
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 font-medium">
-                Sistem Pemantauan Prestasi & Analisis Statistik (Helaian: GERAN AKTIF PR JUN 26)
-              </p>
-            </div>
+  <!-- ==================== HEADER UTAMA ==================== -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <!-- Logo & Tajuk -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center text-white shadow-md shadow-sky-100 flex-shrink-0">
+            <i class="fa-solid fa-chart-pie text-lg"></i>
           </div>
-
-          <div className="flex items-center space-x-2.5">
-            <button
-              onClick={fetchDataFromSheet}
-              className="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-[#DCD6C8] text-slate-700 hover:bg-slate-50 transition shadow-2xs"
-            >
-              <RotateCcw
-                className={`w-3.5 h-3.5 mr-1.5 text-slate-500 ${loading ? 'animate-spin' : ''}`}
-              />
-              Muat Semula Data
-            </button>
-            <button
-              onClick={exportCSV}
-              className="inline-flex items-center px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-[#0084C7] hover:bg-[#0073AD] text-white transition shadow-2xs"
-            >
-              <Download className="w-3.5 h-3.5 mr-1.5" />
-              Eksport CSV
-            </button>
+          <div>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Dashboard Geran Penyelidikan</h1>
+              <span id="sheet-status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="sheet-status-text">Google Sheet Live</span>
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Sistem Pemantauan Prestasi & Analisis Statistik</p>
           </div>
         </div>
 
-        {/* Tab Navigasi */}
-        <div className="max-w-7xl mx-auto flex space-x-2 mt-3.5 border-t border-[#E6E1D6] pt-2 overflow-x-auto">
-          <button
-            onClick={() => setActiveTab('ringkasan')}
-            className={`flex items-center space-x-2 px-3.5 py-1.5 text-xs font-bold rounded-lg transition whitespace-nowrap ${
-              activeTab === 'ringkasan'
-                ? 'bg-[#EBF5FB] text-[#0084C7] border border-[#BEE3F8]'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-[#EFECE6]'
-            }`}
-          >
-            <span>📈 Ringkasan Eksekutif</span>
+        <!-- Butang Tindakan -->
+        <div class="flex items-center gap-2.5 self-end md:self-auto flex-wrap">
+          <button onclick="openConfigModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition border border-slate-300">
+            <i class="fa-solid fa-table"></i>
+            <span>Punca Google Sheet</span>
           </button>
-          <button
-            onClick={() => setActiveTab('visual')}
-            className={`flex items-center space-x-2 px-3.5 py-1.5 text-xs font-bold rounded-lg transition whitespace-nowrap ${
-              activeTab === 'visual'
-                ? 'bg-[#EBF5FB] text-[#0084C7] border border-[#BEE3F8]'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-[#EFECE6]'
-            }`}
-          >
-            <span>📊 Dashboard Visual & Analisis</span>
+          <button onclick="reloadData()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-lg transition border border-slate-300 shadow-sm">
+            <i id="refresh-icon" class="fa-solid fa-arrows-rotate text-sky-600"></i>
+            <span>Muat Semula Data</span>
           </button>
-          <button
-            onClick={() => setActiveTab('verdict')}
-            className={`flex items-center space-x-2 px-3.5 py-1.5 text-xs font-bold rounded-lg transition whitespace-nowrap ${
-              activeTab === 'verdict'
-                ? 'bg-[#EBF5FB] text-[#0084C7] border border-[#BEE3F8]'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-[#EFECE6]'
-            }`}
-          >
-            <span>⚖️ Rekod Statistik New Verdict</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('masterlist')}
-            className={`flex items-center space-x-2 px-3.5 py-1.5 text-xs font-bold rounded-lg transition whitespace-nowrap ${
-              activeTab === 'masterlist'
-                ? 'bg-[#EBF5FB] text-[#0084C7] border border-[#BEE3F8]'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-[#EFECE6]'
-            }`}
-          >
-            <span>📑 Masterlist Direktori</span>
+          <button onclick="exportCSV()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-white bg-sky-700 hover:bg-sky-800 rounded-lg transition shadow-sm">
+            <i class="fa-solid fa-download"></i>
+            <span>Eksport CSV</span>
           </button>
         </div>
-      </header>
+      </div>
 
-      {/* 2. Kandungan Utama */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-[#E6E1D6] shadow-2xs">
-            <Loader2 className="w-10 h-10 text-[#0084C7] animate-spin mb-3" />
-            <p className="text-sm font-bold text-slate-700">
-              Menghubungkan ke Google Sheet: GERAN AKTIF (PR JUN 26)...
-            </p>
-            <p className="text-xs text-slate-400 mt-1">Mengemas kini metrik dan data secara langsung</p>
-          </div>
-        ) : (
-          <>
-            {/* Panel Penapis Data Interaktif */}
-            <div className="bg-[#EFECE4] p-4 rounded-xl border border-[#DFD9CC] space-y-3 shadow-2xs">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-800 uppercase tracking-wider">
-                  <span className="text-[#0084C7] text-sm">▼</span>
-                  <span>PENAPIS DATA INTERAKTIF</span>
-                </div>
-                <button
-                  onClick={handleResetFilters}
-                  className="text-xs font-semibold text-[#0084C7] hover:underline flex items-center"
-                >
-                  <RotateCcw className="w-3 h-3 mr-1" />
-                  Sifar Penapis
-                </button>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-                <div>
-                  <label className="block text-[10px] font-medium text-slate-500 mb-1">
-                    Grant Type
-                  </label>
-                  <select
-                    value={grantTypeFilter}
-                    onChange={(e) => setGrantTypeFilter(e.target.value)}
-                    className="w-full text-xs bg-white border border-[#D6D0C2] rounded-md px-2.5 py-1.5 text-slate-700 font-medium focus:ring-1 focus:ring-[#0084C7] outline-none"
-                  >
-                    {uniqueGrantTypes.map((t, idx) => (
-                      <option key={idx} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-medium text-slate-500 mb-1">
-                    Bulan Tamat (Pelbagai)
-                  </label>
-                  <select
-                    value={monthFilter}
-                    onChange={(e) => setMonthFilter(e.target.value)}
-                    className="w-full text-xs bg-white border border-[#D6D0C2] rounded-md px-2.5 py-1.5 text-slate-700 font-medium focus:ring-1 focus:ring-[#0084C7] outline-none"
-                  >
-                    <option>Semua Bulan</option>
-                    <option>Januari</option>
-                    <option>Februari</option>
-                    <option>Mac</option>
-                    <option>Mei</option>
-                    <option>Ogos</option>
-                    <option>November</option>
-                    <option>Disember</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-medium text-slate-500 mb-1">
-                    Tahun Tamat (Pelbagai)
-                  </label>
-                  <select
-                    value={yearFilter}
-                    onChange={(e) => setYearFilter(e.target.value)}
-                    className="w-full text-xs bg-white border border-[#D6D0C2] rounded-md px-2.5 py-1.5 text-slate-700 font-medium focus:ring-1 focus:ring-[#0084C7] outline-none"
-                  >
-                    <option>Semua Tahun</option>
-                    <option>2024</option>
-                    <option>2025</option>
-                    <option>2026</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-medium text-slate-500 mb-1">
-                    Quartile Monitored
-                  </label>
-                  <select
-                    value={quartileFilter}
-                    onChange={(e) => setQuartileFilter(e.target.value)}
-                    className="w-full text-xs bg-white border border-[#D6D0C2] rounded-md px-2.5 py-1.5 text-slate-700 font-medium focus:ring-1 focus:ring-[#0084C7] outline-none"
-                  >
-                    <option>Semua Quartile</option>
-                    <option>Q1</option>
-                    <option>Q2</option>
-                    <option>Q3</option>
-                    <option>Q4</option>
-                    <option>Non-Indexed</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-medium text-slate-500 mb-1">
-                    % Milestone
-                  </label>
-                  <select
-                    value={milestoneFilter}
-                    onChange={(e) => setMilestoneFilter(e.target.value)}
-                    className="w-full text-xs bg-white border border-[#D6D0C2] rounded-md px-2.5 py-1.5 text-slate-700 font-medium focus:ring-1 focus:ring-[#0084C7] outline-none"
-                  >
-                    <option>Semua Pencapaian</option>
-                    <option>&lt; 10%</option>
-                    <option>10% - 50%</option>
-                    <option>&gt; 50%</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-medium text-slate-500 mb-1">
-                    PR Jun 2026
-                  </label>
-                  <select
-                    value={prStatusFilter}
-                    onChange={(e) => setPrStatusFilter(e.target.value)}
-                    className="w-full text-xs bg-white border border-[#D6D0C2] rounded-md px-2.5 py-1.5 text-slate-700 font-medium focus:ring-1 focus:ring-[#0084C7] outline-none"
-                  >
-                    <option>Semua Status PR</option>
-                    <option>COMPLETED</option>
-                    <option>NOT COMPLETED</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Kad Metrik Utama (4 Cards Tepat Mengikut Paparan Sasaran) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Kad 1: Jumlah Geran Aktif */}
-              <div className="bg-white p-4 rounded-xl border border-[#E6E1D6] shadow-2xs flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-slate-500">Jumlah Geran Aktif</p>
-                  <h3 className="text-2xl font-black text-slate-900 mt-0.5">{stats.totalCount}</h3>
-                  <p className="text-[11px] text-emerald-600 font-bold mt-1">
-                    100% <span className="text-slate-400 font-normal">daripada keseluruhan</span>
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center">
-                  <ListFilter className="w-5 h-5" />
-                </div>
-              </div>
-
-              {/* Kad 2: Jumlah Peruntukan (RM) */}
-              <div className="bg-white p-4 rounded-xl border border-[#E6E1D6] shadow-2xs flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-slate-500">Jumlah Peruntukan (RM)</p>
-                  <h3 className="text-xl font-black text-emerald-700 mt-0.5">
-                    RM {stats.totalPeruntukan.toLocaleString()}
-                  </h3>
-                  <p className="text-[11px] text-slate-400 mt-1">
-                    Purata:{' '}
-                    <span className="font-semibold text-slate-700">
-                      RM {Math.round(stats.totalPeruntukan / (stats.totalCount || 1)).toLocaleString()}
-                    </span>{' '}
-                    / geran
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                  <DollarSign className="w-5 h-5" />
-                </div>
-              </div>
-
-              {/* Kad 3: Purata % Milestone */}
-              <div className="bg-white p-4 rounded-xl border border-[#E6E1D6] shadow-2xs flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-slate-500">Purata % Milestone</p>
-                  <h3 className="text-2xl font-black text-blue-600 mt-0.5">{stats.avgMilestone}%</h3>
-                  <div className="w-24 bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
-                    <div
-                      className="bg-blue-600 h-full rounded-full transition-all duration-500"
-                      style={{ width: `${Math.min(stats.avgMilestone, 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                  <BarChart3 className="w-5 h-5" />
-                </div>
-              </div>
-
-              {/* Kad 4: Tamat Tahun 2026 */}
-              <div className="bg-white p-4 rounded-xl border border-[#E6E1D6] shadow-2xs flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-slate-500">Tamat Tahun 2026</p>
-                  <h3 className="text-2xl font-black text-amber-600 mt-0.5">{stats.count2026}</h3>
-                  <p className="text-[11px] text-amber-600 font-bold mt-1">
-                    100% <span className="text-slate-400 font-normal">perlukan perhatian PR</span>
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                  <Clock className="w-5 h-5" />
-                </div>
-              </div>
-            </div>
-
-            {/* 4. Analisis Strategik & Taburan Quartile */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-              {/* Ringkasan & Analisis Strategik */}
-              <div className="lg:col-span-2 bg-white p-5 rounded-xl border border-[#E6E1D6] shadow-2xs space-y-3.5">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center">
-                    <span className="text-blue-500 mr-2">📊</span> Ringkasan & Analisis Strategik
-                  </h3>
-                  <span className="text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full">
-                    Automated Summary
-                  </span>
-                </div>
-
-                <div className="space-y-2.5">
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start space-x-3">
-                    <div className="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
-                      <Info className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-900">
-                        Kadar Pencapaian Purata Milestone
-                      </h4>
-                      <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
-                        Purata kemajuan projek semasa berada pada{' '}
-                        <strong className="text-slate-900">{stats.avgMilestone}%</strong>. Sebanyak{' '}
-                        <strong className="text-slate-900">
-                          {filteredProjects.filter((p) => p.milestone >= 100).length}
-                        </strong>{' '}
-                        geran telah mencapai 100% sasaran milestone.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-amber-50/50 border border-amber-200 flex items-start space-x-3">
-                    <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
-                      <Clock className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-900">
-                        Sasaran Penamatan Geran Tahun 2026
-                      </h4>
-                      <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
-                        Sebanyak{' '}
-                        <strong className="text-slate-900">
-                          {stats.count2026} geran (100%)
-                        </strong>{' '}
-                        dijadualkan tamat pada tahun 2026. Terdapat{' '}
-                        <strong className="text-slate-900">
-                          {filteredProjects.filter((p) => p.milestone < 50).length} geran
-                        </strong>{' '}
-                        dengan kemajuan milestone di bawah 50% yang memerlukan tindakan susulan.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-emerald-50/50 border border-emerald-200 flex items-start space-x-3">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-                      <Award className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-900">
-                        Pencapaian Penerbitan Quartile
-                      </h4>
-                      <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
-                        Sebanyak{' '}
-                        <strong className="text-slate-900">
-                          {stats.quartiles.q1Count + stats.quartiles.q2Count} geran
-                        </strong>{' '}
-                        dilaporkan berdaftar di bawah indeks berprestasi tinggi Q1 dan Q2.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Taburan Quartile Top */}
-              <div className="bg-white p-5 rounded-xl border border-[#E6E1D6] shadow-2xs flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center">
-                      <Award className="w-4 h-4 text-amber-500 mr-2" /> Taburan Quartile Top
-                    </h3>
-                  </div>
-
-                  <div className="my-6 space-y-4">
-                    <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-semibold text-slate-500">
-                      <span className="flex items-center">
-                        <span className="w-2.5 h-2.5 bg-blue-500 mr-1 rounded-xs"></span> Q1 (
-                        {stats.quartiles.q1Count})
-                      </span>
-                      <span className="flex items-center">
-                        <span className="w-2.5 h-2.5 bg-emerald-500 mr-1 rounded-xs"></span> Q2 (
-                        {stats.quartiles.q2Count})
-                      </span>
-                      <span className="flex items-center">
-                        <span className="w-2.5 h-2.5 bg-amber-500 mr-1 rounded-xs"></span> Q3 (
-                        {stats.quartiles.q3Count})
-                      </span>
-                      <span className="flex items-center">
-                        <span className="w-2.5 h-2.5 bg-rose-500 mr-1 rounded-xs"></span> Q4 (
-                        {stats.quartiles.q4Count})
-                      </span>
-                      <span className="flex items-center">
-                        <span className="w-2.5 h-2.5 bg-slate-400 mr-1 rounded-xs"></span> Non-Indexed (
-                        {stats.quartiles.nonIndexedCount})
-                      </span>
-                    </div>
-
-                    {/* Bar visualisasi taburan */}
-                    <div className="h-20 w-full flex items-end justify-center gap-3 border-b border-slate-200 pb-1 px-4">
-                      <div
-                        className="w-7 bg-blue-500 rounded-t transition-all"
-                        style={{
-                          height: `${Math.max(
-                            5,
-                            (stats.quartiles.q1Count / (stats.totalCount || 1)) * 100
-                          )}%`
-                        }}
-                        title={`Q1: ${stats.quartiles.q1Count}`}
-                      ></div>
-                      <div
-                        className="w-7 bg-emerald-500 rounded-t transition-all"
-                        style={{
-                          height: `${Math.max(
-                            5,
-                            (stats.quartiles.q2Count / (stats.totalCount || 1)) * 100
-                          )}%`
-                        }}
-                        title={`Q2: ${stats.quartiles.q2Count}`}
-                      ></div>
-                      <div
-                        className="w-7 bg-amber-500 rounded-t transition-all"
-                        style={{
-                          height: `${Math.max(
-                            5,
-                            (stats.quartiles.q3Count / (stats.totalCount || 1)) * 100
-                          )}%`
-                        }}
-                        title={`Q3: ${stats.quartiles.q3Count}`}
-                      ></div>
-                      <div
-                        className="w-7 bg-rose-500 rounded-t transition-all"
-                        style={{
-                          height: `${Math.max(
-                            5,
-                            (stats.quartiles.q4Count / (stats.totalCount || 1)) * 100
-                          )}%`
-                        }}
-                        title={`Q4: ${stats.quartiles.q4Count}`}
-                      ></div>
-                      <div
-                        className="w-7 bg-slate-400 rounded-t transition-all"
-                        style={{
-                          height: `${Math.min(
-                            95,
-                            Math.max(
-                              20,
-                              (stats.quartiles.nonIndexedCount / (stats.totalCount || 1)) * 100
-                            )
-                          )}%`
-                        }}
-                        title={`Non-Indexed: ${stats.quartiles.nonIndexedCount}`}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="text-slate-500 font-medium">Jumlah Berdaftar Q1/Q2:</span>
-                  <span className="font-bold text-slate-900">
-                    {stats.quartiles.q1Count + stats.quartiles.q2Count} (
-                    {(
-                      ((stats.quartiles.q1Count + stats.quartiles.q2Count) /
-                        (stats.totalCount || 1)) *
-                      100
-                    ).toFixed(0)}
-                    %)
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* 5. Jadual Geran Perlu Perhatian Khusus */}
-            <div className="bg-white rounded-xl border border-[#E6E1D6] shadow-2xs overflow-hidden">
-              <div className="p-4 bg-[#FAF8F5] border-b border-[#E6E1D6] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <h3 className="text-xs font-bold text-slate-900 flex items-center">
-                    <AlertTriangle className="w-4 h-4 text-amber-500 mr-1.5" />
-                    Geran Perlu Perhatian Khusus
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
-                    Geran tamat pada 2026 atau status PR memerlukan tindakan segera
-                  </p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="relative">
-                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
-                    <input
-                      type="text"
-                      placeholder="Cari tajuk / PI..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-8 pr-3 py-1.5 text-xs bg-white border border-[#D6D0C2] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0084C7]"
-                    />
-                  </div>
-                  <span className="px-2.5 py-1 text-[10px] font-bold bg-amber-100 text-amber-800 rounded-full border border-amber-200 whitespace-nowrap">
-                    {filteredProjects.length} Rekod
-                  </span>
-                </div>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr className="bg-[#FAF8F5] text-slate-500 text-[10px] font-bold uppercase tracking-wider border-b border-slate-200">
-                      <th className="py-3 px-4">KOD / TAJUK</th>
-                      <th className="py-3 px-4">GRANT TYPE</th>
-                      <th className="py-3 px-4">KETUA PENYELIDIK</th>
-                      <th className="py-3 px-4">TAMAT</th>
-                      <th className="py-3 px-4">% MILESTONE</th>
-                      <th className="py-3 px-4">PR JUN 2026</th>
-                      <th className="py-3 px-4 text-right">TINDAKAN</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {filteredProjects.length > 0 ? (
-                      filteredProjects.map((p) => (
-                        <tr key={p.id} className="hover:bg-slate-50/80 transition">
-                          <td className="py-3.5 px-4 font-semibold text-slate-800 max-w-md">
-                            <div className="text-slate-400 font-mono text-[10px]">{p.code}</div>
-                            <div className="line-clamp-1 text-slate-900">{p.title}</div>
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <span className="bg-cyan-50 text-cyan-700 border border-cyan-200 font-bold px-2 py-0.5 rounded text-[10px]">
-                              {p.grantType}
-                            </span>
-                          </td>
-                          <td className="py-3.5 px-4 font-medium text-slate-700">{p.pi}</td>
-                          <td className="py-3.5 px-4 font-bold text-amber-700">{p.endDate}</td>
-                          <td className="py-3.5 px-4">
-                            <div className="flex items-center space-x-2">
-                              <span className="font-bold text-slate-800">{p.milestone}%</span>
-                              <div className="w-16 bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                                <div
-                                  className={`h-full rounded-full ${
-                                    p.milestone >= 80
-                                      ? 'bg-emerald-500'
-                                      : p.milestone >= 40
-                                      ? 'bg-blue-600'
-                                      : 'bg-amber-500'
-                                  }`}
-                                  style={{ width: `${p.milestone}%` }}
-                                ></div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <span
-                              className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                                p.prJun2026 === 'COMPLETED'
-                                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                                  : 'bg-slate-100 text-slate-600 border border-slate-200'
-                              }`}
-                            >
-                              {p.prJun2026}
-                            </span>
-                          </td>
-                          <td className="py-3.5 px-4 text-right">
-                            <button
-                              onClick={() => setSelectedProject(p)}
-                              className="px-3 py-1 text-[11px] font-semibold bg-white border border-slate-300 hover:bg-slate-50 rounded-md shadow-2xs transition text-slate-700"
-                            >
-                              Butiran
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="7" className="text-center py-12 text-slate-400">
-                          <FileSpreadsheet className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-                          Tiada rekod geran yang memenuhi kriteria penapis.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </>
-        )}
-      </main>
-
-      {/* 6. Modal Butiran Projek */}
-      {selectedProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="bg-white w-full max-w-lg rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
-            <div className="p-4 bg-[#FAF8F5] border-b border-slate-200 flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900">
-                Butiran Projek #{selectedProject.code}
-              </h3>
-              <button
-                onClick={() => setSelectedProject(null)}
-                className="text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-5 space-y-3 text-xs">
-              <div>
-                <span className="text-slate-400 font-medium">Tajuk Projek:</span>
-                <p className="font-bold text-slate-900 mt-0.5">{selectedProject.title}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <div>
-                  <span className="text-slate-400 font-medium">Skim Geran:</span>
-                  <p className="font-semibold text-slate-800">{selectedProject.grantType}</p>
-                </div>
-                <div>
-                  <span className="text-slate-400 font-medium">Ketua Penyelidik:</span>
-                  <p className="font-semibold text-slate-800">{selectedProject.pi}</p>
-                </div>
-                <div>
-                  <span className="text-slate-400 font-medium">Tarikh Tamat:</span>
-                  <p className="font-semibold text-amber-700">{selectedProject.endDate}</p>
-                </div>
-                <div>
-                  <span className="text-slate-400 font-medium">Pencapaian Milestone:</span>
-                  <p className="font-semibold text-slate-800">{selectedProject.milestone}%</p>
-                </div>
-                <div>
-                  <span className="text-slate-400 font-medium">Status PR Jun 2026:</span>
-                  <p className="font-bold text-slate-800">{selectedProject.prJun2026}</p>
-                </div>
-                <div>
-                  <span className="text-slate-400 font-medium">Indeks Quartile:</span>
-                  <p className="font-semibold text-slate-800">{selectedProject.quartile}</p>
-                </div>
-              </div>
-            </div>
-            <div className="p-3 bg-slate-50 border-t border-slate-200 flex justify-end">
-              <button
-                onClick={() => setSelectedProject(null)}
-                className="px-4 py-1.5 text-xs font-semibold bg-slate-900 text-white rounded-md hover:bg-slate-800 transition"
-              >
-                Tutup
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <!-- Navigasi Tab -->
+      <nav class="flex space-x-6 mt-4 border-t border-slate-100 pt-1 text-sm font-medium overflow-x-auto scrollbar-thin">
+        <button onclick="switchTab('ringkasan')" id="tab-ringkasan" class="tab-active py-2.5 px-1 inline-flex items-center gap-2 border-b-2 whitespace-nowrap transition">
+          <i class="fa-solid fa-chart-line text-sm"></i>
+          <span>Ringkasan Eksekutif</span>
+        </button>
+        <button onclick="switchTab('visual')" id="tab-visual" class="text-slate-500 hover:text-slate-700 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap transition">
+          <i class="fa-solid fa-chart-simple text-sm"></i>
+          <span>Dashboard Visual & Analisis</span>
+        </button>
+        <button onclick="switchTab('verdict')" id="tab-verdict" class="text-slate-500 hover:text-slate-700 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap transition">
+          <i class="fa-solid fa-scale-balanced text-sm"></i>
+          <span>Rekod Statistik New Verdict</span>
+        </button>
+        <button onclick="switchTab('masterlist')" id="tab-masterlist" class="text-slate-500 hover:text-slate-700 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap transition">
+          <i class="fa-solid fa-list-check text-sm"></i>
+          <span>Masterlist Direktori</span>
+        </button>
+      </nav>
     </div>
-  );
-}
+  </header>
+
+  <!-- ==================== KANDUNGAN UTAMA ==================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- ==================== PANEL PENAPIS INTERAKTIF ==================== -->
+    <section class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2 text-sky-800 font-semibold text-xs uppercase tracking-wider">
+          <i class="fa-solid fa-filter text-sky-600"></i>
+          <span>Penapis Data Interaktif</span>
+        </div>
+        <button onclick="resetFilters()" class="text-xs font-medium text-slate-500 hover:text-sky-600 flex items-center gap-1 transition">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>Sifar Penapis</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 text-xs">
+        <!-- Filter 1: Grant Type -->
+        <div>
+          <label class="block text-slate-500 font-medium mb-1">Grant Type</label>
+          <select id="filter-grant-type" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-700 focus:ring-1 focus:ring-sky-500 focus:outline-none">
+            <option value="all">Semua Jenis Geran</option>
+          </select>
+        </div>
+
+        <!-- Filter 2: Bulan Tamat -->
+        <div>
+          <label class="block text-slate-500 font-medium mb-1">Bulan Tamat (Pelbagai)</label>
+          <select id="filter-bulan" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-700 focus:ring-1 focus:ring-sky-500 focus:outline-none">
+            <option value="all">Semua Bulan</option>
+            <option value="01">01 - Januari</option>
+            <option value="02">02 - Februari</option>
+            <option value="03">03 - Mac</option>
+            <option value="04">04 - April</option>
+            <option value="05">05 - Mei</option>
+            <option value="06">06 - Jun</option>
+            <option value="07">07 - Julai</option>
+            <option value="08">08 - Ogos</option>
+            <option value="09">09 - September</option>
+            <option value="10">10 - Oktober</option>
+            <option value="11">11 - November</option>
+            <option value="12">12 - Disember</option>
+          </select>
+        </div>
+
+        <!-- Filter 3: Tahun Tamat -->
+        <div>
+          <label class="block text-slate-500 font-medium mb-1">Tahun Tamat (Pelbagai)</label>
+          <select id="filter-tahun" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-700 focus:ring-1 focus:ring-sky-500 focus:outline-none">
+            <option value="all">Semua Tahun</option>
+          </select>
+        </div>
+
+        <!-- Filter 4: Quartile -->
+        <div>
+          <label class="block text-slate-500 font-medium mb-1">Quartile Monitored</label>
+          <select id="filter-quartile" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-700 focus:ring-1 focus:ring-sky-500 focus:outline-none">
+            <option value="all">Semua Quartile</option>
+            <option value="Q1">Q1</option>
+            <option value="Q2">Q2</option>
+            <option value="Q3">Q3</option>
+            <option value="Q4">Q4</option>
+            <option value="Non-Indexed">Non-Indexed</option>
+          </select>
+        </div>
+
+        <!-- Filter 5: % Milestone -->
+        <div>
+          <label class="block text-slate-500 font-medium mb-1">% Milestone</label>
+          <select id="filter-milestone" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-700 focus:ring-1 focus:ring-sky-500 focus:outline-none">
+            <option value="all">Semua Pencapaian</option>
+            <option value="0-25">0% - 25% (Kritikal)</option>
+            <option value="26-50">26% - 50% (Sederhana)</option>
+            <option value="51-75">51% - 75% (Memuaskan)</option>
+            <option value="76-99">76% - 99% (Hampir Siap)</option>
+            <option value="100">100% (Selesai)</option>
+          </select>
+        </div>
+
+        <!-- Filter 6: PR Jun 2026 -->
+        <div>
+          <label class="block text-slate-500 font-medium mb-1">PR Jun 2026</label>
+          <select id="filter-pr" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-700 focus:ring-1 focus:ring-sky-500 focus:outline-none">
+            <option value="all">Semua Status PR</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="NOT COMPLETED">NOT COMPLETED</option>
+            <option value="EXTENSION">EXTENSION</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 1: RINGKASAN EKSEKUTIF ==================== -->
+    <div id="view-ringkasan" class="space-y-6">
+      <!-- 4 KAD KPI UTAMA -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Kad 1: Jumlah Geran Aktif -->
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500">Jumlah Geran Aktif</p>
+            <h3 id="kpi-total-grants" class="text-2xl font-black text-slate-900 mt-1">0</h3>
+            <p class="text-[11px] text-emerald-600 font-medium mt-1 flex items-center gap-1">
+              <span id="kpi-grants-percent">100%</span> daripada keseluruhan
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+        </div>
+
+        <!-- Kad 2: Jumlah Peruntukan (RM) -->
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500">Jumlah Peruntukan (RM)</p>
+            <h3 id="kpi-total-fund" class="text-2xl font-black text-emerald-700 mt-1">RM 0</h3>
+            <p class="text-[11px] text-slate-500 font-medium mt-1">
+              Purata: <span id="kpi-avg-fund" class="font-semibold text-slate-700">RM 0</span> / geran
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+          </div>
+        </div>
+
+        <!-- Kad 3: Purata % Milestone -->
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex items-center justify-between">
+          <div class="w-full mr-2">
+            <p class="text-xs font-semibold text-slate-500">Purata % Milestone</p>
+            <h3 id="kpi-avg-milestone" class="text-2xl font-black text-sky-700 mt-1">0%</h3>
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-100 rounded-full h-2 mt-2">
+              <div id="kpi-milestone-bar" class="bg-sky-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-xl flex-shrink-0">
+            <i class="fa-solid fa-bars-progress"></i>
+          </div>
+        </div>
+
+        <!-- Kad 4: Tamat Tahun 2026 -->
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500">Tamat Tahun 2026</p>
+            <h3 id="kpi-end-2026-count" class="text-2xl font-black text-amber-700 mt-1">0</h3>
+            <p class="text-[11px] text-amber-600 font-medium mt-1 flex items-center gap-1">
+              <span id="kpi-end-2026-percent">0%</span> perlukan perhatian PR
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEKSYEN TENGAH: RINGKASAN STRATEGIK & TABURAN QUARTILE -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Kiri: Ringkasan & Analisis Strategik -->
+        <div class="lg:col-span-8 bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2 text-slate-800 font-bold text-sm">
+              <i class="fa-solid fa-wand-magic-sparkles text-sky-600"></i>
+              <span>Ringkasan & Analisis Strategik</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+              Automated Summary
+            </span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <!-- Box 1 -->
+            <div class="p-3.5 bg-sky-50/60 rounded-xl border border-sky-100 flex items-start gap-3">
+              <div class="w-7 h-7 rounded-lg bg-sky-500 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-circle-info text-xs"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 text-xs">Kadar Pencapaian Purata Milestone</h4>
+                <p id="summary-milestone-text" class="text-slate-600 mt-0.5 leading-relaxed">
+                  Purata kemajuan projek semasa berada pada kadar sederhana. Sebanyak 0 geran telah mencapai 100% sasaran milestone.
+                </p>
+              </div>
+            </div>
+
+            <!-- Box 2 -->
+            <div class="p-3.5 bg-amber-50/60 rounded-xl border border-amber-100 flex items-start gap-3">
+              <div class="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-clock text-xs"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 text-xs">Sasaran Penamatan Geran Tahun 2026</h4>
+                <p id="summary-2026-text" class="text-slate-600 mt-0.5 leading-relaxed">
+                  Sebanyak geran dijadualkan tamat pada tahun 2026 dengan peratusan milestone rendah yang memerlukan tindakan susulan rapi.
+                </p>
+              </div>
+            </div>
+
+            <!-- Box 3 -->
+            <div class="p-3.5 bg-emerald-50/60 rounded-xl border border-emerald-100 flex items-start gap-3">
+              <div class="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-award text-xs"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 text-xs">Pencapaian Penerbitan Quartile</h4>
+                <p id="summary-quartile-text" class="text-slate-600 mt-0.5 leading-relaxed">
+                  Sebanyak 0% geran dilaporkan berdaftar di bawah indeks berprestasi tinggi Q1 dan Q2.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kanan: Taburan Quartile Top -->
+        <div class="lg:col-span-4 bg-white rounded-xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-slate-800 font-bold text-sm mb-4">
+              <i class="fa-solid fa-medal text-amber-500"></i>
+              <span>Taburan Quartile Top</span>
+            </div>
+
+            <!-- Bar Segmen Quartile -->
+            <div class="w-full h-3.5 bg-slate-100 rounded-full flex overflow-hidden shadow-inner my-6" id="quartile-segmented-bar">
+              <div style="width: 20%" class="bg-blue-600" title="Q1"></div>
+              <div style="width: 20%" class="bg-emerald-500" title="Q2"></div>
+              <div style="width: 20%" class="bg-amber-500" title="Q3"></div>
+              <div style="width: 20%" class="bg-rose-500" title="Q4"></div>
+              <div style="width: 20%" class="bg-slate-400" title="Non-Indexed"></div>
+            </div>
+
+            <!-- Petunjuk Legend -->
+            <div class="flex items-center justify-center flex-wrap gap-3 text-[11px] text-slate-600">
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-blue-600"></span><span>Q1</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-500"></span><span>Q2</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-500"></span><span>Q3</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-rose-500"></span><span>Q4</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-400"></span><span>Non-Indexed</span></div>
+            </div>
+          </div>
+
+          <div class="pt-4 mt-6 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-500 font-medium">Jumlah Berdaftar Q1/Q2:</span>
+            <span id="quartile-top-stats" class="font-bold text-slate-900">0 (0%)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEKSYEN BAWAH: JADUAL GERAN PERLU PERHATIAN KHUSUS -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+              <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
+              <span>Geran Perlu Perhatian Khusus</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Geran tamat pada 2026 atau status PR memerlukan tindakan segera</p>
+          </div>
+          <span id="warning-cases-badge" class="px-3 py-1 bg-amber-50 text-amber-800 text-xs font-semibold rounded-full border border-amber-200 self-start sm:self-auto">
+            0 Kes Perhatian
+          </span>
+        </div>
+
+        <div class="overflow-x-auto scrollbar-thin">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px]">
+              <tr>
+                <th class="py-3 px-4">Kod / Tajuk</th>
+                <th class="py-3 px-3">Grant Type</th>
+                <th class="py-3 px-3">Ketua Penyelidik</th>
+                <th class="py-3 px-3">Tamat</th>
+                <th class="py-3 px-3">% Milestone</th>
+                <th class="py-3 px-3">PR Jun 2026</th>
+                <th class="py-3 px-4 text-center">Tindakan</th>
+              </tr>
+            </thead>
+            <tbody id="warning-table-body" class="divide-y divide-slate-100 text-slate-700">
+              <!-- Dimuatkan secara dinamik -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 2: DASHBOARD VISUAL & ANALISIS ==================== -->
+    <div id="view-visual" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Carta 1: Taburan Geran mengikut Jenis -->
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+          <h3 class="text-xs font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie text-sky-600"></i>
+            <span>Bilangan Geran Mengikut Jenis (Grant Type)</span>
+          </h3>
+          <div class="h-64 relative">
+            <canvas id="chartGrantType"></canvas>
+          </div>
+        </div>
+
+        <!-- Carta 2: Taburan % Milestone -->
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+          <h3 class="text-xs font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-chart-column text-emerald-600"></i>
+            <span>Taburan Julat % Milestone Keseluruhan</span>
+          </h3>
+          <div class="h-64 relative">
+            <canvas id="chartMilestone"></canvas>
+          </div>
+        </div>
+
+        <!-- Carta 3: Taburan Peruntukan Dana -->
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+          <h3 class="text-xs font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-coins text-amber-500"></i>
+            <span>Pecahan Dana Peruntukan (RM) Mengikut Jenis Geran</span>
+          </h3>
+          <div class="h-64 relative">
+            <canvas id="chartFunding"></canvas>
+          </div>
+        </div>
+
+        <!-- Carta 4: Status PR Jun 2026 -->
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+          <h3 class="text-xs font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-circle-check text-indigo-600"></i>
+            <span>Status Prestasi PR (Progress Report)</span>
+          </h3>
+          <div class="h-64 relative">
+            <canvas id="chartPRStatus"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 3: REKOD STATISTIK NEW VERDICT ==================== -->
+    <div id="view-verdict" class="hidden space-y-6">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+        <h3 class="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-scale-balanced text-sky-600"></i>
+          <span>Matriks Analisis & Status Keputusan Penyelidikan (New Verdict)</span>
+        </h3>
+        <p class="text-xs text-slate-500 mb-6">Pecahan ringkasan menyeluruh mengikut kategori geran dan tahap kepatuhan penerbitan.</p>
+
+        <div class="overflow-x-auto scrollbar-thin">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-4">Kategori Geran</th>
+                <th class="py-3 px-3 text-center">Jumlah Geran</th>
+                <th class="py-3 px-3 text-right">Jumlah Dana (RM)</th>
+                <th class="py-3 px-3 text-center">Purata Milestone</th>
+                <th class="py-3 px-3 text-center">Q1/Q2 Indexed</th>
+                <th class="py-3 px-3 text-center">PR Selesai</th>
+                <th class="py-3 px-3 text-center">Tindakan Disyorkan</th>
+              </tr>
+            </thead>
+            <tbody id="verdict-table-body" class="divide-y divide-slate-100 text-slate-700">
+              <!-- Dimuatkan secara automatik mengikut data -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: MASTERLIST DIREKTORI ==================== -->
+    <div id="view-masterlist" class="hidden space-y-4">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+        <!-- Carian dan Bilangan Data -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div class="relative w-full sm:w-80">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+            <input type="text" id="masterlist-search" oninput="searchMasterlist()" placeholder="Cari kod, tajuk atau penyelidik..." 
+                   class="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+          </div>
+          <div class="text-xs text-slate-500 flex items-center gap-2">
+            <span>Memaparkan <strong id="masterlist-count" class="text-slate-800">0</strong> rekod geran</span>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto scrollbar-thin">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 text-[11px]">
+              <tr>
+                <th class="py-3 px-3">No</th>
+                <th class="py-3 px-4">Kod & Tajuk Projek</th>
+                <th class="py-3 px-3">Grant Type</th>
+                <th class="py-3 px-3">Ketua Penyelidik</th>
+                <th class="py-3 px-3 text-right">Peruntukan (RM)</th>
+                <th class="py-3 px-3 text-center">Tarikh Tamat</th>
+                <th class="py-3 px-3 text-center">% Milestone</th>
+                <th class="py-3 px-3 text-center">Quartile</th>
+                <th class="py-3 px-3 text-center">PR Status</th>
+                <th class="py-3 px-3 text-center">Tindakan</th>
+              </tr>
+            </thead>
+            <tbody id="masterlist-table-body" class="divide-y divide-slate-100 text-slate-700">
+              <!-- Senarai masterlist -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-xs">
+          <div class="text-slate-500" id="pagination-info">Halaman 1 dari 1</div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="prevPage()" id="btn-prev-page" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded disabled:opacity-40 disabled:cursor-not-allowed">Sebelumnya</button>
+            <button onclick="nextPage()" id="btn-next-page" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded disabled:opacity-40 disabled:cursor-not-allowed">Seterusnya</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== MODAL: BUTIRAN GERAN ==================== -->
+  <div id="modal-detail" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+      <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+          <i class="fa-solid fa-file-lines text-sky-600"></i>
+          <span>Butiran Lengkap Geran Penyelidikan</span>
+        </div>
+        <button onclick="closeDetailModal()" class="text-slate-400 hover:text-slate-600 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-4 text-xs" id="detail-modal-body">
+        <!-- Kandungan butiran geran dimasukkan di sini -->
+      </div>
+      <div class="bg-slate-50 px-6 py-3 border-t border-slate-200 flex justify-end">
+        <button onclick="closeDetailModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-xs font-medium transition">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: KONFIGURASI GOOGLE SHEET ==================== -->
+  <div id="modal-config" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-200">
+      <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+          <i class="fa-solid fa-link text-emerald-600"></i>
+          <span>Konfigurasi Pautan Google Sheet</span>
+        </div>
+        <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-600 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Pautan CSV / Google Sheets (Terbit ke Web):</label>
+          <input type="url" id="input-sheet-url" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv" 
+                 class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+          <p class="text-[11px] text-slate-500 mt-1">
+            <strong>Cara Menyambung:</strong> Dalam Google Sheets anda, klik <em>File &rarr; Share &rarr; Publish to web</em>, pilih format <strong>CSV</strong>, dan tampal pautan yang dijana di sini.
+          </p>
+        </div>
+
+        <div class="p-3 bg-sky-50 rounded-lg border border-sky-200 text-sky-800 text-[11px]">
+          <i class="fa-solid fa-lightbulb text-sky-600 mr-1"></i>
+          <strong>Format Lajur Google Sheet yang Diperlukan:</strong><br/>
+          <code class="text-[10px] bg-white px-1 py-0.5 rounded mt-1 inline-block border border-sky-200">
+            No, Kod, Tajuk, Grant_Type, Ketua_Penyelidik, Peruntukan, Bulan_Tamat, Tahun_Tamat, Milestone, Quartile, PR_Status
+          </code>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-6 py-3 border-t border-slate-200 flex justify-end gap-2">
+        <button onclick="useMockData()" class="px-3.5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-xs font-medium transition">
+          Guna Data Contoh (1,092 Geran)
+        </button>
+        <button onclick="saveAndFetchSheet()" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-medium transition shadow-sm">
+          Simpan & Muat Turun
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400">
+    Dashboard Geran Penyelidikan &copy; 2026. Hak Cipta Terpelihara.
+  </footer>
+
+  <!-- ==================== LOGIK SKRIP & PENGURUSAN DATA ==================== -->
+  <script>
+    // Konfigurasi Asas
+    let grantsData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    const itemsPerPage = 15;
+    let googleSheetUrl = "";
+
+    // Pembolehubah Carta Chart.js
+    let chartGrantTypeInst = null;
+    let chartMilestoneInst = null;
+    let chartFundingInst = null;
+    let chartPRStatusInst = null;
+
+    // --- DATA DEFAULT / MOCK (Sesuai dengan Tangkapan Skrin: 1,092 Geran, RM 54,600,000, 11% Milestone, 100% Tamat 2026) ---
+    function generateInitialMockData() {
+      const types = ['CCIN', 'FRGS', 'PRGS', 'TRGS', 'GP', 'UTM TIER 1', 'CREST'];
+      const researchers = ['Prof. Madya Dr. Ahmad', 'Dr. Siti Nurhaliza', 'Prof. Dr. Razak', 'Dr. Wong Wei Lun', 'Dr. Kavitha', 'Prof. Ir. Zulkifli'];
+      const sampleTitles = [
+        "Pemindahan Ilmu Penyelenggaraan Sistem Tenaga Elektrik Solar Komuniti Luar Bandar",
+        "KTP-MRUN FASA 1/2025: Memperkasa Pedagogi Berasaskan Teknologi Pintar AI",
+        "Pembangunan Sensor Nano Pintar Bagi Pengesanan Awal Pencemaran Sungai",
+        "Kajian Kelestarian Bio-Komposit Berasaskan Sisa Pertanian Sawit Tempatan",
+        "Sistem Ramalan Banjir Bandar Bersepadu Menggunakan IoT & Deep Learning",
+        "Inovasi Polimer Kitar Semula Untuk Aplikasi Kejuruteraan Automotif Hijau",
+        "Model Pengoptimuman Rantaian Bekalan Vaksin dan Perubatan Kecemasan",
+        "Penilaian Kualiti Udara dan Pelepasan Karbon Industri Berat Menggunakan Dron Pintar"
+      ];
+
+      const data = [];
+      const totalCount = 1092; // Tepat mengikut paparan foto
+
+      for (let i = 1; i <= totalCount; i++) {
+        const grantType = i <= 600 ? 'CCIN' : types[Math.floor(Math.random() * types.length)];
+        const monthNum = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+        
+        // Taburan milestone sekitar 11% (ramai 1%-15%, segelintir tinggi)
+        let milestone = 0;
+        if (i <= 5) {
+          milestone = i === 1 ? 3 : (i === 2 ? 1 : Math.floor(Math.random() * 8) + 1);
+        } else {
+          const rand = Math.random();
+          if (rand < 0.85) milestone = Math.floor(Math.random() * 18) + 1; // Majoriti rendah
+          else if (rand < 0.95) milestone = Math.floor(Math.random() * 40) + 20;
+          else milestone = Math.floor(Math.random() * 30) + 60;
+        }
+
+        const prStatus = i <= 950 ? 'NOT COMPLETED' : (Math.random() > 0.5 ? 'COMPLETED' : 'EXTENSION');
+        const quartile = Math.random() < 0.90 ? 'Non-Indexed' : (Math.random() < 0.5 ? 'Q3' : 'Q4');
+
+        data.push({
+          no: i,
+          kod: `G-${202600 + i}`,
+          tajuk: sampleTitles[(i - 1) % sampleTitles.length] + ` (Fasa ${((i % 4) + 1)})`,
+          grantType: grantType,
+          penyelidik: researchers[(i - 1) % researchers.length],
+          peruntukan: 50000, // 1092 * 50,000 = RM 54,600,000 (Sama tepat)
+          bulanTamat: monthNum,
+          tahunTamat: '2026',
+          milestone: milestone,
+          quartile: quartile,
+          prStatus: prStatus
+        });
+      }
+      return data;
+    }
+
+    // --- INISIALISASI PAPAN PEMUKA ---
+    window.addEventListener('DOMContentLoaded', () => {
+      grantsData = generateInitialMockData();
+      populateDropdownFilters();
+      applyFilters();
+      initCharts();
+    });
+
+    // --- PENGURUSAN TAB ---
+    function switchTab(tabId) {
+      const tabs = ['ringkasan', 'visual', 'verdict', 'masterlist'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        const view = document.getElementById(`view-${t}`);
+        if (t === tabId) {
+          btn.className = "tab-active py-2.5 px-1 inline-flex items-center gap-2 border-b-2 whitespace-nowrap transition";
+          view.classList.remove('hidden');
+        } else {
+          btn.className = "text-slate-500 hover:text-slate-700 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap transition";
+          view.classList.add('hidden');
+        }
+      });
+
+      if (tabId === 'visual') {
+        setTimeout(updateCharts, 100);
+      }
+    }
+
+    // --- MENGISI PILIHAN PENAPIS ---
+    function populateDropdownFilters() {
+      // Jenis Geran
+      const typeSelect = document.getElementById('filter-grant-type');
+      const uniqueTypes = [...new Set(grantsData.map(d => d.grantType))].sort();
+      typeSelect.innerHTML = '<option value="all">Semua Jenis Geran</option>';
+      uniqueTypes.forEach(t => {
+        typeSelect.innerHTML += `<option value="${t}">${t}</option>`;
+      });
+
+      // Tahun Tamat
+      const yearSelect = document.getElementById('filter-tahun');
+      const uniqueYears = [...new Set(grantsData.map(d => d.tahunTamat))].sort();
+      yearSelect.innerHTML = '<option value="all">Semua Tahun</option>';
+      uniqueYears.forEach(y => {
+        yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+      });
+    }
+
+    // --- PENAPISAN DATA UTAMA ---
+    function applyFilters() {
+      const type = document.getElementById('filter-grant-type').value;
+      const bulan = document.getElementById('filter-bulan').value;
+      const tahun = document.getElementById('filter-tahun').value;
+      const quartile = document.getElementById('filter-quartile').value;
+      const milestone = document.getElementById('filter-milestone').value;
+      const pr = document.getElementById('filter-pr').value;
+
+      filteredData = grantsData.filter(item => {
+        if (type !== 'all' && item.grantType !== type) return false;
+        if (bulan !== 'all' && item.bulanTamat !== bulan) return false;
+        if (tahun !== 'all' && item.tahunTamat !== tahun) return false;
+        if (quartile !== 'all' && item.quartile !== quartile) return false;
+        if (pr !== 'all' && item.prStatus !== pr) return false;
+        
+        if (milestone !== 'all') {
+          if (milestone === '0-25' && !(item.milestone >= 0 && item.milestone <= 25)) return false;
+          if (milestone === '26-50' && !(item.milestone >= 26 && item.milestone <= 50)) return false;
+          if (milestone === '51-75' && !(item.milestone >= 51 && item.milestone <= 75)) return false;
+          if (milestone === '76-99' && !(item.milestone >= 76 && item.milestone <= 99)) return false;
+          if (milestone === '100' && item.milestone !== 100) return false;
+        }
+        return true;
+      });
+
+      currentPage = 1;
+      renderKPIs();
+      renderSummaryAnalysis();
+      renderQuartileBar();
+      renderWarningTable();
+      renderVerdictTable();
+      renderMasterlist();
+      updateCharts();
+    }
+
+    function resetFilters() {
+      document.getElementById('filter-grant-type').value = 'all';
+      document.getElementById('filter-bulan').value = 'all';
+      document.getElementById('filter-tahun').value = 'all';
+      document.getElementById('filter-quartile').value = 'all';
+      document.getElementById('filter-milestone').value = 'all';
+      document.getElementById('filter-pr').value = 'all';
+      applyFilters();
+    }
+
+    // --- RENDER KPI CARDS ---
+    function renderKPIs() {
+      const totalGrants = filteredData.length;
+      const totalAll = grantsData.length;
+      const grantPercent = totalAll > 0 ? ((totalGrants / totalAll) * 100).toFixed(0) : 0;
+      
+      const totalFund = filteredData.reduce((acc, curr) => acc + curr.peruntukan, 0);
+      const avgFund = totalGrants > 0 ? (totalFund / totalGrants) : 0;
+      
+      const avgMilestone = totalGrants > 0 
+        ? (filteredData.reduce((acc, curr) => acc + curr.milestone, 0) / totalGrants).toFixed(0)
+        : 0;
+
+      const end2026Count = filteredData.filter(d => d.tahunTamat === '2026').length;
+      const end2026Percent = totalGrants > 0 ? ((end2026Count / totalGrants) * 100).toFixed(0) : 0;
+
+      document.getElementById('kpi-total-grants').innerText = totalGrants.toLocaleString();
+      document.getElementById('kpi-grants-percent').innerText = `${grantPercent}%`;
+      document.getElementById('kpi-total-fund').innerText = `RM ${totalFund.toLocaleString()}`;
+      document.getElementById('kpi-avg-fund').innerText = `RM ${avgFund.toLocaleString(undefined, {maximumFractionDigits:0})}`;
+      document.getElementById('kpi-avg-milestone').innerText = `${avgMilestone}%`;
+      document.getElementById('kpi-milestone-bar').style.width = `${Math.min(avgMilestone, 100)}%`;
+      document.getElementById('kpi-end-2026-count').innerText = end2026Count.toLocaleString();
+      document.getElementById('kpi-end-2026-percent').innerText = `${end2026Percent}%`;
+    }
+
+    // --- RENDER RINGKASAN STRATEGIK ---
+    function renderSummaryAnalysis() {
+      const total = filteredData.length;
+      const avgMilestone = total > 0 
+        ? (filteredData.reduce((acc, curr) => acc + curr.milestone, 0) / total).toFixed(0)
+        : 0;
+      const completed100 = filteredData.filter(d => d.milestone === 100).length;
+      
+      document.getElementById('summary-milestone-text').innerHTML = 
+        `Purata kemajuan projek semasa berada pada <strong>${avgMilestone}%</strong>. Sebanyak <strong>${completed100} geran</strong> telah mencapai 100% sasaran milestone.`;
+
+      const end2026 = filteredData.filter(d => d.tahunTamat === '2026').length;
+      const below50 = filteredData.filter(d => d.tahunTamat === '2026' && d.milestone < 50).length;
+      const percent2026 = total > 0 ? ((end2026 / total) * 100).toFixed(0) : 0;
+
+      document.getElementById('summary-2026-text').innerHTML = 
+        `Sebanyak <strong>${end2026} geran (${percent2026}%)</strong> dijadualkan tamat pada tahun 2026. Terdapat <strong>${below50} geran</strong> dengan kemajuan milestone di bawah 50% yang memerlukan tindakan susulan.`;
+
+      const q1q2 = filteredData.filter(d => d.quartile === 'Q1' || d.quartile === 'Q2').length;
+      const q1q2Percent = total > 0 ? ((q1q2 / total) * 100).toFixed(0) : 0;
+
+      document.getElementById('summary-quartile-text').innerHTML = 
+        `Sebanyak <strong>${q1q2Percent}% (${q1q2} geran)</strong> dilaporkan berdaftar di bawah indeks berprestasi tinggi Q1 dan Q2.`;
+    }
+
+    // --- RENDER TABURAN QUARTILE BAR ---
+    function renderQuartileBar() {
+      const total = filteredData.length;
+      const q1 = filteredData.filter(d => d.quartile === 'Q1').length;
+      const q2 = filteredData.filter(d => d.quartile === 'Q2').length;
+      const q3 = filteredData.filter(d => d.quartile === 'Q3').length;
+      const q4 = filteredData.filter(d => d.quartile === 'Q4').length;
+      const nonIdx = filteredData.filter(d => d.quartile === 'Non-Indexed').length;
+
+      const pQ1 = total > 0 ? (q1 / total) * 100 : 0;
+      const pQ2 = total > 0 ? (q2 / total) * 100 : 0;
+      const pQ3 = total > 0 ? (q3 / total) * 100 : 0;
+      const pQ4 = total > 0 ? (q4 / total) * 100 : 0;
+      const pNon = total > 0 ? (nonIdx / total) * 100 : 0;
+
+      const barContainer = document.getElementById('quartile-segmented-bar');
+      barContainer.innerHTML = `
+        <div style="width: ${pQ1}%" class="bg-blue-600 transition-all duration-300" title="Q1: ${q1}"></div>
+        <div style="width: ${pQ2}%" class="bg-emerald-500 transition-all duration-300" title="Q2: ${q2}"></div>
+        <div style="width: ${pQ3}%" class="bg-amber-500 transition-all duration-300" title="Q3: ${q3}"></div>
+        <div style="width: ${pQ4}%" class="bg-rose-500 transition-all duration-300" title="Q4: ${q4}"></div>
+        <div style="width: ${pNon}%" class="bg-slate-400 transition-all duration-300" title="Non-Indexed: ${nonIdx}"></div>
+      `;
+
+      const topCount = q1 + q2;
+      const topPercent = total > 0 ? ((topCount / total) * 100).toFixed(0) : 0;
+      document.getElementById('quartile-top-stats').innerText = `${topCount} (${topPercent}%)`;
+    }
+
+    // --- RENDER JADUAL GERAN PERLU PERHATIAN KHUSUS ---
+    function renderWarningTable() {
+      const warningList = filteredData.filter(d => d.tahunTamat === '2026' || d.prStatus === 'NOT COMPLETED').slice(0, 5);
+      const tbody = document.getElementById('warning-table-body');
+      document.getElementById('warning-cases-badge').innerText = `${warningList.length} Kes Perhatian`;
+
+      if (warningList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400 italic">Tiada geran yang memerlukan perhatian khusus dalam penapisan semasa.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = warningList.map((item, idx) => `
+        <tr class="hover:bg-slate-50/80 transition">
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-900">${item.no}</div>
+            <div class="text-[11px] text-slate-500 truncate max-w-xs sm:max-w-md">${item.tajuk}</div>
+          </td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-sky-50 text-sky-700 border border-sky-200">${item.grantType}</span>
+          </td>
+          <td class="py-3 px-3 text-slate-600 font-medium">${item.penyelidik}</td>
+          <td class="py-3 px-3 font-semibold text-amber-700 whitespace-nowrap">${item.bulanTamat} ${item.tahunTamat}</td>
+          <td class="py-3 px-3 whitespace-nowrap">
+            <div class="flex items-center gap-1.5">
+              <span class="font-bold text-sky-700 w-7">${item.milestone}%</span>
+              <div class="w-12 bg-slate-100 rounded-full h-1.5">
+                <div class="bg-sky-500 h-1.5 rounded-full" style="width: ${item.milestone}%"></div>
+              </div>
+            </div>
+          </td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.prStatus === 'COMPLETED' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-600 border border-slate-200'}">
+              ${item.prStatus}
+            </span>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="viewGrantDetail(${item.no})" class="px-3 py-1 bg-slate-100 hover:bg-sky-50 text-slate-700 hover:text-sky-700 rounded border border-slate-200 text-[11px] font-medium transition shadow-2xs">
+              Butiran
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // --- RENDER JADUAL NEW VERDICT ---
+    function renderVerdictTable() {
+      const tbody = document.getElementById('verdict-table-body');
+      const uniqueTypes = [...new Set(filteredData.map(d => d.grantType))];
+
+      if (uniqueTypes.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400 italic">Tiada data untuk paparan New Verdict.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = uniqueTypes.map(type => {
+        const typeGrants = filteredData.filter(d => d.grantType === type);
+        const count = typeGrants.length;
+        const totalFund = typeGrants.reduce((acc, c) => acc + c.peruntukan, 0);
+        const avgMilestone = (typeGrants.reduce((acc, c) => acc + c.milestone, 0) / count).toFixed(0);
+        const q1q2Count = typeGrants.filter(d => d.quartile === 'Q1' || d.quartile === 'Q2').length;
+        const prDoneCount = typeGrants.filter(d => d.prStatus === 'COMPLETED').length;
+
+        let recommendation = `<span class="text-emerald-600 font-medium">Dalam Pemantauan Normal</span>`;
+        if (avgMilestone < 25) {
+          recommendation = `<span class="text-rose-600 font-bold">Intervensi Audit Prestasi</span>`;
+        } else if (prDoneCount < (count * 0.5)) {
+          recommendation = `<span class="text-amber-600 font-medium">Peringatan PR Jun 2026</span>`;
+        }
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-4 font-bold text-slate-900">${type}</td>
+            <td class="py-3 px-3 text-center font-semibold">${count}</td>
+            <td class="py-3 px-3 text-right font-medium text-emerald-700">RM ${totalFund.toLocaleString()}</td>
+            <td class="py-3 px-3 text-center font-bold text-sky-700">${avgMilestone}%</td>
+            <td class="py-3 px-3 text-center">${q1q2Count} geran</td>
+            <td class="py-3 px-3 text-center font-medium">${prDoneCount} / ${count}</td>
+            <td class="py-3 px-3 text-center text-[11px]">${recommendation}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // --- RENDER MASTERLIST & PAGINATION ---
+    let searchResults = [];
+    function searchMasterlist() {
+      const query = document.getElementById('masterlist-search').value.toLowerCase();
+      searchResults = filteredData.filter(d => 
+        d.kod.toLowerCase().includes(query) ||
+        d.tajuk.toLowerCase().includes(query) ||
+        d.penyelidik.toLowerCase().includes(query) ||
+        d.grantType.toLowerCase().includes(query)
+      );
+      currentPage = 1;
+      renderMasterlist();
+    }
+
+    function renderMasterlist() {
+      const dataToRender = document.getElementById('masterlist-search').value ? searchResults : filteredData;
+      const totalItems = dataToRender.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+
+      document.getElementById('masterlist-count').innerText = totalItems.toLocaleString();
+      document.getElementById('pagination-info').innerText = `Halaman ${currentPage} dari ${totalPages}`;
+      document.getElementById('btn-prev-page').disabled = currentPage <= 1;
+      document.getElementById('btn-next-page').disabled = currentPage >= totalPages;
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const paginatedItems = dataToRender.slice(startIndex, startIndex + itemsPerPage);
+      const tbody = document.getElementById('masterlist-table-body');
+
+      if (paginatedItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" class="py-8 text-center text-slate-400 italic">Tiada rekod dijumpai.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = paginatedItems.map(item => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="py-3 px-3 font-semibold text-slate-500">${item.no}</td>
+          <td class="py-3 px-4">
+            <span class="font-bold text-slate-800 text-[11px]">${item.kod}</span>
+            <p class="text-[11px] text-slate-600 line-clamp-1 max-w-sm">${item.tajuk}</p>
+          </td>
+          <td class="py-3 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-200">${item.grantType}</span></td>
+          <td class="py-3 px-3 text-slate-600">${item.penyelidik}</td>
+          <td class="py-3 px-3 text-right font-medium text-emerald-700">RM ${item.peruntukan.toLocaleString()}</td>
+          <td class="py-3 px-3 text-center whitespace-nowrap font-medium text-slate-600">${item.bulanTamat}/${item.tahunTamat}</td>
+          <td class="py-3 px-3 text-center font-bold text-sky-700">${item.milestone}%</td>
+          <td class="py-3 px-3 text-center">
+            <span class="px-2 py-0.5 rounded text-[10px] font-medium ${item.quartile === 'Q1' || item.quartile === 'Q2' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold' : 'bg-slate-100 text-slate-600'}">
+              ${item.quartile}
+            </span>
+          </td>
+          <td class="py-3 px-3 text-center">
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${item.prStatus === 'COMPLETED' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-600 border border-slate-200'}">
+              ${item.prStatus}
+            </span>
+          </td>
+          <td class="py-3 px-3 text-center">
+            <button onclick="viewGrantDetail(${item.no})" class="text-sky-600 hover:text-sky-800 font-semibold text-[11px]">
+              Lihat
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderMasterlist();
+      }
+    }
+
+    function nextPage() {
+      const dataToRender = document.getElementById('masterlist-search').value ? searchResults : filteredData;
+      const totalPages = Math.ceil(dataToRender.length / itemsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderMasterlist();
+      }
+    }
+
+    // --- INISIALISASI & KEMAS KINI CARTA ---
+    function initCharts() {
+      // 1. Carta Jenis Geran
+      const ctx1 = document.getElementById('chartGrantType').getContext('2d');
+      chartGrantTypeInst = new Chart(ctx1, {
+        type: 'doughnut',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: ['#0284c7', '#0d9488', '#eab308', '#f43f5e', '#8b5cf6', '#64748b'] }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } } }
+      });
+
+      // 2. Carta Milestone
+      const ctx2 = document.getElementById('chartMilestone').getContext('2d');
+      chartMilestoneInst = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: ['0-25% (Kritikal)', '26-50% (Sederhana)', '51-75% (Memuaskan)', '76-99% (Hampir Siap)', '100% (Selesai)'],
+          datasets: [{ label: 'Bilangan Geran', data: [0, 0, 0, 0, 0], backgroundColor: ['#f43f5e', '#f59e0b', '#38bdf8', '#0284c7', '#10b981'] }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      // 3. Carta Pecahan Dana
+      const ctx3 = document.getElementById('chartFunding').getContext('2d');
+      chartFundingInst = new Chart(ctx3, {
+        type: 'bar',
+        data: { labels: [], datasets: [{ label: 'Jumlah Peruntukan (RM)', data: [], backgroundColor: '#059669' }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      // 4. Carta Status PR
+      const ctx4 = document.getElementById('chartPRStatus').getContext('2d');
+      chartPRStatusInst = new Chart(ctx4, {
+        type: 'pie',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: ['#10b981', '#64748b', '#f59e0b', '#0284c7'] }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } } }
+      });
+
+      updateCharts();
+    }
+
+    function updateCharts() {
+      if (!chartGrantTypeInst) return;
+
+      // Data Jenis Geran
+      const typeCounts = {};
+      const typeFunds = {};
+      filteredData.forEach(d => {
+        typeCounts[d.grantType] = (typeCounts[d.grantType] || 0) + 1;
+        typeFunds[d.grantType] = (typeFunds[d.grantType] || 0) + d.peruntukan;
+      });
+
+      chartGrantTypeInst.data.labels = Object.keys(typeCounts);
+      chartGrantTypeInst.data.datasets[0].data = Object.values(typeCounts);
+      chartGrantTypeInst.update();
+
+      // Data Julat Milestone
+      const m0_25 = filteredData.filter(d => d.milestone <= 25).length;
+      const m26_50 = filteredData.filter(d => d.milestone >= 26 && d.milestone <= 50).length;
+      const m51_75 = filteredData.filter(d => d.milestone >= 51 && d.milestone <= 75).length;
+      const m76_99 = filteredData.filter(d => d.milestone >= 76 && d.milestone <= 99).length;
+      const m100 = filteredData.filter(d => d.milestone === 100).length;
+
+      chartMilestoneInst.data.datasets[0].data = [m0_25, m26_50, m51_75, m76_99, m100];
+      chartMilestoneInst.update();
+
+      // Data Dana
+      chartFundingInst.data.labels = Object.keys(typeFunds);
+      chartFundingInst.data.datasets[0].data = Object.values(typeFunds);
+      chartFundingInst.update();
+
+      // Data PR
+      const prCounts = {};
+      filteredData.forEach(d => {
+        prCounts[d.prStatus] = (prCounts[d.prStatus] || 0) + 1;
+      });
+      chartPRStatusInst.data.labels = Object.keys(prCounts);
+      chartPRStatusInst.data.datasets[0].data = Object.values(prCounts);
+      chartPRStatusInst.update();
+    }
+
+    // --- BUTIRAN GERAN (MODAL) ---
+    function viewGrantDetail(grantNo) {
+      const grant = grantsData.find(g => g.no === grantNo);
+      if (!grant) return;
+
+      const body = document.getElementById('detail-modal-body');
+      body.innerHTML = `
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider">Kod Geran: ${grant.kod}</span>
+          <h3 class="text-sm font-bold text-slate-900 mt-0.5">${grant.tajuk}</h3>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-3 rounded-lg border border-slate-100 bg-white">
+            <span class="text-slate-400 block text-[10px]">Ketua Penyelidik</span>
+            <span class="font-bold text-slate-800 text-xs">${grant.penyelidik}</span>
+          </div>
+          <div class="p-3 rounded-lg border border-slate-100 bg-white">
+            <span class="text-slate-400 block text-[10px]">Jenis Geran</span>
+            <span class="font-bold text-sky-700 text-xs">${grant.grantType}</span>
+          </div>
+          <div class="p-3 rounded-lg border border-slate-100 bg-white">
+            <span class="text-slate-400 block text-[10px]">Peruntukan Diterima</span>
+            <span class="font-bold text-emerald-700 text-xs">RM ${grant.peruntukan.toLocaleString()}</span>
+          </div>
+          <div class="p-3 rounded-lg border border-slate-100 bg-white">
+            <span class="text-slate-400 block text-[10px]">Tarikh Sasaran Tamat</span>
+            <span class="font-bold text-amber-700 text-xs">${grant.bulanTamat} / ${grant.tahunTamat}</span>
+          </div>
+          <div class="p-3 rounded-lg border border-slate-100 bg-white">
+            <span class="text-slate-400 block text-[10px]">Pencapaian Semasa Milestone</span>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="font-bold text-sky-700 text-xs">${grant.milestone}%</span>
+              <div class="flex-1 bg-slate-100 rounded-full h-2">
+                <div class="bg-sky-500 h-2 rounded-full" style="width: ${grant.milestone}%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="p-3 rounded-lg border border-slate-100 bg-white">
+            <span class="text-slate-400 block text-[10px]">Status Laporan Kemajuan (PR)</span>
+            <span class="font-bold text-slate-800 text-xs mt-1 block">${grant.prStatus}</span>
+          </div>
+        </div>
+
+        <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 text-amber-900 text-[11px]">
+          <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i>
+          <strong>Nota Pemantauan:</strong> Projek ini dijadualkan tamat dalam kitaran semasa tahun ${grant.tahunTamat}. Sila pastikan pelaporan kewangan dan penerbitan ${grant.quartile} dilengkapkan mengikut garis masa.
+        </div>
+      `;
+
+      document.getElementById('modal-detail').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('modal-detail').classList.add('hidden');
+    }
+
+    // --- PENGENDALIAN GOOGLE SHEETS & CSV ---
+    function openConfigModal() {
+      document.getElementById('input-sheet-url').value = googleSheetUrl;
+      document.getElementById('modal-config').classList.remove('hidden');
+    }
+
+    function closeConfigModal() {
+      document.getElementById('modal-config').classList.add('hidden');
+    }
+
+    function useMockData() {
+      grantsData = generateInitialMockData();
+      googleSheetUrl = "";
+      document.getElementById('sheet-status-text').innerText = "Google Sheet Live";
+      populateDropdownFilters();
+      applyFilters();
+      closeConfigModal();
+    }
+
+    function saveAndFetchSheet() {
+      const url = document.getElementById('input-sheet-url').value.trim();
+      if (!url) {
+        useMockData();
+        return;
+      }
+
+      googleSheetUrl = url;
+      fetchGoogleSheetData(url);
+      closeConfigModal();
+    }
+
+    function reloadData() {
+      const icon = document.getElementById('refresh-icon');
+      icon.classList.add('fa-spin');
+
+      if (googleSheetUrl) {
+        fetchGoogleSheetData(googleSheetUrl);
+      } else {
+        setTimeout(() => {
+          grantsData = generateInitialMockData();
+          applyFilters();
+          icon.classList.remove('fa-spin');
+        }, 600);
+      }
+    }
+
+    function fetchGoogleSheetData(url) {
+      const icon = document.getElementById('refresh-icon');
+      icon.classList.add('fa-spin');
+      
+      Papa.parse(url, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          icon.classList.remove('fa-spin');
+          if (results.data && results.data.length > 0) {
+            grantsData = results.data.map((row, index) => ({
+              no: parseInt(row.No || row.no || (index + 1)),
+              kod: row.Kod || row.kod || `G-${index + 1}`,
+              tajuk: row.Tajuk || row.tajuk || row.Title || "Geran Penyelidikan",
+              grantType: row.Grant_Type || row.grantType || row.Type || "CCIN",
+              penyelidik: row.Ketua_Penyelidik || row.penyelidik || row.Researcher || "Penyelidik",
+              peruntukan: parseFloat(row.Peruntukan || row.peruntukan || row.Fund || 50000),
+              bulanTamat: String(row.Bulan_Tamat || row.bulanTamat || "06").padStart(2, '0'),
+              tahunTamat: String(row.Tahun_Tamat || row.tahunTamat || "2026"),
+              milestone: parseInt(row.Milestone || row.milestone || 0),
+              quartile: row.Quartile || row.quartile || "Non-Indexed",
+              prStatus: row.PR_Status || row.prStatus || "NOT COMPLETED"
+            }));
+
+            document.getElementById('sheet-status-text').innerText = "Google Sheet Disambung";
+            populateDropdownFilters();
+            applyFilters();
+          } else {
+            alert("Amaran: Format data Google Sheet tidak mengandungi rekod yang sah. Data contoh dimuatkan semula.");
+            useMockData();
+          }
+        },
+        error: function(err) {
+          icon.classList.remove('fa-spin');
+          alert("Gagal membaca Google Sheet. Pastikan pautan diterbitkan (Publish to Web) sebagai CSV.");
+          useMockData();
+        }
+      });
+    }
+
+    // --- EKSPORT DATA CSV ---
+    function exportCSV() {
+      const csvData = Papa.unparse(filteredData.map(d => ({
+        "No": d.no,
+        "Kod": d.kod,
+        "Tajuk": d.tajuk,
+        "Grant Type": d.grantType,
+        "Ketua Penyelidik": d.penyelidik,
+        "Peruntukan (RM)": d.peruntukan,
+        "Bulan Tamat": d.bulanTamat,
+        "Tahun Tamat": d.tahunTamat,
+        "% Milestone": d.milestone,
+        "Quartile": d.quartile,
+        "PR Status": d.prStatus
+      })));
+
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Laporan_Geran_Penyelidikan_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
