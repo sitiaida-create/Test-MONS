@@ -598,7 +598,7 @@
     let filteredData = [];
     let currentPage = 1;
     const itemsPerPage = 15;
-    let googleSheetUrl = "";
+    let googleSheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSqpPENTFIzT-l9tEdvytJSgI4TXReZVYs3KGsL8xuzT9NA8LPWFoGnVrf_uIeEAw0F87U64VcTiCnI/pub?gid=892877893&single=true&output=csv";
 
     // Pembolehubah Carta Chart.js
     let chartGrantTypeInst = null;
@@ -660,11 +660,16 @@
 
     // --- INISIALISASI PAPAN PEMUKA ---
     window.addEventListener('DOMContentLoaded', () => {
-      grantsData = generateInitialMockData();
-      populateDropdownFilters();
-      applyFilters();
-      initCharts();
-    });
+     initCharts();
+
+     if (googleSheetUrl) {
+    fetchGoogleSheetData(googleSheetUrl);
+  } else {
+    grantsData = generateInitialMockData();
+    populateDropdownFilters();
+    applyFilters();
+     }
+   });
 
     // --- PENGURUSAN TAB ---
     function switchTab(tabId) {
