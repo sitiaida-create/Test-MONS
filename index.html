@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Dashboard Geran Penyelidikan - MONS</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
 <style>
@@ -17,15 +20,18 @@ body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
     "Helvetica Neue",Arial,sans-serif
 }
+
 .tab-active{
     color:#0284c7;
     border-bottom:2px solid #0284c7;
     font-weight:600
 }
+
 .scrollbar-thin::-webkit-scrollbar{
     height:6px;
     width:6px
 }
+
 .scrollbar-thin::-webkit-scrollbar-thumb{
     background:#cbd5e1;
     border-radius:4px
@@ -35,8 +41,12 @@ body{
 
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-<!-- HEADER -->
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
 <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
 
 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -48,6 +58,7 @@ body{
 </div>
 
 <div>
+
 <div class="flex items-center gap-2 flex-wrap">
 
 <h1 class="text-lg sm:text-xl font-bold text-slate-900">
@@ -79,8 +90,10 @@ Sistem Pemantauan Prestasi & Analisis Statistik
 
 <button onclick="openConfigModal()"
 class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-300">
+
 <i class="fa-solid fa-table"></i>
 Punca Google Sheet
+
 </button>
 
 <button onclick="reloadData()"
@@ -90,6 +103,7 @@ class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-sla
 class="fa-solid fa-arrows-rotate text-sky-600"></i>
 
 Muat Semula
+
 </button>
 
 <button onclick="exportCSV()"
@@ -101,12 +115,16 @@ Eksport CSV
 </button>
 
 </div>
+
 </div>
 
+
 <!-- NAVIGATION -->
+
 <nav class="flex space-x-6 mt-4 border-t border-slate-100 pt-1 text-sm font-medium overflow-x-auto scrollbar-thin">
 
-<button onclick="switchTab('ringkasan')" id="tab-ringkasan"
+<button onclick="switchTab('ringkasan')"
+id="tab-ringkasan"
 class="tab-active py-2.5 px-1 inline-flex items-center gap-2 border-b-2 whitespace-nowrap">
 
 <i class="fa-solid fa-chart-line"></i>
@@ -114,7 +132,9 @@ Ringkasan Eksekutif
 
 </button>
 
-<button onclick="switchTab('visual')" id="tab-visual"
+
+<button onclick="switchTab('visual')"
+id="tab-visual"
 class="text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap">
 
 <i class="fa-solid fa-chart-simple"></i>
@@ -122,7 +142,9 @@ Dashboard Visual & Analisis
 
 </button>
 
-<button onclick="switchTab('verdict')" id="tab-verdict"
+
+<button onclick="switchTab('verdict')"
+id="tab-verdict"
 class="text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap">
 
 <i class="fa-solid fa-scale-balanced"></i>
@@ -130,7 +152,9 @@ Rekod Statistik New Verdict
 
 </button>
 
-<button onclick="switchTab('masterlist')" id="tab-masterlist"
+
+<button onclick="switchTab('masterlist')"
+id="tab-masterlist"
 class="text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap">
 
 <i class="fa-solid fa-list-check"></i>
@@ -144,10 +168,17 @@ Masterlist Direktori
 </header>
 
 
-<!-- MAIN -->
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
 
-<!-- FILTER -->
+
+<!-- =========================================================
+     FILTER
+========================================================= -->
+
 <section class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
 
 <div class="flex items-center justify-between mb-3">
@@ -155,6 +186,7 @@ Masterlist Direktori
 <div class="flex items-center gap-2 text-sky-800 font-semibold text-xs uppercase tracking-wider">
 
 <i class="fa-solid fa-filter text-sky-600"></i>
+
 Penapis Data Interaktif
 
 </div>
@@ -172,8 +204,11 @@ Sifar Penapis
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-8 gap-3 text-xs">
 
+
 <!-- SOURCE -->
+
 <div>
+
 <label class="block text-slate-500 font-medium mb-1">
 Sumber
 </label>
@@ -182,16 +217,27 @@ Sumber
 onchange="applyFilters()"
 class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
 
-<option value="all">Aktif + Tamat</option>
-<option value="Geran Aktif">Geran Aktif</option>
-<option value="Geran Tamat">Geran Tamat</option>
+<option value="all">
+Aktif + Tamat
+</option>
+
+<option value="Geran Aktif">
+Geran Aktif
+</option>
+
+<option value="Geran Tamat">
+Geran Tamat
+</option>
 
 </select>
+
 </div>
 
 
 <!-- GRANT TYPE -->
+
 <div>
+
 <label class="block text-slate-500 font-medium mb-1">
 Grant Type
 </label>
@@ -205,11 +251,14 @@ Semua Grant Type
 </option>
 
 </select>
+
 </div>
 
 
 <!-- GRANT CATEGORY -->
+
 <div>
+
 <label class="block text-slate-500 font-medium mb-1">
 Grant Category
 </label>
@@ -223,11 +272,14 @@ Semua Grant Category
 </option>
 
 </select>
+
 </div>
 
 
-<!-- MONTH -->
+<!-- BULAN -->
+
 <div>
+
 <label class="block text-slate-500 font-medium mb-1">
 Bulan Tamat
 </label>
@@ -236,7 +288,10 @@ Bulan Tamat
 onchange="applyFilters()"
 class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
 
-<option value="all">Semua Bulan</option>
+<option value="all">
+Semua Bulan
+</option>
+
 <option value="01">01 - Januari</option>
 <option value="02">02 - Februari</option>
 <option value="03">03 - Mac</option>
@@ -251,11 +306,14 @@ class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
 <option value="12">12 - Disember</option>
 
 </select>
+
 </div>
 
 
-<!-- YEAR -->
+<!-- TAHUN -->
+
 <div>
+
 <label class="block text-slate-500 font-medium mb-1">
 Tahun Tamat
 </label>
@@ -269,11 +327,14 @@ Semua Tahun
 </option>
 
 </select>
+
 </div>
 
 
 <!-- QUARTILE -->
+
 <div>
+
 <label class="block text-slate-500 font-medium mb-1">
 Quartile
 </label>
@@ -286,19 +347,22 @@ class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
 Semua Quartile
 </option>
 
-<option>Q1</option>
-<option>Q2</option>
-<option>Q3</option>
-<option>Q4</option>
-<option>Q5 (extension)</option>
-<option>Grant Not Monitored</option>
+<option value="Q1">Q1</option>
+<option value="Q2">Q2</option>
+<option value="Q3">Q3</option>
+<option value="Q4">Q4</option>
+<option value="Q5 (Extension)">Q5 (Extension)</option>
+<option value="Grant Not Monitored">Grant Not Monitored</option>
 
 </select>
+
 </div>
 
 
 <!-- MILESTONE -->
+
 <div>
+
 <label class="block text-slate-500 font-medium mb-1">
 % Milestone
 </label>
@@ -311,18 +375,35 @@ class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
 Semua Pencapaian
 </option>
 
-<option value="0-25">0% - 25%</option>
-<option value="26-50">26% - 50%</option>
-<option value="51-75">51% - 75%</option>
-<option value="76-99">76% - 99%</option>
-<option value="100">100%</option>
+<option value="0-25">
+0% - 25%
+</option>
+
+<option value="26-50">
+26% - 50%
+</option>
+
+<option value="51-75">
+51% - 75%
+</option>
+
+<option value="76-99">
+76% - 99%
+</option>
+
+<option value="100">
+100%
+</option>
 
 </select>
+
 </div>
 
 
 <!-- PR -->
+
 <div>
+
 <label class="block text-slate-500 font-medium mb-1">
 PR Status
 </label>
@@ -335,23 +416,40 @@ class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
 Semua Status PR
 </option>
 
-<option>COMPLETED</option>
-<option>NOT COMPLETED</option>
-<option>EXTENSION</option>
+<option>
+COMPLETED
+</option>
+
+<option>
+NOT COMPLETED
+</option>
+
+<option>
+EXTENSION
+</option>
 
 </select>
+
 </div>
 
 </div>
 </section>
 
 
-<!-- RINGKASAN -->
+<!-- =========================================================
+     RINGKASAN
+========================================================= -->
+
 <div id="view-ringkasan" class="space-y-6">
+
+
+<!-- KPI -->
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
+
 <!-- TOTAL -->
+
 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
 
 <p class="text-xs font-semibold text-slate-500">
@@ -371,6 +469,7 @@ Aktif + Tamat
 
 
 <!-- ACTIVE -->
+
 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
 
 <p class="text-xs font-semibold text-slate-500">
@@ -390,6 +489,7 @@ Daripada Geran Aktif
 
 
 <!-- ENDED -->
+
 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
 
 <p class="text-xs font-semibold text-slate-500">
@@ -408,88 +508,102 @@ Daripada Geran Tamat
 </div>
 
 
-<!-- MILESTONE -->
+<!-- MONITORED QUARTILE -->
+
 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
 
 <p class="text-xs font-semibold text-slate-500">
-Purata Milestone
+Total Grant by Monitored Quartile
 </p>
 
-<h3 id="kpi-milestone"
+<h3 id="kpi-quartile-monitored"
 class="text-2xl font-black text-sky-700 mt-1">
-0%
+0
 </h3>
 
-<div class="w-full bg-slate-100 rounded-full h-2 mt-2">
-
-<div id="kpi-milestone-bar"
-class="bg-sky-500 h-2 rounded-full"
-style="width:0%">
-</div>
+<p class="text-[11px] text-slate-500 mt-1">
+Q1 – Q5 (Extension)
+</p>
 
 </div>
 
 </div>
 
-</div>
 
+<!-- SUMMARY + QUARTILE -->
 
-<!-- SUMMARY -->
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+
+<!-- STRATEGIC SUMMARY -->
 
 <div class="lg:col-span-8 bg-white rounded-xl p-5 shadow-sm border border-slate-200">
 
 <div class="flex items-center gap-2 font-bold text-sm mb-4">
 
 <i class="fa-solid fa-wand-magic-sparkles text-sky-600"></i>
+
 Ringkasan & Analisis Strategik
 
 </div>
 
+
 <div class="space-y-3 text-xs">
+
 
 <div class="p-3.5 bg-sky-50 rounded-xl border border-sky-100">
 
 <b>Milestone:</b>
+
 <span id="summary-milestone"></span>
 
 </div>
 
+
 <div class="p-3.5 bg-amber-50 rounded-xl border border-amber-100">
 
 <b>Penamatan:</b>
+
 <span id="summary-end"></span>
 
 </div>
 
+
 <div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-100">
 
 <b>Quartile:</b>
+
 <span id="summary-quartile"></span>
 
 </div>
 
 </div>
+
 </div>
 
 
 <!-- QUARTILE -->
+
 <div class="lg:col-span-4 bg-white rounded-xl p-5 shadow-sm border border-slate-200">
 
 <div class="font-bold text-sm mb-4">
 
 <i class="fa-solid fa-medal text-amber-500"></i>
+
 Taburan Quartile
 
 </div>
+
 
 <div id="quartile-bar"
 class="w-full h-4 bg-slate-100 rounded-full flex overflow-hidden">
 </div>
 
+
 <div class="grid grid-cols-2 gap-2 text-[11px] mt-4"
 id="quartile-legend">
 </div>
+
 
 <div class="pt-4 mt-4 border-t text-xs flex justify-between">
 
@@ -507,6 +621,7 @@ id="quartile-legend">
 
 
 <!-- WARNING -->
+
 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
 
 <div class="p-4 border-b flex justify-between">
@@ -522,7 +637,9 @@ Geran Perlu Perhatian
 </b>
 
 <p class="text-xs text-slate-500 mt-1">
+
 Geran tamat 2026 atau PR belum selesai
+
 </p>
 
 </div>
@@ -565,16 +682,20 @@ class="divide-y">
 </table>
 
 </div>
-</div>
 
 </div>
 
+</div>
 
-<!-- VISUAL -->
-<div id="view-visual"
-class="hidden space-y-6">
+
+<!-- =========================================================
+     VISUAL
+========================================================= -->
+
+<div id="view-visual" class="hidden space-y-6">
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
 
 <div class="bg-white rounded-xl p-5 shadow-sm border">
 
@@ -583,7 +704,9 @@ Bilangan Geran Mengikut Sumber
 </h3>
 
 <div class="h-64">
+
 <canvas id="chartSource"></canvas>
+
 </div>
 
 </div>
@@ -596,7 +719,9 @@ Bilangan Geran Mengikut Grant Type
 </h3>
 
 <div class="h-64">
+
 <canvas id="chartType"></canvas>
+
 </div>
 
 </div>
@@ -605,11 +730,13 @@ Bilangan Geran Mengikut Grant Type
 <div class="bg-white rounded-xl p-5 shadow-sm border">
 
 <h3 class="text-xs font-bold mb-4">
-Taburan Quartile
+Taburan % Milestone
 </h3>
 
 <div class="h-64">
-<canvas id="chartQuartile"></canvas>
+
+<canvas id="chartMilestone"></canvas>
+
 </div>
 
 </div>
@@ -622,18 +749,38 @@ Status PR
 </h3>
 
 <div class="h-64">
+
 <canvas id="chartPR"></canvas>
+
+</div>
+
+</div>
+
+
+<div class="bg-white rounded-xl p-5 shadow-sm border lg:col-span-2">
+
+<h3 class="text-xs font-bold mb-4">
+Bilangan Geran Mengikut Quartile
+</h3>
+
+<div class="h-72">
+
+<canvas id="chartQuartile"></canvas>
+
+</div>
+
 </div>
 
 </div>
 
 </div>
-</div>
 
 
-<!-- VERDICT -->
-<div id="view-verdict"
-class="hidden space-y-6">
+<!-- =========================================================
+     VERDICT
+========================================================= -->
+
+<div id="view-verdict" class="hidden space-y-6">
 
 <div class="bg-white rounded-xl shadow-sm border p-5">
 
@@ -649,6 +796,7 @@ Matriks Analisis & New Verdict
 Ringkasan mengikut Grant Type.
 </p>
 
+
 <div class="overflow-x-auto">
 
 <table class="w-full text-xs">
@@ -657,12 +805,29 @@ Ringkasan mengikut Grant Type.
 
 <tr>
 
-<th class="p-3 text-left">Grant Type</th>
-<th class="p-3">Jumlah</th>
-<th class="p-3">Purata Milestone</th>
-<th class="p-3">Q1/Q2</th>
-<th class="p-3">PR Selesai</th>
-<th class="p-3">Tindakan</th>
+<th class="p-3 text-left">
+Grant Type
+</th>
+
+<th class="p-3">
+Jumlah
+</th>
+
+<th class="p-3">
+Purata Milestone
+</th>
+
+<th class="p-3">
+Q1/Q2
+</th>
+
+<th class="p-3">
+PR Selesai
+</th>
+
+<th class="p-3">
+Tindakan
+</th>
 
 </tr>
 
@@ -677,26 +842,36 @@ class="divide-y">
 </div>
 
 </div>
+
 </div>
 
 
-<!-- MASTERLIST -->
+<!-- =========================================================
+     MASTERLIST
+========================================================= -->
+
 <div id="view-masterlist"
 class="hidden space-y-4">
 
 <div class="bg-white rounded-xl shadow-sm border p-4">
 
+
 <div class="flex flex-col sm:flex-row justify-between gap-3 mb-4">
 
 <input id="master-search"
 oninput="renderMasterlist()"
-placeholder="Cari Cost Centre, tajuk, staff name, grant type..."
+placeholder="Cari Cost Centre, tajuk, staff, grant type atau category..."
 class="w-full sm:w-96 p-2 bg-slate-50 border rounded-lg text-xs">
+
 
 <span class="text-xs text-slate-500">
 
 Memaparkan
-<b id="master-count">0</b>
+
+<b id="master-count">
+0
+</b>
+
 rekod
 
 </span>
@@ -712,18 +887,49 @@ rekod
 
 <tr>
 
-<th class="p-3">No</th>
-<th class="p-3 text-left">Sumber</th>
-<th class="p-3 text-left">Cost Centre No</th>
-<th class="p-3 text-left">Grant Title</th>
-<th class="p-3">Grant Type</th>
-<th class="p-3">Grant Category</th>
-<th class="p-3 text-left">Staff Name</th>
-<th class="p-3">Tamat</th>
-<th class="p-3">Milestone</th>
-<th class="p-3">Quartile</th>
-<th class="p-3">PR</th>
-<th class="p-3">Tindakan</th>
+<th class="p-3">
+No
+</th>
+
+<th class="p-3 text-left">
+Sumber
+</th>
+
+<th class="p-3 text-left">
+Cost Centre & Grant Title
+</th>
+
+<th class="p-3">
+Grant Type
+</th>
+
+<th class="p-3">
+Grant Category
+</th>
+
+<th class="p-3 text-left">
+Staff Name
+</th>
+
+<th class="p-3">
+Tamat
+</th>
+
+<th class="p-3">
+Milestone
+</th>
+
+<th class="p-3">
+Quartile
+</th>
+
+<th class="p-3">
+PR
+</th>
+
+<th class="p-3">
+Tindakan
+</th>
 
 </tr>
 
@@ -767,12 +973,16 @@ Seterusnya
 </div>
 
 </div>
+
 </div>
 
 </main>
 
 
-<!-- DETAIL MODAL -->
+<!-- =========================================================
+     DETAIL MODAL
+========================================================= -->
+
 <div id="detail-modal"
 class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center p-4">
 
@@ -780,10 +990,14 @@ class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center p-4
 
 <div class="p-4 border-b flex justify-between">
 
-<b>Butiran Geran</b>
+<b>
+Butiran Geran
+</b>
 
 <button onclick="closeDetail()">
+
 <i class="fa-solid fa-xmark"></i>
+
 </button>
 
 </div>
@@ -793,10 +1007,14 @@ class="p-5 text-xs space-y-4">
 </div>
 
 </div>
+
 </div>
 
 
-<!-- CONFIG MODAL -->
+<!-- =========================================================
+     CONFIG MODAL
+========================================================= -->
+
 <div id="config-modal"
 class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center p-4">
 
@@ -804,16 +1022,21 @@ class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center p-4
 
 <div class="p-4 border-b flex justify-between">
 
-<b>Punca Google Sheet</b>
+<b>
+Punca Google Sheet
+</b>
 
 <button onclick="closeConfigModal()">
+
 <i class="fa-solid fa-xmark"></i>
+
 </button>
 
 </div>
 
 
 <div class="p-5 text-xs space-y-4">
+
 
 <div>
 
@@ -842,7 +1065,10 @@ class="w-full mt-1 p-2 bg-slate-50 border rounded-lg">
 <p class="p-3 bg-sky-50 border border-sky-200 rounded-lg text-sky-800">
 
 Kedua-dua pautan mesti menggunakan
-<b>Publish to web → CSV</b>.
+
+<b>
+Publish to web → CSV
+</b>.
 
 Dashboard akan membaca kedua-dua tab dan menggabungkannya secara automatik.
 
@@ -870,13 +1096,15 @@ Simpan & Muat Semula
 </div>
 
 </div>
+
 </div>
 
 
+<!-- FOOTER -->
+
 <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400">
 
-Dashboard Geran Penyelidikan © 2026.
-Hak Cipta Terpelihara.
+Dashboard Geran Penyelidikan © 2026. Hak Cipta Terpelihara.
 
 </footer>
 
@@ -903,31 +1131,34 @@ localStorage.getItem('mons_ended_url') ||
 DEFAULT_ENDED_URL;
 
 
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
 let grantsData = [];
 let filteredData = [];
 let searchData = [];
 
 let currentPage = 1;
+
 const pageSize = 15;
 
 let charts = {};
 
 
 /* =========================================================
-   BASIC HELPERS
+   HELPER
 ========================================================= */
 
 const $ = id => document.getElementById(id);
 
+
 function clean(v){
+
     return String(v ?? '').trim();
+
 }
 
-function norm(v){
-    return clean(v)
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g,'');
-}
 
 function number(v){
 
@@ -939,13 +1170,15 @@ function number(v){
         .replace(/,/g,'')
         .replace(/\s/g,'');
 
-    if(!s) return 0;
+    if(!s)
+        return 0;
 
     let n = parseFloat(
         s.replace(/[^0-9.-]/g,'')
     );
 
     return Number.isFinite(n) ? n : 0;
+
 }
 
 
@@ -960,36 +1193,173 @@ function percent(v){
         return n * 100;
 
     return Math.max(0,Math.min(100,n));
+
 }
 
 
 /* =========================================================
-   GET COLUMN BY POSITION
-   D = 4
-   F = 6
-   K = 11
-   L = 12
-   P = 16
-   AK = 37
+   ESCAPE HTML
 ========================================================= */
 
-function getColumn(row,columnNumber){
+function esc(v){
 
-    const keys = Object.keys(row);
-
-    return clean(
-        row[keys[columnNumber - 1]]
+    return clean(v).replace(
+        /[&<>"']/g,
+        m => ({
+            '&':'&amp;',
+            '<':'&lt;',
+            '>':'&gt;',
+            '"':'&quot;',
+            "'":'&#39;'
+        }[m])
     );
+
+}
+
+
+function escAttr(v){
+
+    return esc(v).replace(/`/g,'');
+
 }
 
 
 /* =========================================================
-   DATE
+   DATE PARSING
+========================================================= */
+
+function parseDateValue(v){
+
+    const s = clean(v);
+
+    if(!s)
+        return null;
+
+
+    /*
+       Format:
+       dd/mm/yyyy
+       dd-mm-yyyy
+    */
+
+    let m = s.match(
+        /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/
+    );
+
+    if(m){
+
+        const day =
+            parseInt(m[1],10);
+
+        const month =
+            parseInt(m[2],10);
+
+        const year =
+            parseInt(m[3],10);
+
+        const d =
+            new Date(year,month-1,day);
+
+        if(
+            d.getFullYear() === year &&
+            d.getMonth() === month-1 &&
+            d.getDate() === day
+        ){
+
+            return d;
+
+        }
+
+    }
+
+
+    /*
+       Google Sheet ISO date
+    */
+
+    const iso =
+        new Date(s);
+
+    if(!isNaN(iso.getTime()))
+        return iso;
+
+
+    return null;
+
+}
+
+
+/* =========================================================
+   PROJECT END
+========================================================= */
+
+function getProjectEnd(row){
+
+    /*
+       Column K = index 10
+       Column L = index 11
+
+       LOGIC:
+       1. Jika L ada tarikh -> guna L
+       2. Jika L kosong -> guna K
+       3. Jika kedua-duanya kosong -> kosong
+    */
+
+    const k = clean(row[10]);
+    const l = clean(row[11]);
+
+    const dateL = parseDateValue(l);
+    const dateK = parseDateValue(k);
+
+
+    if(dateL)
+        return l;
+
+    if(dateK)
+        return k;
+
+
+    /*
+       Kalau nilai bukan date tetapi ada isi,
+       masih cuba gunakan L dahulu.
+    */
+
+    if(l)
+        return l;
+
+    if(k)
+        return k;
+
+
+    return '';
+
+}
+
+
+/* =========================================================
+   DATE PARTS
 ========================================================= */
 
 function dateParts(v){
 
-    let s = clean(v);
+    const d = parseDateValue(v);
+
+    if(d){
+
+        return {
+            month:String(
+                d.getMonth()+1
+            ).padStart(2,'0'),
+
+            year:String(
+                d.getFullYear()
+            )
+        };
+
+    }
+
+
+    const s = clean(v);
 
     if(!s)
         return {
@@ -997,9 +1367,11 @@ function dateParts(v){
             year:''
         };
 
-    let m = s.match(
-        /(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/
-    );
+
+    const m =
+        s.match(
+            /(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/
+        );
 
     if(m){
 
@@ -1010,109 +1382,101 @@ function dateParts(v){
 
     }
 
-    let y = s.match(/(19|20)\d{2}/);
-
-    if(y){
-
-        let mon =
-        s.match(/\b(0?[1-9]|1[0-2])\b/);
-
-        return {
-            month:mon ?
-                mon[1].padStart(2,'0') :
-                '',
-            year:y[0]
-        };
-
-    }
 
     return {
         month:'',
         year:''
     };
+
 }
 
 
 /* =========================================================
-   QUARTILE LOGIC - COLUMN P
+   QUARTILE
 ========================================================= */
 
 function parseQuartile(value){
 
-    const raw = clean(value);
-
-    if(!raw)
-        return 'Grant Not Monitored';
-
-
-    const upper = raw.toUpperCase();
-
-
-    /* Q1 */
-    if(
-        upper === 'Q1' ||
-        upper === '1' ||
-        upper === '1.0'
-    )
-        return 'Q1';
-
-
-    /* Q2 */
-    if(
-        upper === 'Q2' ||
-        upper === '2' ||
-        upper === '2.0'
-    )
-        return 'Q2';
-
-
-    /* Q3 */
-    if(
-        upper === 'Q3' ||
-        upper === '3' ||
-        upper === '3.0'
-    )
-        return 'Q3';
-
-
-    /* Q4 */
-    if(
-        upper === 'Q4' ||
-        upper === '4' ||
-        upper === '4.0'
-    )
-        return 'Q4';
+    const s = clean(value);
 
 
     /*
-       Q5 EXTENSION
-
-       Contoh:
-       5
-       6
-       7
-       8
-       9
-       Q5
-       Q5 (extension)
+       Blank / NULL / invalid
     */
 
-    const numeric =
-    parseFloat(
-        raw.replace(/[^0-9.-]/g,'')
-    );
+    if(
+        !s ||
+        s.toLowerCase() === 'null' ||
+        s.toLowerCase() === 'undefined' ||
+        s === '-' ||
+        s === '—'
+    ){
+
+        return 'Grant Not Monitored';
+
+    }
+
+
+    /*
+       Cuba baca nombor
+    */
+
+    const n =
+        parseFloat(
+            s.replace(/[^0-9.-]/g,'')
+        );
+
+
+    if(!Number.isNaN(n)){
+
+        if(n === 1)
+            return 'Q1';
+
+        if(n === 2)
+            return 'Q2';
+
+        if(n === 3)
+            return 'Q3';
+
+        if(n === 4)
+            return 'Q4';
+
+        if(n >= 5)
+            return 'Q5 (Extension)';
+
+    }
+
+
+    /*
+       Sokong jika data sudah ditulis:
+       Q1, Q2, Q3, Q4, Q5
+    */
+
+    const upper =
+        s.toUpperCase();
+
+
+    if(upper === 'Q1')
+        return 'Q1';
+
+    if(upper === 'Q2')
+        return 'Q2';
+
+    if(upper === 'Q3')
+        return 'Q3';
+
+    if(upper === 'Q4')
+        return 'Q4';
 
     if(
-        upper.includes('Q5') ||
-        (
-            Number.isFinite(numeric) &&
-            numeric >= 5
-        )
+        upper === 'Q5' ||
+        upper.includes('EXTENSION')
     )
-        return 'Q5 (extension)';
+        return 'Q5 (Extension)';
 
 
     return 'Grant Not Monitored';
+
 }
 
 
@@ -1123,76 +1487,124 @@ function parseQuartile(value){
 function parseRow(row,index,source){
 
     /*
-       COLUMN MAPPING
+       Column structure:
 
-       D  = Grant Type
-       E  = Grant Title
-       F  = Staff Name
-       K  = Project End
-       L  = New End Date (If Extended)
-       P  = Quartile
-       AK = Grant Category
+       C  = index 2  = Cost Centre No
+       D  = index 3  = Grant Type
+       E  = index 4  = Grant Title
+       F  = index 5  = Staff Name
+
+       K  = index 10 = Project End
+       L  = index 11 = New End Date (If Extended)
+
+       P  = index 15 = Quartile
+
+       AK = index 36 = Grant Category
     */
 
 
+    const costCentre =
+        clean(row[2]) ||
+        `CC-${index+1}`;
+
+
     const grantType =
-        getColumn(row,4) ||
+        clean(row[3]) ||
         'Tidak Dinyatakan';
 
 
     const grantTitle =
-        getColumn(row,5) ||
+        clean(row[4]) ||
         'Geran Penyelidikan';
 
 
     const staffName =
-        getColumn(row,6) ||
+        clean(row[5]) ||
+        'Tidak Dinyatakan';
+
+
+    const grantCategory =
+        clean(row[36]) ||
         'Tidak Dinyatakan';
 
 
     const projectEnd =
-        getColumn(row,11);
-
-
-    const newEndDate =
-        getColumn(row,12);
-
-
-    /*
-       TARIKH TAMAT
-
-       Jika K ada, L kosong -> K
-       Jika K kosong, L ada -> L
-       Jika K dan L ada -> L
-       Jika kedua-duanya kosong -> kosong
-
-       Jadi L mempunyai keutamaan.
-    */
-
-    const endDate =
-        newEndDate ||
-        projectEnd ||
-        '';
+        getProjectEnd(row);
 
 
     const dp =
-        dateParts(endDate);
+        dateParts(projectEnd);
 
 
     const quartile =
-        parseQuartile(
-            getColumn(row,16)
-        );
+        parseQuartile(row[15]);
 
 
-    const grantCategory =
-        getColumn(row,37) ||
-        'Tidak Dinyatakan';
+    /*
+       Milestone & PR masih cuba baca
+       berdasarkan header supaya tidak
+       merosakkan struktur sedia ada.
+    */
+
+    const headers =
+        Object.keys(row);
+
+
+    function findByHeader(candidates){
+
+        for(const candidate of candidates){
+
+            const c =
+                candidate.toLowerCase()
+                .replace(/[^a-z0-9]/g,'');
+
+            const key =
+                headers.find(h =>
+                    String(h)
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/g,'') === c
+                );
+
+            if(
+                key &&
+                clean(row[key])
+            )
+                return row[key];
+
+        }
+
+
+        for(const candidate of candidates){
+
+            const c =
+                candidate.toLowerCase()
+                .replace(/[^a-z0-9]/g,'');
+
+            const key =
+                headers.find(h =>
+                    String(h)
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/g,'')
+                    .includes(c)
+                );
+
+            if(
+                key &&
+                clean(row[key])
+            )
+                return row[key];
+
+        }
+
+
+        return '';
+
+    }
 
 
     const milestone =
         percent(
-            findVal(row,[
+            findByHeader([
                 'Milestone',
                 '% Milestone',
                 'Milestone %',
@@ -1205,7 +1617,7 @@ function parseRow(row,index,source){
 
     const prStatus =
         clean(
-            findVal(row,[
+            findByHeader([
                 'PR_Status',
                 'PR Status',
                 'Progress Report',
@@ -1218,192 +1630,158 @@ function parseRow(row,index,source){
 
     return {
 
-        no:
-            parseInt(
-                findVal(row,[
-                    'No',
-                    'Bil',
-                    'Bilangan',
-                    'No.'
-                ])
-            ) ||
-            index + 1,
+        no:index+1,
 
+        costCentre,
 
-        kod:
-            grantTitle !== 'Geran Penyelidikan'
-                ? grantTitle
-                : `G-${index+1}`,
+        kod:costCentre,
 
+        tajuk:grantTitle,
 
-        /*
-           Cost Centre No
-           Column C
-        */
+        grantType,
 
-        costCentre:
-            getColumn(row,3) ||
-            `G-${index+1}`,
+        grantCategory,
 
+        penyelidik:staffName,
 
-        tajuk:
-            grantTitle,
+        staffName,
 
-
-        grantType:
-            grantType,
-
-
-        grantCategory:
-            grantCategory,
-
-
-        penyelidik:
-            staffName,
-
-
-        projectEnd:
-            projectEnd,
-
-
-        newEndDate:
-            newEndDate,
-
-
-        endDate:
-            endDate,
-
+        projectEnd,
 
         bulanTamat:
             dp.month,
 
-
         tahunTamat:
             dp.year,
 
+        milestone,
 
-        milestone:
-            milestone,
+        quartile,
 
+        prStatus,
 
-        quartile:
-            quartile,
+        source
 
-
-        prStatus:
-            prStatus,
-
-
-        source:
-            source
     };
+
 }
 
 
 /* =========================================================
-   FIND VALUE
-========================================================= */
-
-function findVal(row,candidates){
-
-    const keys =
-        Object.keys(row);
-
-
-    for(
-        const c of candidates
-    ){
-
-        const n = norm(c);
-
-        const k =
-            keys.find(
-                x => norm(x) === n
-            );
-
-        if(
-            k &&
-            clean(row[k])
-        )
-            return row[k];
-
-    }
-
-
-    for(
-        const c of candidates
-    ){
-
-        const n = norm(c);
-
-        const k =
-            keys.find(
-                x => norm(x).includes(n)
-            );
-
-        if(
-            k &&
-            clean(row[k])
-        )
-            return row[k];
-
-    }
-
-
-    return '';
-}
-
-
-/* =========================================================
-   CSV
+   PARSE CSV
 ========================================================= */
 
 function parseCSV(url,source){
 
     return new Promise(
-        (resolve,reject)=>{
+        (resolve,reject) => {
 
             Papa.parse(
                 url,
                 {
 
                     download:true,
-                    header:true,
+
+                    header:false,
+
                     skipEmptyLines:true,
 
-                    complete:r=>{
+                    complete:r => {
 
-                        if(
-                            r.errors &&
-                            r.errors.length
-                        )
-                            console.warn(
-                                source,
-                                r.errors
-                            );
+                        try{
+
+                            const raw =
+                                r.data || [];
 
 
-                        const data =
-                            (r.data || [])
-                            .map(
-                                (x,i)=>
-                                parseRow(
-                                    x,
-                                    i,
-                                    source
+                            if(!raw.length){
+
+                                resolve([]);
+
+                                return;
+
+                            }
+
+
+                            /*
+                               Row pertama = header
+                            */
+
+                            const headers =
+                                raw[0];
+
+
+                            const records =
+                                raw
+                                .slice(1)
+                                .map(
+                                    row => {
+
+                                        const obj = {};
+
+                                        headers.forEach(
+                                            (header,i) => {
+
+                                                obj[
+                                                    header ||
+                                                    `Column_${i+1}`
+                                                ] =
+                                                    row[i] ?? '';
+
+                                            }
+                                        );
+
+
+                                        /*
+                                           Simpan juga
+                                           berdasarkan index
+                                           supaya Column C,
+                                           D, E, F, K, L, P,
+                                           AK boleh dibaca tepat.
+                                        */
+
+                                        row.forEach(
+                                            (value,i) => {
+
+                                                obj[i] =
+                                                    value ?? '';
+
+                                            }
+                                        );
+
+
+                                        return obj;
+
+                                    }
+                                );
+
+
+                            const parsed =
+                                records
+                                .map(
+                                    (row,i) =>
+                                        parseRow(
+                                            row,
+                                            i,
+                                            source
+                                        )
                                 )
-                            )
-                            .filter(
-                                x =>
-                                Object.values(x)
-                                .some(
-                                    v =>
-                                    clean(v)
-                                )
-                            );
+                                .filter(
+                                    x =>
+                                        x.costCentre ||
+                                        x.tajuk ||
+                                        x.grantType
+                                );
 
 
-                        resolve(data);
+                            resolve(parsed);
+
+
+                        }catch(error){
+
+                            reject(error);
+
+                        }
 
                     },
 
@@ -1415,6 +1793,7 @@ function parseCSV(url,source){
 
         }
     );
+
 }
 
 
@@ -1427,7 +1806,11 @@ async function fetchGoogleSheets(){
     const icon =
         $('refresh-icon');
 
-    icon.classList.add('fa-spin');
+
+    icon.classList.add(
+        'fa-spin'
+    );
+
 
     setStatus(
         'Memuatkan Geran Aktif & Geran Tamat...',
@@ -1437,51 +1820,47 @@ async function fetchGoogleSheets(){
 
     try{
 
-        const [a,e] =
-        await Promise.all([
+        const [active,ended] =
+            await Promise.all([
 
-            parseCSV(
-                activeUrl,
-                'Geran Aktif'
-            ),
+                parseCSV(
+                    activeUrl,
+                    'Geran Aktif'
+                ),
 
-            parseCSV(
-                endedUrl,
-                'Geran Tamat'
-            )
+                parseCSV(
+                    endedUrl,
+                    'Geran Tamat'
+                )
 
-        ]);
+            ]);
 
 
         grantsData =
-            [
-                ...a,
-                ...e
-            ];
+            [...active,...ended];
 
 
-        if(
-            !grantsData.length
-        )
+        if(!grantsData.length)
             throw new Error(
                 'Tiada rekod'
             );
 
 
         setStatus(
-            `Disambung • Aktif: ${a.length.toLocaleString()} • Tamat: ${e.length.toLocaleString()}`,
+            `Disambung • Aktif: ${active.length.toLocaleString()} • Tamat: ${ended.length.toLocaleString()}`,
             'ok'
         );
 
 
         populateFilters();
+
         applyFilters();
 
-    }
 
-    catch(err){
+    }catch(err){
 
         console.error(err);
+
 
         setStatus(
             'Gagal membaca Google Sheet',
@@ -1490,18 +1869,19 @@ async function fetchGoogleSheets(){
 
 
         alert(
-            'Dashboard tidak dapat membaca salah satu Google Sheet. Pastikan kedua-dua URL masih aktif dan telah Publish to web sebagai CSV.'
+            'Dashboard tidak dapat membaca salah satu Google Sheet. ' +
+            'Pastikan kedua-dua URL masih aktif dan telah Publish to web sebagai CSV.'
         );
 
-    }
 
-    finally{
+    }finally{
 
         icon.classList.remove(
             'fa-spin'
         );
 
     }
+
 }
 
 
@@ -1511,59 +1891,63 @@ async function fetchGoogleSheets(){
 
 function setStatus(text,state){
 
-    $('sheet-status-text')
-        .innerText = text;
+    $('sheet-status-text').innerText =
+        text;
 
 
-    const b =
+    const badge =
         $('sheet-status-badge');
 
-    const d =
+    const dot =
         $('status-dot');
 
 
-    b.className =
+    badge.className =
         'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border';
 
 
     if(state === 'ok'){
 
-        b.classList.add(
+        badge.classList.add(
             'bg-emerald-50',
             'text-emerald-700',
             'border-emerald-200'
         );
 
-        d.className =
+
+        dot.className =
             'w-2 h-2 rounded-full bg-emerald-500';
 
     }
 
     else if(state === 'error'){
 
-        b.classList.add(
+        badge.classList.add(
             'bg-rose-50',
             'text-rose-700',
             'border-rose-200'
         );
 
-        d.className =
+
+        dot.className =
             'w-2 h-2 rounded-full bg-rose-500';
 
     }
 
     else{
 
-        b.classList.add(
+        badge.classList.add(
             'bg-amber-50',
             'text-amber-700',
             'border-amber-200'
         );
 
-        d.className =
+
+        dot.className =
             'w-2 h-2 rounded-full bg-amber-500';
 
     }
+
 }
 
 
@@ -1576,8 +1960,10 @@ function populateFilters(){
     const type =
         $('filter-grant-type');
 
+
     const category =
         $('filter-grant-category');
+
 
     const year =
         $('filter-tahun');
@@ -1587,69 +1973,67 @@ function populateFilters(){
         [
             ...new Set(
                 grantsData
-                .map(
-                    x =>
-                    x.grantType
-                )
+                .map(x => x.grantType)
                 .filter(Boolean)
             )
-        ].sort();
+        ]
+        .sort();
 
 
     const categories =
         [
             ...new Set(
                 grantsData
-                .map(
-                    x =>
-                    x.grantCategory
-                )
+                .map(x => x.grantCategory)
                 .filter(Boolean)
             )
-        ].sort();
+        ]
+        .sort();
 
 
     const years =
         [
             ...new Set(
                 grantsData
-                .map(
-                    x =>
-                    x.tahunTamat
-                )
+                .map(x => x.tahunTamat)
                 .filter(Boolean)
             )
-        ].sort();
+        ]
+        .sort();
 
 
     type.innerHTML =
         '<option value="all">Semua Grant Type</option>' +
+
         types
         .map(
             x =>
-            `<option value="${escAttr(x)}">${esc(x)}</option>`
+                `<option value="${escAttr(x)}">${esc(x)}</option>`
         )
         .join('');
 
 
     category.innerHTML =
         '<option value="all">Semua Grant Category</option>' +
+
         categories
         .map(
             x =>
-            `<option value="${escAttr(x)}">${esc(x)}</option>`
+                `<option value="${escAttr(x)}">${esc(x)}</option>`
         )
         .join('');
 
 
     year.innerHTML =
         '<option value="all">Semua Tahun</option>' +
+
         years
         .map(
             x =>
-            `<option value="${escAttr(x)}">${esc(x)}</option>`
+                `<option value="${escAttr(x)}">${esc(x)}</option>`
         )
         .join('');
+
 }
 
 
@@ -1674,10 +2058,10 @@ function applyFilters(){
     const year =
         $('filter-tahun').value;
 
-    const q =
+    const quartile =
         $('filter-quartile').value;
 
-    const m =
+    const milestone =
         $('filter-milestone').value;
 
     const pr =
@@ -1688,45 +2072,59 @@ function applyFilters(){
         grantsData.filter(
             x =>
 
-            (source === 'all' ||
-                x.source === source)
+                (
+                    source === 'all' ||
+                    x.source === source
+                )
 
-            &&
+                &&
 
-            (type === 'all' ||
-                x.grantType === type)
+                (
+                    type === 'all' ||
+                    x.grantType === type
+                )
 
-            &&
+                &&
 
-            (category === 'all' ||
-                x.grantCategory === category)
+                (
+                    category === 'all' ||
+                    x.grantCategory === category
+                )
 
-            &&
+                &&
 
-            (month === 'all' ||
-                x.bulanTamat === month)
+                (
+                    month === 'all' ||
+                    x.bulanTamat === month
+                )
 
-            &&
+                &&
 
-            (year === 'all' ||
-                x.tahunTamat === year)
+                (
+                    year === 'all' ||
+                    x.tahunTamat === year
+                )
 
-            &&
+                &&
 
-            (q === 'all' ||
-                x.quartile === q)
+                (
+                    quartile === 'all' ||
+                    x.quartile === quartile
+                )
 
-            &&
+                &&
 
-            (pr === 'all' ||
-                x.prStatus === pr)
+                (
+                    pr === 'all' ||
+                    x.prStatus === pr
+                )
 
-            &&
+                &&
 
-            matchMilestone(
-                x.milestone,
-                m
-            )
+                matchMilestone(
+                    x.milestone,
+                    milestone
+                )
         );
 
 
@@ -1737,30 +2135,42 @@ function applyFilters(){
 
 
     renderAll();
+
 }
 
+
+/* =========================================================
+   MILESTONE FILTER
+========================================================= */
 
 function matchMilestone(n,m){
 
     if(m === 'all')
         return true;
 
+
     if(m === '0-25')
         return n <= 25;
+
 
     if(m === '26-50')
         return n >= 26 && n <= 50;
 
+
     if(m === '51-75')
         return n >= 51 && n <= 75;
+
 
     if(m === '76-99')
         return n >= 76 && n <= 99;
 
+
     if(m === '100')
         return n === 100;
 
+
     return true;
+
 }
 
 
@@ -1781,14 +2191,14 @@ function resetFilters(){
         'filter-pr'
     ]
     .forEach(
-        id =>
-        $(id).value = 'all'
+        id => $(id).value = 'all'
     );
 
 
     $('master-search').value = '';
 
     applyFilters();
+
 }
 
 
@@ -1799,10 +2209,15 @@ function resetFilters(){
 function renderAll(){
 
     renderKPIs();
+
     renderSummary();
+
     renderWarning();
+
     renderVerdict();
+
     renderMasterlist();
+
     updateCharts();
 
 }
@@ -1818,53 +2233,55 @@ function renderKPIs(){
         filteredData.length;
 
 
-    const a =
+    const active =
         filteredData.filter(
             x =>
-            x.source === 'Geran Aktif'
+                x.source === 'Geran Aktif'
         ).length;
 
 
-    const e =
+    const ended =
         filteredData.filter(
             x =>
-            x.source === 'Geran Tamat'
+                x.source === 'Geran Tamat'
         ).length;
 
 
-    const ms =
-        total
-        ? filteredData.reduce(
-            (s,x)=>
-            s + x.milestone,
-            0
-        ) / total
-        : 0;
+    /*
+       Monitored =
+       Q1 + Q2 + Q3 + Q4 + Q5 Extension
+
+       Grant Not Monitored TIDAK dikira.
+    */
+
+    const monitored =
+        filteredData.filter(
+            x =>
+                [
+                    'Q1',
+                    'Q2',
+                    'Q3',
+                    'Q4',
+                    'Q5 (Extension)'
+                ]
+                .includes(x.quartile)
+        ).length;
 
 
-    $('kpi-total')
-        .innerText =
+    $('kpi-total').innerText =
         total.toLocaleString();
 
 
-    $('kpi-active')
-        .innerText =
-        a.toLocaleString();
+    $('kpi-active').innerText =
+        active.toLocaleString();
 
 
-    $('kpi-ended')
-        .innerText =
-        e.toLocaleString();
+    $('kpi-ended').innerText =
+        ended.toLocaleString();
 
 
-    $('kpi-milestone')
-        .innerText =
-        Math.round(ms) + '%';
-
-
-    $('kpi-milestone-bar')
-        .style.width =
-        Math.min(100,ms) + '%';
+    $('kpi-quartile-monitored').innerText =
+        monitored.toLocaleString();
 
 }
 
@@ -1875,72 +2292,89 @@ function renderKPIs(){
 
 function renderSummary(){
 
-    const t =
+    const total =
         filteredData.length;
 
 
-    const ms =
-        t
-        ? Math.round(
+    const avgMilestone =
+        total
+        ?
+        Math.round(
             filteredData.reduce(
-                (s,x)=>
-                s + x.milestone,
+                (sum,x) =>
+                    sum + x.milestone,
                 0
-            ) / t
+            ) / total
         )
-        : 0;
+        :
+        0;
 
 
-    const end26 =
+    const end2026 =
         filteredData.filter(
             x =>
-            x.tahunTamat === '2026'
+                x.tahunTamat === '2026'
         ).length;
 
 
     const low =
         filteredData.filter(
             x =>
-            x.tahunTamat === '2026' &&
-            x.milestone < 50
+                x.tahunTamat === '2026' &&
+                x.milestone < 50
         ).length;
 
 
     const q12 =
         filteredData.filter(
             x =>
-            ['Q1','Q2']
-            .includes(x.quartile)
+                ['Q1','Q2']
+                .includes(x.quartile)
         ).length;
 
 
-    $('summary-milestone')
-        .innerHTML =
-        `Purata kemajuan semasa ialah <b>${ms}%</b>.
-        Sebanyak <b>${filteredData.filter(
-            x=>x.milestone===100
-        ).length}</b> geran mencapai 100%.`;
+    const monitored =
+        filteredData.filter(
+            x =>
+                [
+                    'Q1',
+                    'Q2',
+                    'Q3',
+                    'Q4',
+                    'Q5 (Extension)'
+                ]
+                .includes(x.quartile)
+        ).length;
 
 
-    $('summary-end')
-        .innerHTML =
-        `<b>${end26}</b> geran dijadualkan tamat pada 2026;
-        <b>${low}</b> daripadanya mempunyai milestone di bawah 50%.`;
+    $('summary-milestone').innerHTML =
+        `Purata kemajuan semasa ialah <b>${avgMilestone}%</b>. ` +
+        `Sebanyak <b>${filteredData.filter(x => x.milestone === 100).length}</b> ` +
+        `geran mencapai 100%.`;
 
 
-    $('summary-quartile')
-        .innerHTML =
-        `<b>${q12}</b> geran
-        (${t ? Math.round(q12/t*100) : 0}%)
-        berada dalam Q1/Q2.`;
+    $('summary-end').innerHTML =
+        `<b>${end2026}</b> geran dijadualkan tamat pada 2026; ` +
+        `<b>${low}</b> daripadanya mempunyai milestone di bawah 50%.`;
 
+
+    $('summary-quartile').innerHTML =
+        `<b>${monitored}</b> geran dipantau mengikut quartile ` +
+        `(Q1 hingga Q5 Extension). ` +
+        `Q1/Q2 merangkumi <b>${q12}</b> geran ` +
+        `(${total ? Math.round(q12 / total * 100) : 0}%).`;
+
+
+    /*
+       Quartile bar
+    */
 
     const qs = [
         'Q1',
         'Q2',
         'Q3',
         'Q4',
-        'Q5 (extension)',
+        'Q5 (Extension)',
         'Grant Not Monitored'
     ];
 
@@ -1955,48 +2389,56 @@ function renderSummary(){
     ];
 
 
-    $('quartile-bar')
-        .innerHTML =
+    $('quartile-bar').innerHTML =
         qs.map(
-            (q,i)=>{
+            (q,i) => {
 
                 const n =
                     filteredData.filter(
                         x =>
-                        x.quartile === q
+                            x.quartile === q
                     ).length;
 
 
                 return `
                 <div
-                class="${cls[i]}"
-                style="width:${t ? n/t*100 : 0}%"
-                title="${q}: ${n}">
-                </div>`;
+                    class="${cls[i]}"
+                    style="width:${total ? n / total * 100 : 0}%"
+                    title="${q}: ${n}">
+                </div>
+                `;
 
             }
-        ).join('');
+        )
+        .join('');
 
 
-    $('quartile-legend')
-        .innerHTML =
+    $('quartile-legend').innerHTML =
         qs.map(
-            q =>
-            `<div>
-                ${q}: 
-                <b>
-                ${filteredData.filter(
-                    x =>
-                    x.quartile === q
-                ).length}
-                </b>
-            </div>`
-        ).join('');
+            q => {
+
+                const n =
+                    filteredData.filter(
+                        x =>
+                            x.quartile === q
+                    ).length;
 
 
-    $('q12-total')
-        .innerText =
-        `${q12} (${t ? Math.round(q12/t*100) : 0}%)`;
+                return `
+                <div>
+                    ${esc(q)}:
+                    <b>${n}</b>
+                </div>
+                `;
+
+            }
+        )
+        .join('');
+
+
+    $('q12-total').innerText =
+        `${q12} (${total ? Math.round(q12 / total * 100) : 0}%)`;
+
 }
 
 
@@ -2010,19 +2452,18 @@ function renderWarning(){
         filteredData
         .filter(
             x =>
-            x.tahunTamat === '2026' ||
-            x.prStatus === 'NOT COMPLETED'
+                x.tahunTamat === '2026' ||
+                x.prStatus === 'NOT COMPLETED'
         )
         .slice(0,10);
 
 
-    $('warning-count')
-        .innerText =
+    $('warning-count').innerText =
         `${list.length} Kes`;
 
 
-    $('warning-body')
-        .innerHTML =
+    $('warning-body').innerHTML =
+
         list.length
 
         ?
@@ -2048,7 +2489,9 @@ ${esc(x.source)}
 
 <td class="p-3">
 
-<b>${esc(x.costCentre)}</b>
+<b>
+${esc(x.costCentre)}
+</b>
 
 <div class="text-[11px] text-slate-500 max-w-md truncate">
 
@@ -2060,37 +2503,44 @@ ${esc(x.tajuk)}
 
 
 <td class="p-3">
+
 ${esc(x.grantType)}
+
 </td>
 
 
 <td class="p-3">
+
 ${esc(x.grantCategory)}
+
 </td>
 
 
 <td class="p-3">
-${x.bulanTamat || '-'}/${x.tahunTamat || '-'}
+
+${esc(formatEndDate(x.projectEnd))}
+
 </td>
 
 
 <td class="p-3 font-bold text-sky-700">
+
 ${Math.round(x.milestone)}%
+
 </td>
 
 
 <td class="p-3">
+
 ${esc(x.prStatus)}
+
 </td>
 
 
 <td class="p-3">
 
 <button
-onclick="viewGrant(
-'${escAttr(x.source)}',
-'${escAttr(x.costCentre)}'
-)"
+onclick="viewGrant('${escAttr(x.source)}','${escAttr(x.costCentre)}')"
 class="text-sky-600 font-semibold">
 
 Butiran
@@ -2102,20 +2552,47 @@ Butiran
 </tr>
 
 `
-        ).join('')
+        )
+        .join('')
 
         :
 
         `
+
 <tr>
+
 <td colspan="8"
 class="p-6 text-center text-slate-400">
 
 Tiada rekod memerlukan perhatian.
 
 </td>
+
 </tr>
+
 `;
+
+}
+
+
+/* =========================================================
+   FORMAT DATE
+========================================================= */
+
+function formatEndDate(value){
+
+    const d =
+        parseDateValue(value);
+
+
+    if(!d)
+        return value || '-';
+
+
+    return `${String(d.getDate()).padStart(2,'0')}/` +
+           `${String(d.getMonth()+1).padStart(2,'0')}/` +
+           `${d.getFullYear()}`;
+
 }
 
 
@@ -2128,16 +2605,14 @@ function renderVerdict(){
     const types =
         [
             ...new Set(
-                filteredData.map(
-                    x =>
-                    x.grantType
-                )
+                filteredData
+                .map(x => x.grantType)
             )
-        ].sort();
+        ]
+        .sort();
 
 
-    $('verdict-body')
-        .innerHTML =
+    $('verdict-body').innerHTML =
 
         types.map(
             t => {
@@ -2145,48 +2620,52 @@ function renderVerdict(){
                 const a =
                     filteredData.filter(
                         x =>
-                        x.grantType === t
+                            x.grantType === t
                     );
 
 
                 const ms =
                     a.length
-                    ? Math.round(
+                    ?
+                    Math.round(
                         a.reduce(
-                            (s,x)=>
-                            s+x.milestone,
+                            (s,x) =>
+                                s + x.milestone,
                             0
                         ) / a.length
                     )
-                    : 0;
+                    :
+                    0;
 
 
                 const q =
                     a.filter(
                         x =>
-                        ['Q1','Q2']
-                        .includes(x.quartile)
+                            ['Q1','Q2']
+                            .includes(x.quartile)
                     ).length;
 
 
                 const pr =
                     a.filter(
                         x =>
-                        x.prStatus === 'COMPLETED'
+                            x.prStatus === 'COMPLETED'
                     ).length;
 
 
-                let act =
+                let action =
                     'Dalam Pemantauan Normal';
 
 
                 if(ms < 25)
-                    act =
-                    'Intervensi Audit Prestasi';
+                    action =
+                        'Intervensi Audit Prestasi';
 
-                else if(pr < a.length*.5)
-                    act =
-                    'Peringatan PR';
+                else if(
+                    pr < a.length * .5
+                )
+                    action =
+                        'Peringatan PR';
 
 
                 return `
@@ -2194,27 +2673,44 @@ function renderVerdict(){
 <tr>
 
 <td class="p-3 font-bold">
+
 ${esc(t)}
+
 </td>
 
+
 <td class="p-3 text-center">
+
 ${a.length}
+
 </td>
+
 
 <td class="p-3 text-center font-bold text-sky-700">
+
 ${ms}%
+
 </td>
 
+
 <td class="p-3 text-center">
+
 ${q}
+
 </td>
 
+
 <td class="p-3 text-center">
+
 ${pr}/${a.length}
+
 </td>
 
+
 <td class="p-3 text-center">
-${act}
+
+${esc(action)}
+
 </td>
 
 </tr>
@@ -2222,18 +2718,26 @@ ${act}
 `;
 
             }
-        ).join('')
+        )
+        .join('')
 
         ||
 
         `
+
 <tr>
+
 <td colspan="6"
 class="p-6 text-center text-slate-400">
+
 Tiada data.
+
 </td>
+
 </tr>
+
 `;
+
 }
 
 
@@ -2253,19 +2757,22 @@ function renderMasterlist(){
         filteredData.filter(
             x =>
 
-            !q ||
+                !q ||
 
-            [
-                x.costCentre,
-                x.tajuk,
-                x.penyelidik,
-                x.grantType,
-                x.grantCategory,
-                x.source
-            ]
-            .join(' ')
-            .toLowerCase()
-            .includes(q)
+                [
+
+                    x.costCentre,
+                    x.tajuk,
+                    x.staffName,
+                    x.grantType,
+                    x.grantCategory,
+                    x.source,
+                    x.quartile
+
+                ]
+                .join(' ')
+                .toLowerCase()
+                .includes(q)
         );
 
 
@@ -2288,19 +2795,16 @@ function renderMasterlist(){
 
     const rows =
         searchData.slice(
-            (currentPage-1)*pageSize,
-            currentPage*pageSize
+            (currentPage-1) * pageSize,
+            currentPage * pageSize
         );
 
 
-    $('master-count')
-        .innerText =
-        searchData.length
-        .toLocaleString();
+    $('master-count').innerText =
+        searchData.length.toLocaleString();
 
 
-    $('page-info')
-        .innerText =
+    $('page-info').innerText =
         `Halaman ${currentPage} dari ${pages}`;
 
 
@@ -2312,56 +2816,66 @@ function renderMasterlist(){
         currentPage >= pages;
 
 
-    $('master-body')
-        .innerHTML =
+    $('master-body').innerHTML =
 
         rows.map(
-            (x,i)=>`
+            (x,i) => `
 
 <tr>
 
 <td class="p-3">
+
 ${(currentPage-1)*pageSize+i+1}
+
 </td>
 
 
 <td class="p-3">
+
 ${esc(x.source)}
-</td>
 
-
-<td class="p-3 font-semibold">
-${esc(x.costCentre)}
 </td>
 
 
 <td class="p-3">
 
-<div class="max-w-sm">
+<b>
+${esc(x.costCentre)}
+</b>
+
+<div class="text-[11px] text-slate-500 max-w-sm truncate">
+
 ${esc(x.tajuk)}
+
 </div>
 
 </td>
 
 
 <td class="p-3">
+
 ${esc(x.grantType)}
+
 </td>
 
 
 <td class="p-3">
+
 ${esc(x.grantCategory)}
+
 </td>
 
 
 <td class="p-3">
-${esc(x.penyelidik)}
+
+${esc(x.staffName)}
+
 </td>
 
 
 <td class="p-3 text-center">
 
-${x.bulanTamat || '-'}/${x.tahunTamat || '-'}
+${esc(formatEndDate(x.projectEnd))}
 
 </td>
 
@@ -2375,16 +2889,7 @@ ${Math.round(x.milestone)}%
 
 <td class="p-3 text-center">
 
-<span class="px-2 py-1 rounded-full text-[10px]
-${x.quartile === 'Q5 (extension)'
-    ? 'bg-purple-50 text-purple-700'
-    : x.quartile === 'Grant Not Monitored'
-    ? 'bg-slate-100 text-slate-600'
-    : 'bg-sky-50 text-sky-700'}">
-
 ${esc(x.quartile)}
-
-</span>
 
 </td>
 
@@ -2399,10 +2904,7 @@ ${esc(x.prStatus)}
 <td class="p-3 text-center">
 
 <button
-onclick="viewGrant(
-'${escAttr(x.source)}',
-'${escAttr(x.costCentre)}'
-)"
+onclick="viewGrant('${escAttr(x.source)}','${escAttr(x.costCentre)}')"
 class="text-sky-600 font-semibold">
 
 Lihat
@@ -2414,14 +2916,16 @@ Lihat
 </tr>
 
 `
-        ).join('')
+        )
+        .join('')
 
         ||
 
         `
+
 <tr>
 
-<td colspan="12"
+<td colspan="11"
 class="p-8 text-center text-slate-400">
 
 Tiada rekod dijumpai.
@@ -2429,7 +2933,9 @@ Tiada rekod dijumpai.
 </td>
 
 </tr>
+
 `;
+
 }
 
 
@@ -2446,6 +2952,7 @@ function prevPage(){
         renderMasterlist();
 
     }
+
 }
 
 
@@ -2465,11 +2972,12 @@ function nextPage(){
         renderMasterlist();
 
     }
+
 }
 
 
 /* =========================================================
-   CHARTS
+   CHART INITIALIZATION
 ========================================================= */
 
 function initCharts(){
@@ -2478,6 +2986,7 @@ function initCharts(){
         new Chart(
             $('chartSource'),
             {
+
                 type:'doughnut',
 
                 data:{
@@ -2497,6 +3006,7 @@ function initCharts(){
                     responsive:true,
                     maintainAspectRatio:false
                 }
+
             }
         );
 
@@ -2505,6 +3015,7 @@ function initCharts(){
         new Chart(
             $('chartType'),
             {
+
                 type:'bar',
 
                 data:{
@@ -2528,32 +3039,37 @@ function initCharts(){
                         }
                     }
                 }
+
             }
         );
 
 
-    charts.quartile =
+    charts.milestone =
         new Chart(
-            $('chartQuartile'),
+            $('chartMilestone'),
             {
+
                 type:'bar',
 
                 data:{
+
                     labels:[
-                        'Q1',
-                        'Q2',
-                        'Q3',
-                        'Q4',
-                        'Q5 (extension)',
-                        'Grant Not Monitored'
+                        '0-25%',
+                        '26-50%',
+                        '51-75%',
+                        '76-99%',
+                        '100%'
                     ],
 
                     datasets:[
                         {
                             label:'Bilangan',
-                            data:[0,0,0,0,0,0]
+                            data:[
+                                0,0,0,0,0
+                            ]
                         }
                     ]
+
                 },
 
                 options:{
@@ -2566,6 +3082,7 @@ function initCharts(){
                         }
                     }
                 }
+
             }
         );
 
@@ -2574,6 +3091,7 @@ function initCharts(){
         new Chart(
             $('chartPR'),
             {
+
                 type:'pie',
 
                 data:{
@@ -2590,8 +3108,57 @@ function initCharts(){
                     responsive:true,
                     maintainAspectRatio:false
                 }
+
             }
         );
+
+
+    charts.quartile =
+        new Chart(
+            $('chartQuartile'),
+            {
+
+                type:'bar',
+
+                data:{
+
+                    labels:[
+                        'Q1',
+                        'Q2',
+                        'Q3',
+                        'Q4',
+                        'Q5 (Extension)',
+                        'Grant Not Monitored'
+                    ],
+
+                    datasets:[
+                        {
+                            label:'Bilangan Geran',
+                            data:[
+                                0,0,0,0,0,0
+                            ]
+                        }
+                    ]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    scales:{
+                        y:{
+                            beginAtZero:true
+                        }
+                    }
+
+                }
+
+            }
+        );
+
 }
 
 
@@ -2605,17 +3172,17 @@ function updateCharts(){
         return;
 
 
-    const a =
+    const active =
         filteredData.filter(
             x =>
-            x.source === 'Geran Aktif'
+                x.source === 'Geran Aktif'
         ).length;
 
 
-    const e =
+    const ended =
         filteredData.filter(
             x =>
-            x.source === 'Geran Tamat'
+                x.source === 'Geran Tamat'
         ).length;
 
 
@@ -2623,49 +3190,139 @@ function updateCharts(){
         .data
         .datasets[0]
         .data =
-        [a,e];
+        [
+            active,
+            ended
+        ];
 
 
     charts.source.update();
 
 
-    /* GRANT TYPE */
+    /*
+       Grant Type
+    */
 
-    const tc = {};
+    const typeCount = {};
 
 
     filteredData.forEach(
         x => {
 
-            tc[x.grantType] =
-            (tc[x.grantType] || 0) + 1;
+            const key =
+                x.grantType ||
+                'Tidak Dinyatakan';
+
+
+            typeCount[key] =
+                (
+                    typeCount[key] ||
+                    0
+                ) + 1;
 
         }
     );
 
 
     charts.type.data.labels =
-        Object.keys(tc);
+        Object.keys(typeCount);
 
 
-    charts.type
-        .data
-        .datasets[0]
-        .data =
-        Object.values(tc);
+    charts.type.data.datasets[0].data =
+        Object.values(typeCount);
 
 
     charts.type.update();
 
 
-    /* QUARTILE */
+    /*
+       Milestone
+    */
 
-    const qs = [
+    charts.milestone
+        .data
+        .datasets[0]
+        .data = [
+
+            filteredData.filter(
+                x => x.milestone <= 25
+            ).length,
+
+            filteredData.filter(
+                x =>
+                    x.milestone >= 26 &&
+                    x.milestone <= 50
+            ).length,
+
+            filteredData.filter(
+                x =>
+                    x.milestone >= 51 &&
+                    x.milestone <= 75
+            ).length,
+
+            filteredData.filter(
+                x =>
+                    x.milestone >= 76 &&
+                    x.milestone <= 99
+            ).length,
+
+            filteredData.filter(
+                x =>
+                    x.milestone === 100
+            ).length
+
+        ];
+
+
+    charts.milestone.update();
+
+
+    /*
+       PR
+    */
+
+    const prCount = {};
+
+
+    filteredData.forEach(
+        x => {
+
+            const key =
+                x.prStatus ||
+                'NOT COMPLETED';
+
+
+            prCount[key] =
+                (
+                    prCount[key] ||
+                    0
+                ) + 1;
+
+        }
+    );
+
+
+    charts.pr.data.labels =
+        Object.keys(prCount);
+
+
+    charts.pr.data.datasets[0].data =
+        Object.values(prCount);
+
+
+    charts.pr.update();
+
+
+    /*
+       QUARTILE
+    */
+
+    const quartiles = [
         'Q1',
         'Q2',
         'Q3',
         'Q4',
-        'Q5 (extension)',
+        'Q5 (Extension)',
         'Grant Not Monitored'
     ];
 
@@ -2674,51 +3331,22 @@ function updateCharts(){
         .data
         .datasets[0]
         .data =
-        qs.map(
+        quartiles.map(
             q =>
-            filteredData.filter(
-                x =>
-                x.quartile === q
-            ).length
+                filteredData.filter(
+                    x =>
+                        x.quartile === q
+                ).length
         );
 
 
     charts.quartile.update();
 
-
-    /* PR */
-
-    const pc = {};
-
-
-    filteredData.forEach(
-        x => {
-
-            pc[x.prStatus] =
-            (pc[x.prStatus] || 0) + 1;
-
-        }
-    );
-
-
-    charts.pr.data.labels =
-        Object.keys(pc);
-
-
-    charts.pr
-        .data
-        .datasets[0]
-        .data =
-        Object.values(pc);
-
-
-    charts.pr.update();
-
 }
 
 
 /* =========================================================
-   TABS
+   SWITCH TAB
 ========================================================= */
 
 function switchTab(id){
@@ -2732,19 +3360,20 @@ function switchTab(id){
     .forEach(
         t => {
 
-            const b =
+            const button =
                 $('tab-'+t);
 
-            const v =
+            const view =
                 $('view-'+t);
 
 
             if(t === id){
 
-                b.className =
+                button.className =
                     'tab-active py-2.5 px-1 inline-flex items-center gap-2 border-b-2 whitespace-nowrap';
 
-                v.classList.remove(
+
+                view.classList.remove(
                     'hidden'
                 );
 
@@ -2752,10 +3381,11 @@ function switchTab(id){
 
             else{
 
-                b.className =
+                button.className =
                     'text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap';
 
-                v.classList.add(
+
+                view.classList.add(
                     'hidden'
                 );
 
@@ -2765,16 +3395,20 @@ function switchTab(id){
     );
 
 
-    if(id === 'visual')
+    if(id === 'visual'){
+
         setTimeout(
             updateCharts,
             50
         );
+
+    }
+
 }
 
 
 /* =========================================================
-   DETAIL
+   VIEW GRANT
 ========================================================= */
 
 function viewGrant(source,costCentre){
@@ -2782,8 +3416,8 @@ function viewGrant(source,costCentre){
     const x =
         grantsData.find(
             g =>
-            g.source === source &&
-            g.costCentre === costCentre
+                g.source === source &&
+                g.costCentre === costCentre
         );
 
 
@@ -2791,17 +3425,20 @@ function viewGrant(source,costCentre){
         return;
 
 
-    $('detail-body')
-        .innerHTML = `
+    $('detail-body').innerHTML = `
 
 <div class="p-3 bg-slate-50 rounded-xl">
 
 <b class="text-sky-700">
+
 ${esc(x.costCentre)}
+
 </b>
 
 <h3 class="font-bold text-sm mt-1">
+
 ${esc(x.tajuk)}
+
 </h3>
 
 </div>
@@ -2812,7 +3449,9 @@ ${esc(x.tajuk)}
 
 <div class="p-3 border rounded-lg">
 
-<small>Sumber</small>
+<small>
+Sumber
+</small>
 
 <br>
 
@@ -2825,7 +3464,9 @@ ${esc(x.source)}
 
 <div class="p-3 border rounded-lg">
 
-<small>Grant Type</small>
+<small>
+Grant Type
+</small>
 
 <br>
 
@@ -2838,7 +3479,9 @@ ${esc(x.grantType)}
 
 <div class="p-3 border rounded-lg">
 
-<small>Grant Category</small>
+<small>
+Grant Category
+</small>
 
 <br>
 
@@ -2851,12 +3494,14 @@ ${esc(x.grantCategory)}
 
 <div class="p-3 border rounded-lg">
 
-<small>Staff Name</small>
+<small>
+Staff Name
+</small>
 
 <br>
 
 <b>
-${esc(x.penyelidik)}
+${esc(x.staffName)}
 </b>
 
 </div>
@@ -2864,7 +3509,9 @@ ${esc(x.penyelidik)}
 
 <div class="p-3 border rounded-lg">
 
-<small>Cost Centre No</small>
+<small>
+Cost Centre No
+</small>
 
 <br>
 
@@ -2877,12 +3524,14 @@ ${esc(x.costCentre)}
 
 <div class="p-3 border rounded-lg">
 
-<small>Project End</small>
+<small>
+Project End
+</small>
 
 <br>
 
 <b>
-${esc(x.projectEnd || '-')}
+${esc(formatEndDate(x.projectEnd))}
 </b>
 
 </div>
@@ -2890,33 +3539,9 @@ ${esc(x.projectEnd || '-')}
 
 <div class="p-3 border rounded-lg">
 
-<small>New End Date (If Extended)</small>
-
-<br>
-
-<b>
-${esc(x.newEndDate || '-')}
-</b>
-
-</div>
-
-
-<div class="p-3 border rounded-lg">
-
-<small>Tarikh Tamat Digunakan</small>
-
-<br>
-
-<b>
-${esc(x.endDate || '-')}
-</b>
-
-</div>
-
-
-<div class="p-3 border rounded-lg">
-
-<small>Milestone</small>
+<small>
+Milestone
+</small>
 
 <br>
 
@@ -2929,7 +3554,9 @@ ${Math.round(x.milestone)}%
 
 <div class="p-3 border rounded-lg">
 
-<small>Quartile</small>
+<small>
+Quartile
+</small>
 
 <br>
 
@@ -2942,7 +3569,9 @@ ${esc(x.quartile)}
 
 <div class="p-3 border rounded-lg">
 
-<small>PR Status</small>
+<small>
+PR Status
+</small>
 
 <br>
 
@@ -2952,34 +3581,38 @@ ${esc(x.prStatus)}
 
 </div>
 
-
 </div>
+
 `;
 
 
     $('detail-modal')
-        .classList.remove(
-            'hidden'
-        );
+        .classList
+        .remove('hidden');
+
 
     $('detail-modal')
-        .classList.add(
-            'flex'
-        );
+        .classList
+        .add('flex');
+
 }
 
+
+/* =========================================================
+   CLOSE DETAIL
+========================================================= */
 
 function closeDetail(){
 
     $('detail-modal')
-        .classList.add(
-            'hidden'
-        );
+        .classList
+        .add('hidden');
+
 
     $('detail-modal')
-        .classList.remove(
-            'flex'
-        );
+        .classList
+        .remove('flex');
+
 }
 
 
@@ -2989,41 +3622,43 @@ function closeDetail(){
 
 function openConfigModal(){
 
-    $('url-active')
-        .value =
+    $('url-active').value =
         activeUrl;
 
 
-    $('url-ended')
-        .value =
+    $('url-ended').value =
         endedUrl;
 
 
     $('config-modal')
-        .classList.remove(
-            'hidden'
-        );
+        .classList
+        .remove('hidden');
+
 
     $('config-modal')
-        .classList.add(
-            'flex'
-        );
+        .classList
+        .add('flex');
+
 }
 
 
 function closeConfigModal(){
 
     $('config-modal')
-        .classList.add(
-            'hidden'
-        );
+        .classList
+        .add('hidden');
+
 
     $('config-modal')
-        .classList.remove(
-            'flex'
-        );
+        .classList
+        .remove('flex');
+
 }
 
+
+/* =========================================================
+   SAVE URL
+========================================================= */
 
 function saveAndFetchSheets(){
 
@@ -3054,8 +3689,13 @@ function saveAndFetchSheets(){
     closeConfigModal();
 
     fetchGoogleSheets();
+
 }
 
+
+/* =========================================================
+   RELOAD
+========================================================= */
 
 function reloadData(){
 
@@ -3092,16 +3732,10 @@ function exportCSV(){
                         x.grantCategory,
 
                     'Staff Name':
-                        x.penyelidik,
+                        x.staffName,
 
                     'Project End':
                         x.projectEnd,
-
-                    'New End Date (If Extended)':
-                        x.newEndDate,
-
-                    'Tarikh Tamat Digunakan':
-                        x.endDate,
 
                     '% Milestone':
                         x.milestone,
@@ -3114,6 +3748,7 @@ function exportCSV(){
 
                 })
             )
+
         );
 
 
@@ -3122,7 +3757,7 @@ function exportCSV(){
             [csv],
             {
                 type:
-                'text/csv;charset=utf-8'
+                    'text/csv;charset=utf-8'
             }
         );
 
@@ -3135,7 +3770,8 @@ function exportCSV(){
         document.createElement('a');
 
 
-    a.href = url;
+    a.href =
+        url;
 
 
     a.download =
@@ -3150,47 +3786,17 @@ function exportCSV(){
 
 
     URL.revokeObjectURL(url);
+
 }
 
 
 /* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function esc(v){
-
-    return clean(v)
-        .replace(
-            /[&<>"']/g,
-            m =>
-            ({
-                '&':'&amp;',
-                '<':'&lt;',
-                '>':'&gt;',
-                '"':'&quot;',
-                "'":'&#39;'
-            }[m])
-        );
-}
-
-
-function escAttr(v){
-
-    return esc(v)
-        .replace(
-            /`/g,
-            ''
-        );
-}
-
-
-/* =========================================================
-   START
+   INITIALIZE
 ========================================================= */
 
 document.addEventListener(
     'DOMContentLoaded',
-    ()=>{
+    () => {
 
         initCharts();
 
