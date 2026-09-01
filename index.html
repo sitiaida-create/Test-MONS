@@ -1,207 +1,2717 @@
 <!DOCTYPE html>
+
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Geran Penyelidikan - MONS</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
 <style>
-body{background:#f6f8fa;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}.tab-active{color:#0284c7;border-bottom:2px solid #0284c7;font-weight:600}.scrollbar-thin::-webkit-scrollbar{height:6px;width:6px}.scrollbar-thin::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+body{
+    background:#f6f8fa;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif
+}
+.tab-active{
+    color:#0284c7;
+    border-bottom:2px solid #0284c7;
+    font-weight:600
+}
+.scrollbar-thin::-webkit-scrollbar{
+    height:6px;
+    width:6px
+}
+.scrollbar-thin::-webkit-scrollbar-thumb{
+    background:#cbd5e1;
+    border-radius:4px
+}
 </style>
+
 </head>
+
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
-<header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+
+<header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+
 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center text-white"><i class="fa-solid fa-chart-pie"></i></div><div><div class="flex items-center gap-2 flex-wrap"><h1 class="text-lg sm:text-xl font-bold text-slate-900">Dashboard Geran Penyelidikan</h1><span id="sheet-status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200"><span id="status-dot" class="w-2 h-2 rounded-full bg-amber-500"></span><span id="sheet-status-text">Memuatkan Google Sheet...</span></span></div><p class="text-xs text-slate-500 mt-0.5">Sistem Pemantauan Prestasi & Analisis Statistik</p></div></div>
-<div class="flex items-center gap-2.5 self-end md:self-auto"><button onclick="openConfigModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-300"><i class="fa-solid fa-table"></i>Punca Google Sheet</button><button onclick="reloadData()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-lg border border-slate-300 shadow-sm"><i id="refresh-icon" class="fa-solid fa-arrows-rotate text-sky-600"></i>Muat Semula</button><button onclick="exportCSV()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-white bg-sky-700 hover:bg-sky-800 rounded-lg"><i class="fa-solid fa-download"></i>Eksport CSV</button></div></div>
-<nav class="flex space-x-6 mt-4 border-t border-slate-100 pt-1 text-sm font-medium overflow-x-auto scrollbar-thin"><button onclick="switchTab('ringkasan')" id="tab-ringkasan" class="tab-active py-2.5 px-1 inline-flex items-center gap-2 border-b-2 whitespace-nowrap"><i class="fa-solid fa-chart-line"></i>Ringkasan Eksekutif</button><button onclick="switchTab('visual')" id="tab-visual" class="text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap"><i class="fa-solid fa-chart-simple"></i>Dashboard Visual & Analisis</button><button onclick="switchTab('verdict')" id="tab-verdict" class="text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap"><i class="fa-solid fa-scale-balanced"></i>Rekod Statistik New Verdict</button><button onclick="switchTab('masterlist')" id="tab-masterlist" class="text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap"><i class="fa-solid fa-list-check"></i>Masterlist Direktori</button></nav>
-</div></header>
+
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center text-white">
+<i class="fa-solid fa-chart-pie"></i>
+</div>
+
+<div>
+<div class="flex items-center gap-2 flex-wrap">
+
+<h1 class="text-lg sm:text-xl font-bold text-slate-900">
+Dashboard Geran Penyelidikan
+</h1>
+
+<span id="sheet-status-badge"
+class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+
+<span id="status-dot" class="w-2 h-2 rounded-full bg-amber-500"></span>
+
+<span id="sheet-status-text">
+Memuatkan Google Sheet...
+</span>
+
+</span>
+
+</div>
+
+<p class="text-xs text-slate-500 mt-0.5">
+Sistem Pemantauan Prestasi & Analisis Statistik
+</p>
+
+</div>
+</div>
+
+<div class="flex items-center gap-2.5 self-end md:self-auto">
+
+<button onclick="openConfigModal()"
+class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-300">
+
+<i class="fa-solid fa-table"></i>
+Punca Google Sheet </button>
+
+<button onclick="reloadData()"
+class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-lg border border-slate-300 shadow-sm">
+
+<i id="refresh-icon" class="fa-solid fa-arrows-rotate text-sky-600"></i>
+Muat Semula </button>
+
+<button onclick="exportCSV()"
+class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-white bg-sky-700 hover:bg-sky-800 rounded-lg">
+
+<i class="fa-solid fa-download"></i>
+Eksport CSV </button>
+
+</div>
+</div>
+
+<nav class="flex space-x-6 mt-4 border-t border-slate-100 pt-1 text-sm font-medium overflow-x-auto scrollbar-thin">
+
+<button onclick="switchTab('ringkasan')" id="tab-ringkasan"
+class="tab-active py-2.5 px-1 inline-flex items-center gap-2 border-b-2 whitespace-nowrap"> <i class="fa-solid fa-chart-line"></i>
+Ringkasan Eksekutif </button>
+
+<button onclick="switchTab('visual')" id="tab-visual"
+class="text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap"> <i class="fa-solid fa-chart-simple"></i>
+Dashboard Visual & Analisis </button>
+
+<button onclick="switchTab('verdict')" id="tab-verdict"
+class="text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap"> <i class="fa-solid fa-scale-balanced"></i>
+Rekod Statistik New Verdict </button>
+
+<button onclick="switchTab('masterlist')" id="tab-masterlist"
+class="text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap"> <i class="fa-solid fa-list-check"></i>
+Masterlist Direktori </button>
+
+</nav>
+</div>
+</header>
+
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
-<section class="bg-white rounded-xl p-4 shadow-sm border border-slate-200"><div class="flex items-center justify-between mb-3"><div class="flex items-center gap-2 text-sky-800 font-semibold text-xs uppercase tracking-wider"><i class="fa-solid fa-filter text-sky-600"></i>Penapis Data Interaktif</div><button onclick="resetFilters()" class="text-xs font-medium text-slate-500 hover:text-sky-600"><i class="fa-solid fa-rotate-left"></i> Sifar Penapis</button></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3 text-xs">
-<div><label class="block text-slate-500 font-medium mb-1">Sumber</label><select id="filter-source" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2"><option value="all">Aktif + Tamat</option><option value="Geran Aktif">Geran Aktif</option><option value="Geran Tamat">Geran Tamat</option></select></div>
-<div><label class="block text-slate-500 font-medium mb-1">Grant Type</label><select id="filter-grant-type" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2"><option value="all">Semua Jenis Geran</option></select></div>
-<div><label class="block text-slate-500 font-medium mb-1">Bulan Tamat</label><select id="filter-bulan" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2"><option value="all">Semua Bulan</option><option value="01">01 - Januari</option><option value="02">02 - Februari</option><option value="03">03 - Mac</option><option value="04">04 - April</option><option value="05">05 - Mei</option><option value="06">06 - Jun</option><option value="07">07 - Julai</option><option value="08">08 - Ogos</option><option value="09">09 - September</option><option value="10">10 - Oktober</option><option value="11">11 - November</option><option value="12">12 - Disember</option></select></div>
-<div><label class="block text-slate-500 font-medium mb-1">Tahun Tamat</label><select id="filter-tahun" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2"><option value="all">Semua Tahun</option></select></div>
-<div><label class="block text-slate-500 font-medium mb-1">Quartile</label><select id="filter-quartile" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2"><option value="all">Semua Quartile</option><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option><option>Non-Indexed</option></select></div>
-<div><label class="block text-slate-500 font-medium mb-1">% Milestone</label><select id="filter-milestone" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2"><option value="all">Semua Pencapaian</option><option value="0-25">0% - 25%</option><option value="26-50">26% - 50%</option><option value="51-75">51% - 75%</option><option value="76-99">76% - 99%</option><option value="100">100%</option></select></div>
-<div><label class="block text-slate-500 font-medium mb-1">PR Status</label><select id="filter-pr" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2"><option value="all">Semua Status PR</option><option>COMPLETED</option><option>NOT COMPLETED</option><option>EXTENSION</option></select></div></div></section>
-<div id="view-ringkasan" class="space-y-6"><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200"><p class="text-xs font-semibold text-slate-500">Jumlah Keseluruhan</p><h3 id="kpi-total" class="text-2xl font-black mt-1">0</h3><p class="text-[11px] text-slate-500 mt-1">Aktif + Tamat</p></div>
-<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200"><p class="text-xs font-semibold text-slate-500">Geran Aktif</p><h3 id="kpi-active" class="text-2xl font-black text-cyan-700 mt-1">0</h3><p class="text-[11px] text-slate-500 mt-1">Daripada Geran Aktif</p></div>
-<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200"><p class="text-xs font-semibold text-slate-500">Geran Tamat</p><h3 id="kpi-ended" class="text-2xl font-black text-amber-700 mt-1">0</h3><p class="text-[11px] text-slate-500 mt-1">Daripada Geran Tamat</p></div>
 
-<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200"><p class="text-xs font-semibold text-slate-500">Purata Milestone</p><h3 id="kpi-milestone" class="text-2xl font-black text-sky-700 mt-1">0%</h3><div class="w-full bg-slate-100 rounded-full h-2 mt-2"><div id="kpi-milestone-bar" class="bg-sky-500 h-2 rounded-full" style="width:0%"></div></div></div></div>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-6"><div class="lg:col-span-8 bg-white rounded-xl p-5 shadow-sm border border-slate-200"><div class="flex items-center gap-2 font-bold text-sm mb-4"><i class="fa-solid fa-wand-magic-sparkles text-sky-600"></i>Ringkasan & Analisis Strategik</div><div class="space-y-3 text-xs"><div class="p-3.5 bg-sky-50 rounded-xl border border-sky-100"><b>Milestone:</b> <span id="summary-milestone"></span></div><div class="p-3.5 bg-amber-50 rounded-xl border border-amber-100"><b>Penamatan:</b> <span id="summary-end"></span></div><div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-100"><b>Quartile:</b> <span id="summary-quartile"></span></div></div></div><div class="lg:col-span-4 bg-white rounded-xl p-5 shadow-sm border border-slate-200"><div class="font-bold text-sm mb-4"><i class="fa-solid fa-medal text-amber-500"></i> Taburan Quartile</div><div id="quartile-bar" class="w-full h-4 bg-slate-100 rounded-full flex overflow-hidden"></div><div class="grid grid-cols-2 gap-2 text-[11px] mt-4" id="quartile-legend"></div><div class="pt-4 mt-4 border-t text-xs flex justify-between"><span>Q1/Q2</span><b id="q12-total">0 (0%)</b></div></div></div>
-<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"><div class="p-4 border-b flex justify-between"><div><b class="text-sm"><i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Geran Perlu Perhatian</b><p class="text-xs text-slate-500 mt-1">Geran tamat 2026 atau PR belum selesai</p></div><span id="warning-count" class="px-3 py-1 bg-amber-50 text-amber-800 text-xs font-semibold rounded-full">0 Kes</span></div><div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50 text-slate-500"><tr><th class="p-3">Sumber</th><th class="p-3">Kod / Tajuk</th><th class="p-3">Grant Type</th><th class="p-3">Tamat</th><th class="p-3">Milestone</th><th class="p-3">PR</th><th class="p-3">Tindakan</th></tr></thead><tbody id="warning-body" class="divide-y"></tbody></table></div></div></div>
-<div id="view-visual" class="hidden space-y-6"><div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><div class="bg-white rounded-xl p-5 shadow-sm border"><h3 class="text-xs font-bold mb-4">Bilangan Geran Mengikut Sumber</h3><div class="h-64"><canvas id="chartSource"></canvas></div></div><div class="bg-white rounded-xl p-5 shadow-sm border"><h3 class="text-xs font-bold mb-4">Bilangan Geran Mengikut Grant Type</h3><div class="h-64"><canvas id="chartType"></canvas></div></div><div class="bg-white rounded-xl p-5 shadow-sm border"><h3 class="text-xs font-bold mb-4">Taburan % Milestone</h3><div class="h-64"><canvas id="chartMilestone"></canvas></div></div><div class="bg-white rounded-xl p-5 shadow-sm border"><h3 class="text-xs font-bold mb-4">Status PR</h3><div class="h-64"><canvas id="chartPR"></canvas></div></div></div></div>
-<div id="view-verdict" class="hidden space-y-6"><div class="bg-white rounded-xl shadow-sm border p-5"><h3 class="text-sm font-bold mb-2"><i class="fa-solid fa-scale-balanced text-sky-600"></i> Matriks Analisis & New Verdict</h3><p class="text-xs text-slate-500 mb-5">Ringkasan mengikut Grant Type.</p><div class="overflow-x-auto"><table class="w-full text-xs"><thead class="bg-slate-50"><tr><th class="p-3 text-left">Grant Type</th><th class="p-3">Jumlah</th><th class="p-3">Purata Milestone</th><th class="p-3">Q1/Q2</th><th class="p-3">PR Selesai</th><th class="p-3">Tindakan</th></tr></thead><tbody id="verdict-body" class="divide-y"></tbody></table></div></div></div>
-<div id="view-masterlist" class="hidden space-y-4"><div class="bg-white rounded-xl shadow-sm border p-4"><div class="flex flex-col sm:flex-row justify-between gap-3 mb-4"><input id="master-search" oninput="renderMasterlist()" placeholder="Cari kod, tajuk, penyelidik atau grant type..." class="w-full sm:w-96 p-2 bg-slate-50 border rounded-lg text-xs"><span class="text-xs text-slate-500">Memaparkan <b id="master-count">0</b> rekod</span></div><div class="overflow-x-auto"><table class="w-full text-xs"><thead class="bg-slate-50"><tr><th class="p-3">No</th><th class="p-3 text-left">Sumber</th><th class="p-3 text-left">Kod & Tajuk</th><th class="p-3">Grant Type</th><th class="p-3 text-left">Ketua Penyelidik</th><th class="p-3">Tamat</th><th class="p-3">Milestone</th><th class="p-3">Quartile</th><th class="p-3">PR</th><th class="p-3">Tindakan</th></tr></thead><tbody id="master-body" class="divide-y"></tbody></table></div><div class="flex items-center justify-between mt-4 pt-3 border-t text-xs"><span id="page-info">Halaman 1 dari 1</span><div class="flex gap-2"><button onclick="prevPage()" id="prev" class="px-3 py-1 bg-slate-100 rounded">Sebelumnya</button><button onclick="nextPage()" id="next" class="px-3 py-1 bg-slate-100 rounded">Seterusnya</button></div></div></div></div>
+<!-- FILTER -->
+
+<section class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+
+<div class="flex items-center justify-between mb-3">
+
+<div class="flex items-center gap-2 text-sky-800 font-semibold text-xs uppercase tracking-wider">
+<i class="fa-solid fa-filter text-sky-600"></i>
+Penapis Data Interaktif
+</div>
+
+<button onclick="resetFilters()"
+class="text-xs font-medium text-slate-500 hover:text-sky-600">
+
+<i class="fa-solid fa-rotate-left"></i>
+Sifar Penapis
+
+</button>
+
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-8 gap-3 text-xs">
+
+<div>
+<label class="block text-slate-500 font-medium mb-1">
+Sumber
+</label>
+
+<select id="filter-source" onchange="applyFilters()"
+class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
+
+<option value="all">Aktif + Tamat</option>
+<option value="Geran Aktif">Geran Aktif</option>
+<option value="Geran Tamat">Geran Tamat</option>
+
+</select>
+</div>
+
+<div>
+<label class="block text-slate-500 font-medium mb-1">
+Grant Type
+</label>
+
+<select id="filter-grant-type" onchange="applyFilters()"
+class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
+
+<option value="all">
+Semua Grant Type
+</option>
+
+</select>
+</div>
+
+<div>
+<label class="block text-slate-500 font-medium mb-1">
+Grant Category
+</label>
+
+<select id="filter-grant-category" onchange="applyFilters()"
+class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
+
+<option value="all">
+Semua Grant Category
+</option>
+
+</select>
+</div>
+
+<div>
+<label class="block text-slate-500 font-medium mb-1">
+Bulan Tamat
+</label>
+
+<select id="filter-bulan" onchange="applyFilters()"
+class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
+
+<option value="all">Semua Bulan</option>
+<option value="01">01 - Januari</option>
+<option value="02">02 - Februari</option>
+<option value="03">03 - Mac</option>
+<option value="04">04 - April</option>
+<option value="05">05 - Mei</option>
+<option value="06">06 - Jun</option>
+<option value="07">07 - Julai</option>
+<option value="08">08 - Ogos</option>
+<option value="09">09 - September</option>
+<option value="10">10 - Oktober</option>
+<option value="11">11 - November</option>
+<option value="12">12 - Disember</option>
+
+</select>
+</div>
+
+<div>
+<label class="block text-slate-500 font-medium mb-1">
+Tahun Tamat
+</label>
+
+<select id="filter-tahun" onchange="applyFilters()"
+class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
+
+<option value="all">
+Semua Tahun
+</option>
+
+</select>
+</div>
+
+<div>
+<label class="block text-slate-500 font-medium mb-1">
+Quartile
+</label>
+
+<select id="filter-quartile" onchange="applyFilters()"
+class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
+
+<option value="all">Semua Quartile</option>
+<option>Q1</option>
+<option>Q2</option>
+<option>Q3</option>
+<option>Q4</option>
+<option>Non-Indexed</option>
+
+</select>
+</div>
+
+<div>
+<label class="block text-slate-500 font-medium mb-1">
+% Milestone
+</label>
+
+<select id="filter-milestone" onchange="applyFilters()"
+class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
+
+<option value="all">Semua Pencapaian</option>
+<option value="0-25">0% - 25%</option>
+<option value="26-50">26% - 50%</option>
+<option value="51-75">51% - 75%</option>
+<option value="76-99">76% - 99%</option>
+<option value="100">100%</option>
+
+</select>
+</div>
+
+<div>
+<label class="block text-slate-500 font-medium mb-1">
+PR Status
+</label>
+
+<select id="filter-pr" onchange="applyFilters()"
+class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2">
+
+<option value="all">Semua Status PR</option>
+<option>COMPLETED</option>
+<option>NOT COMPLETED</option>
+<option>EXTENSION</option>
+
+</select>
+</div>
+
+</div>
+</section>
+
+<!-- RINGKASAN -->
+
+<div id="view-ringkasan" class="space-y-6">
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+<p class="text-xs font-semibold text-slate-500">
+Jumlah Keseluruhan
+</p>
+
+<h3 id="kpi-total"
+class="text-2xl font-black mt-1">
+0
+</h3>
+
+<p class="text-[11px] text-slate-500 mt-1">
+Aktif + Tamat
+</p>
+</div>
+
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+
+<p class="text-xs font-semibold text-slate-500">
+Geran Aktif
+</p>
+
+<h3 id="kpi-active"
+class="text-2xl font-black text-cyan-700 mt-1">
+0
+</h3>
+
+<p class="text-[11px] text-slate-500 mt-1">
+Daripada Geran Aktif
+</p>
+
+</div>
+
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+
+<p class="text-xs font-semibold text-slate-500">
+Geran Tamat
+</p>
+
+<h3 id="kpi-ended"
+class="text-2xl font-black text-amber-700 mt-1">
+0
+</h3>
+
+<p class="text-[11px] text-slate-500 mt-1">
+Daripada Geran Tamat
+</p>
+
+</div>
+
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+
+<p class="text-xs font-semibold text-slate-500">
+Purata Milestone
+</p>
+
+<h3 id="kpi-milestone"
+class="text-2xl font-black text-sky-700 mt-1">
+0%
+</h3>
+
+<div class="w-full bg-slate-100 rounded-full h-2 mt-2">
+
+<div id="kpi-milestone-bar"
+class="bg-sky-500 h-2 rounded-full"
+style="width:0%">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+<div class="lg:col-span-8 bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+
+<div class="flex items-center gap-2 font-bold text-sm mb-4">
+<i class="fa-solid fa-wand-magic-sparkles text-sky-600"></i>
+Ringkasan & Analisis Strategik
+</div>
+
+<div class="space-y-3 text-xs">
+
+<div class="p-3.5 bg-sky-50 rounded-xl border border-sky-100">
+<b>Milestone:</b>
+<span id="summary-milestone"></span>
+</div>
+
+<div class="p-3.5 bg-amber-50 rounded-xl border border-amber-100">
+<b>Penamatan:</b>
+<span id="summary-end"></span>
+</div>
+
+<div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-100">
+<b>Quartile:</b>
+<span id="summary-quartile"></span>
+</div>
+
+</div>
+</div>
+
+<div class="lg:col-span-4 bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+
+<div class="font-bold text-sm mb-4">
+<i class="fa-solid fa-medal text-amber-500"></i>
+Taburan Quartile
+</div>
+
+<div id="quartile-bar"
+class="w-full h-4 bg-slate-100 rounded-full flex overflow-hidden">
+</div>
+
+<div class="grid grid-cols-2 gap-2 text-[11px] mt-4"
+id="quartile-legend">
+</div>
+
+<div class="pt-4 mt-4 border-t text-xs flex justify-between">
+
+<span>Q1/Q2</span>
+
+<b id="q12-total">
+0 (0%)
+</b>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- WARNING -->
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
+<div class="p-4 border-b flex justify-between">
+
+<div>
+
+<b class="text-sm">
+<i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
+Geran Perlu Perhatian
+</b>
+
+<p class="text-xs text-slate-500 mt-1">
+Geran tamat 2026 atau PR belum selesai
+</p>
+
+</div>
+
+<span id="warning-count"
+class="px-3 py-1 bg-amber-50 text-amber-800 text-xs font-semibold rounded-full">
+0 Kes </span>
+
+</div>
+
+<div class="overflow-x-auto">
+
+<table class="w-full text-left text-xs">
+
+<thead class="bg-slate-50 text-slate-500">
+
+<tr>
+<th class="p-3">Sumber</th>
+<th class="p-3">Cost Centre / Grant Title</th>
+<th class="p-3">Grant Type</th>
+<th class="p-3">Grant Category</th>
+<th class="p-3">Tamat</th>
+<th class="p-3">Milestone</th>
+<th class="p-3">PR</th>
+<th class="p-3">Tindakan</th>
+</tr>
+
+</thead>
+
+<tbody id="warning-body" class="divide-y"></tbody>
+
+</table>
+
+</div>
+</div>
+
+</div>
+
+<!-- VISUAL -->
+
+<div id="view-visual" class="hidden space-y-6">
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+<div class="bg-white rounded-xl p-5 shadow-sm border">
+<h3 class="text-xs font-bold mb-4">
+Bilangan Geran Mengikut Sumber
+</h3>
+
+<div class="h-64">
+<canvas id="chartSource"></canvas>
+</div>
+
+</div>
+
+<div class="bg-white rounded-xl p-5 shadow-sm border">
+
+<h3 class="text-xs font-bold mb-4">
+Bilangan Geran Mengikut Grant Type
+</h3>
+
+<div class="h-64">
+<canvas id="chartType"></canvas>
+</div>
+
+</div>
+
+<div class="bg-white rounded-xl p-5 shadow-sm border">
+
+<h3 class="text-xs font-bold mb-4">
+Bilangan Geran Mengikut Grant Category
+</h3>
+
+<div class="h-64">
+<canvas id="chartCategory"></canvas>
+</div>
+
+</div>
+
+<div class="bg-white rounded-xl p-5 shadow-sm border">
+
+<h3 class="text-xs font-bold mb-4">
+Taburan % Milestone
+</h3>
+
+<div class="h-64">
+<canvas id="chartMilestone"></canvas>
+</div>
+
+</div>
+
+<div class="bg-white rounded-xl p-5 shadow-sm border">
+
+<h3 class="text-xs font-bold mb-4">
+Status PR
+</h3>
+
+<div class="h-64">
+<canvas id="chartPR"></canvas>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<!-- VERDICT -->
+
+<div id="view-verdict" class="hidden space-y-6">
+
+<div class="bg-white rounded-xl shadow-sm border p-5">
+
+<h3 class="text-sm font-bold mb-2">
+<i class="fa-solid fa-scale-balanced text-sky-600"></i>
+Matriks Analisis & New Verdict
+</h3>
+
+<p class="text-xs text-slate-500 mb-5">
+Ringkasan mengikut Grant Type.
+</p>
+
+<div class="overflow-x-auto">
+
+<table class="w-full text-xs">
+
+<thead class="bg-slate-50">
+
+<tr>
+<th class="p-3 text-left">Grant Type</th>
+<th class="p-3">Jumlah</th>
+<th class="p-3">Purata Milestone</th>
+<th class="p-3">Q1/Q2</th>
+<th class="p-3">PR Selesai</th>
+<th class="p-3">Tindakan</th>
+</tr>
+
+</thead>
+
+<tbody id="verdict-body" class="divide-y"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MASTERLIST -->
+
+<div id="view-masterlist" class="hidden space-y-4">
+
+<div class="bg-white rounded-xl shadow-sm border p-4">
+
+<div class="flex flex-col sm:flex-row justify-between gap-3 mb-4">
+
+<input id="master-search"
+oninput="renderMasterlist()"
+placeholder="Cari Cost Centre, tajuk, staff atau grant type..."
+class="w-full sm:w-96 p-2 bg-slate-50 border rounded-lg text-xs">
+
+<span class="text-xs text-slate-500">
+Memaparkan <b id="master-count">0</b> rekod
+</span>
+
+</div>
+
+<div class="overflow-x-auto">
+
+<table class="w-full text-xs">
+
+<thead class="bg-slate-50">
+
+<tr>
+
+<th class="p-3">No</th>
+<th class="p-3 text-left">Sumber</th>
+<th class="p-3 text-left">Cost Centre No</th>
+<th class="p-3 text-left">Grant Title</th>
+<th class="p-3">Grant Type</th>
+<th class="p-3">Grant Category</th>
+<th class="p-3 text-left">Staff Name</th>
+<th class="p-3">Tamat</th>
+<th class="p-3">Milestone</th>
+<th class="p-3">Quartile</th>
+<th class="p-3">PR</th>
+<th class="p-3">Tindakan</th>
+
+</tr>
+
+</thead>
+
+<tbody id="master-body" class="divide-y"></tbody>
+
+</table>
+
+</div>
+
+<div class="flex items-center justify-between mt-4 pt-3 border-t text-xs">
+
+<span id="page-info">
+Halaman 1 dari 1
+</span>
+
+<div class="flex gap-2">
+
+<button onclick="prevPage()"
+id="prev"
+class="px-3 py-1 bg-slate-100 rounded">
+Sebelumnya </button>
+
+<button onclick="nextPage()"
+id="next"
+class="px-3 py-1 bg-slate-100 rounded">
+Seterusnya </button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
 </main>
-<div id="detail-modal" class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center p-4"><div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden"><div class="p-4 border-b flex justify-between"><b>Butiran Geran</b><button onclick="closeDetail()"><i class="fa-solid fa-xmark"></i></button></div><div id="detail-body" class="p-5 text-xs space-y-4"></div></div></div>
-<div id="config-modal" class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center p-4"><div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl"><div class="p-4 border-b flex justify-between"><b>Punca Google Sheet</b><button onclick="closeConfigModal()"><i class="fa-solid fa-xmark"></i></button></div><div class="p-5 text-xs space-y-4"><div><label class="font-semibold">Geran Aktif</label><input id="url-active" class="w-full mt-1 p-2 bg-slate-50 border rounded-lg" /></div><div><label class="font-semibold">Geran Tamat</label><input id="url-ended" class="w-full mt-1 p-2 bg-slate-50 border rounded-lg" /></div><p class="p-3 bg-sky-50 border border-sky-200 rounded-lg text-sky-800">Kedua-dua pautan mesti menggunakan <b>Publish to web → CSV</b>. Dashboard akan membaca kedua-dua tab dan menggabungkannya secara automatik.</p></div><div class="p-4 border-t flex justify-end gap-2"><button onclick="closeConfigModal()" class="px-4 py-2 bg-slate-100 rounded-lg text-xs">Batal</button><button onclick="saveAndFetchSheets()" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-xs">Simpan & Muat Semula</button></div></div></div>
-<footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400">Dashboard Geran Penyelidikan © 2026. Hak Cipta Terpelihara.</footer>
+
+<!-- DETAIL MODAL -->
+
+<div id="detail-modal"
+class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center p-4">
+
+<div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden">
+
+<div class="p-4 border-b flex justify-between">
+
+<b>Butiran Geran</b>
+
+<button onclick="closeDetail()">
+<i class="fa-solid fa-xmark"></i>
+</button>
+
+</div>
+
+<div id="detail-body"
+class="p-5 text-xs space-y-4">
+</div>
+
+</div>
+</div>
+
+<!-- CONFIG MODAL -->
+
+<div id="config-modal"
+class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center p-4">
+
+<div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl">
+
+<div class="p-4 border-b flex justify-between">
+
+<b>Punca Google Sheet</b>
+
+<button onclick="closeConfigModal()">
+<i class="fa-solid fa-xmark"></i>
+</button>
+
+</div>
+
+<div class="p-5 text-xs space-y-4">
+
+<div>
+
+<label class="font-semibold">
+Geran Aktif
+</label>
+
+<input id="url-active"
+class="w-full mt-1 p-2 bg-slate-50 border rounded-lg">
+
+</div>
+
+<div>
+
+<label class="font-semibold">
+Geran Tamat
+</label>
+
+<input id="url-ended"
+class="w-full mt-1 p-2 bg-slate-50 border rounded-lg">
+
+</div>
+
+<p class="p-3 bg-sky-50 border border-sky-200 rounded-lg text-sky-800">
+
+Kedua-dua pautan mesti menggunakan <b>Publish to web → CSV</b>.
+Dashboard akan membaca kedua-dua tab dan menggabungkannya secara automatik.
+
+</p>
+
+</div>
+
+<div class="p-4 border-t flex justify-end gap-2">
+
+<button onclick="closeConfigModal()"
+class="px-4 py-2 bg-slate-100 rounded-lg text-xs">
+Batal </button>
+
+<button onclick="saveAndFetchSheets()"
+class="px-4 py-2 bg-sky-600 text-white rounded-lg text-xs">
+Simpan & Muat Semula </button>
+
+</div>
+
+</div>
+</div>
+
+<footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400">
+Dashboard Geran Penyelidikan © 2026. Hak Cipta Terpelihara.
+</footer>
+
 <script>
-const DEFAULT_ACTIVE_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSqpPENTFIzT-l9tEdvytJSgI4TXReZVYs3KGsL8xuzT9NA8LPWFoGnVrf_uIeEAw0F87U64VcTiCnI/pub?gid=892877893&single=true&output=csv';
-const DEFAULT_ENDED_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSqpPENTFIzT-l9tEdvytJSgI4TXReZVYs3KGsL8xuzT9NA8LPWFoGnVrf_uIeEAw0F87U64VcTiCnI/pub?gid=619542785&single=true&output=csv';
-let activeUrl=localStorage.getItem('mons_active_url')||DEFAULT_ACTIVE_URL, endedUrl=localStorage.getItem('mons_ended_url')||DEFAULT_ENDED_URL;
-let grantsData=[],filteredData=[],searchData=[],currentPage=1;const pageSize=15;let charts={};
-const $=id=>document.getElementById(id);
-function clean(v){return String(v??'').trim()}
-function norm(v){return clean(v).toLowerCase().replace(/[^a-z0-9]/g,'')}
-function findVal(row,candidates){const keys=Object.keys(row);for(const c of candidates){const n=norm(c);const k=keys.find(x=>norm(x)===n);if(k&&clean(row[k]))return row[k]}for(const c of candidates){const n=norm(c);const k=keys.find(x=>norm(x).includes(n));if(k&&clean(row[k]))return row[k]}return ''}
-function number(v){if(typeof v==='number')return v;let s=clean(v).replace(/rm/ig,'').replace(/,/g,'').replace(/\s/g,'');if(!s)return 0;let n=parseFloat(s.replace(/[^0-9.-]/g,''));return Number.isFinite(n)?n:0}
-function percent(v){let n=number(v);if(String(v).includes('%'))return Math.max(0,Math.min(100,n));if(n>0&&n<=1)return n*100;return Math.max(0,Math.min(100,n))}
-function dateParts(v){let s=clean(v);if(!s)return {month:'',year:''};let m=s.match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);if(m)return {month:m[2].padStart(2,'0'),year:m[3]};let y=s.match(/(19|20)\d{2}/);if(y){let mon=s.match(/\b(0?[1-9]|1[0-2])\b/);return {month:mon?mon[1].padStart(2,'0'):'',year:y[0]}}return {month:'',year:''}}
+
+const DEFAULT_ACTIVE_URL =
+'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqpPENTFIzT-l9tEdvytJSgI4TXReZVYs3KGsL8xuzT9NA8LPWFoGnVrf_uIeEAw0F87U64VcTiCnI/pub?gid=892877893&single=true&output=csv';
+
+const DEFAULT_ENDED_URL =
+'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqpPENTFIzT-l9tEdvytJSgI4TXReZVYs3KGsL8xuzT9NA8LPWFoGnVrf_uIeEAw0F87U64VcTiCnI/pub?gid=619542785&single=true&output=csv';
+
+
+let activeUrl =
+localStorage.getItem('mons_active_url') ||
+DEFAULT_ACTIVE_URL;
+
+let endedUrl =
+localStorage.getItem('mons_ended_url') ||
+DEFAULT_ENDED_URL;
+
+
+let grantsData = [];
+let filteredData = [];
+let searchData = [];
+
+let currentPage = 1;
+
+const pageSize = 15;
+
+let charts = {};
+
+
+const $ = id => document.getElementById(id);
+
+
+function clean(v){
+return String(v ?? '').trim();
+}
+
+
+function norm(v){
+return clean(v)
+.toLowerCase()
+.replace(/[^a-z0-9]/g,'');
+}
+
+
+function findVal(row,candidates){
+
+const keys = Object.keys(row);
+
+for(const c of candidates){
+
+const n = norm(c);
+
+const k = keys.find(x => norm(x) === n);
+
+if(k && clean(row[k]))
+return row[k];
+
+}
+
+for(const c of candidates){
+
+const n = norm(c);
+
+const k = keys.find(x => norm(x).includes(n));
+
+if(k && clean(row[k]))
+return row[k];
+
+}
+
+return '';
+}
+
+
+function number(v){
+
+if(typeof v === 'number')
+return v;
+
+let s = clean(v)
+.replace(/rm/ig,'')
+.replace(/,/g,'')
+.replace(/\s/g,'');
+
+if(!s)
+return 0;
+
+let n = parseFloat(
+s.replace(/[^0-9.-]/g,'')
+);
+
+return Number.isFinite(n) ? n : 0;
+}
+
+
+function percent(v){
+
+let n = number(v);
+
+if(String(v).includes('%'))
+return Math.max(0,Math.min(100,n));
+
+if(n > 0 && n <= 1)
+return n * 100;
+
+return Math.max(0,Math.min(100,n));
+}
+
+
+function dateParts(v){
+
+let s = clean(v);
+
+if(!s)
+return {month:'',year:''};
+
+let m = s.match(
+/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/
+);
+
+if(m){
+
+return {
+month:m[2].padStart(2,'0'),
+year:m[3]
+};
+
+}
+
+let y = s.match(/(19|20)\d{2}/);
+
+if(y){
+
+let mon =
+s.match(/\b(0?[1-9]|1[0-2])\b/);
+
+return {
+month:mon ? mon[1].padStart(2,'0') : '',
+year:y[0]
+};
+
+}
+
+return {
+month:'',
+year:''
+};
+
+}
+
+
+/* =========================
+   PARSE ROW
+========================= */
+
 function parseRow(row,index,source){
-    const keys = Object.keys(row);
 
-    // Column C = Cost Centre No
-    const costCentreNo = clean(row[keys[2]]);
+const values = Object.values(row);
 
-    // Column E = Grant Title
-    const grantTitle = clean(row[keys[4]]);
 
-    const end = findVal(row,[
-        'Bulan_Tamat',
-        'bulan tamat',
-        'month end',
-        'end month',
-        'Tarikh Tamat',
-        'End Date',
-        'New End Date',
-        'Grant End Date',
-        'Revised Date'
-    ]);
+/* Column C */
+const costCentreNo =
+clean(values[2]);
 
-    const dp = dateParts(end);
 
-    return {
-        no: parseInt(findVal(row,[
-            'No',
-            'Bil',
-            'Bilangan',
-            'No.'
-        ])) || index + 1,
+/* Column D */
+const grantType =
+clean(values[3]);
 
-        // COLUMN C
-        kod: costCentreNo || `G-${index+1}`,
 
-        // COLUMN E
-        tajuk: grantTitle || 'Geran Penyelidikan',
+/* Column E */
+const grantTitle =
+clean(values[4]);
 
-        grantType: clean(findVal(row,[
-            'Grant_Type',
-            'Grant Type',
-            'GrantType',
-            'Jenis Geran',
-            'Type'
-        ])) || 'Tidak Dinyatakan',
 
-        penyelidik: clean(Object.values(row)[5]) || 'Tidak Dinyatakan',
+/* Column F */
+const staffName =
+clean(values[5]);
 
-        peruntukan: number(findVal(row,[
-            'Peruntukan',
-            'Jumlah Peruntukan',
-            'Allocation',
-            'Fund',
-            'Approved Amount',
-            'Amount'
-        ])),
 
-        bulanTamat:
-            clean(findVal(row,[
-                'Bulan_Tamat',
-                'Bulan Tamat',
-                'Month'
-            ]))?.padStart(2,'0') || dp.month,
+/* Column AK */
+const grantCategory =
+clean(values[36]);
 
-        tahunTamat:
-            clean(findVal(row,[
-                'Tahun_Tamat',
-                'Tahun Tamat',
-                'Year'
-            ])) || dp.year || '',
 
-        milestone: percent(findVal(row,[
-            'Milestone',
-            '% Milestone',
-            'Milestone %',
-            'Achievement',
-            'Progress',
-            'Progress %'
-        ])),
+const end = findVal(row,[
 
-        quartile: clean(findVal(row,[
-            'Quartile',
-            'Quartile Monitored',
-            'Publication Quartile',
-            'Q'
-        ])) || 'Non-Indexed',
+'Bulan_Tamat',
+'bulan tamat',
+'month end',
+'end month',
+'Tarikh Tamat',
+'End Date',
+'New End Date',
+'Grant End Date',
+'Revised Date'
 
-        prStatus: clean(findVal(row,[
-            'PR_Status',
-            'PR Status',
-            'Progress Report',
-            'PR Jun 2026',
-            'PR'
-        ])) || 'NOT COMPLETED',
+]);
 
-        source
-    };
+
+const dp = dateParts(end);
+
+
+return {
+
+no:
+parseInt(
+findVal(row,[
+'No',
+'Bil',
+'Bilangan',
+'No.'
+])
+) || index + 1,
+
+
+kod:
+costCentreNo || `G-${index+1}`,
+
+
+tajuk:
+grantTitle || 'Geran Penyelidikan',
+
+
+grantType:
+grantType || 'Tidak Dinyatakan',
+
+
+grantCategory:
+grantCategory || 'Tidak Dinyatakan',
+
+
+penyelidik:
+staffName || 'Tidak Dinyatakan',
+
+
+bulanTamat:
+clean(findVal(row,[
+'Bulan_Tamat',
+'Bulan Tamat',
+'Month'
+]))?.padStart(2,'0') || dp.month,
+
+
+tahunTamat:
+clean(findVal(row,[
+'Tahun_Tamat',
+'Tahun Tamat',
+'Year'
+])) || dp.year || '',
+
+
+milestone:
+percent(findVal(row,[
+'Milestone',
+'% Milestone',
+'Milestone %',
+'Achievement',
+'Progress',
+'Progress %'
+])),
+
+
+quartile:
+clean(findVal(row,[
+'Quartile',
+'Quartile Monitored',
+'Publication Quartile',
+'Q'
+])) || 'Non-Indexed',
+
+
+prStatus:
+clean(findVal(row,[
+'PR_Status',
+'PR Status',
+'Progress Report',
+'PR Jun 2026',
+'PR'
+])) || 'NOT COMPLETED',
+
+
+source
+
+};
+
 }
-function parseCSV(url,source){return new Promise((resolve,reject)=>Papa.parse(url,{download:true,header:true,skipEmptyLines:true,complete:r=>{if(r.errors&&r.errors.length)console.warn(source,r.errors);resolve((r.data||[]).map((x,i)=>parseRow(x,i,source)).filter(x=>Object.values(x).some(v=>clean(v))))},error:e=>reject(e)}))}
-async function fetchGoogleSheets(){const icon=$('refresh-icon');icon.classList.add('fa-spin');setStatus('Memuatkan Geran Aktif & Geran Tamat...','loading');try{const [a,e]=await Promise.all([parseCSV(activeUrl,'Geran Aktif'),parseCSV(endedUrl,'Geran Tamat')]);grantsData=[...a,...e];if(!grantsData.length)throw new Error('Tiada rekod');setStatus(`Disambung • Aktif: ${a.length.toLocaleString()} • Tamat: ${e.length.toLocaleString()}`,'ok');populateFilters();applyFilters()}catch(err){console.error(err);setStatus('Gagal membaca Google Sheet','error');alert('Dashboard tidak dapat membaca salah satu Google Sheet. Pastikan kedua-dua URL masih aktif dan telah Publish to web sebagai CSV.')}finally{icon.classList.remove('fa-spin')}}
-function setStatus(text,state){$('sheet-status-text').innerText=text;const b=$('sheet-status-badge'),d=$('status-dot');b.className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border';if(state==='ok'){b.classList.add('bg-emerald-50','text-emerald-700','border-emerald-200');d.className='w-2 h-2 rounded-full bg-emerald-500'}else if(state==='error'){b.classList.add('bg-rose-50','text-rose-700','border-rose-200');d.className='w-2 h-2 rounded-full bg-rose-500'}else{b.classList.add('bg-amber-50','text-amber-700','border-amber-200');d.className='w-2 h-2 rounded-full bg-amber-500'}}
-function populateFilters(){const type=$('filter-grant-type'),year=$('filter-tahun'),types=[...new Set(grantsData.map(x=>x.grantType).filter(Boolean))].sort(),years=[...new Set(grantsData.map(x=>x.tahunTamat).filter(Boolean))].sort();type.innerHTML='<option value="all">Semua Jenis Geran</option>'+types.map(x=>`<option>${esc(x)}</option>`).join('');year.innerHTML='<option value="all">Semua Tahun</option>'+years.map(x=>`<option>${esc(x)}</option>`).join('')}
-function applyFilters(){const source=$('filter-source').value,type=$('filter-grant-type').value,month=$('filter-bulan').value,year=$('filter-tahun').value,q=$('filter-quartile').value,m=$('filter-milestone').value,pr=$('filter-pr').value;filteredData=grantsData.filter(x=>(source==='all'||x.source===source)&&(type==='all'||x.grantType===type)&&(month==='all'||x.bulanTamat===month)&&(year==='all'||x.tahunTamat===year)&&(q==='all'||x.quartile===q)&&(pr==='all'||x.prStatus===pr)&&matchMilestone(x.milestone,m));currentPage=1;searchData=filteredData;renderAll()}
-function matchMilestone(n,m){if(m==='all')return true;if(m==='0-25')return n<=25;if(m==='26-50')return n>=26&&n<=50;if(m==='51-75')return n>=51&&n<=75;if(m==='76-99')return n>=76&&n<=99;if(m==='100')return n===100;return true}
-function resetFilters(){['filter-source','filter-grant-type','filter-bulan','filter-tahun','filter-quartile','filter-milestone','filter-pr'].forEach(id=>$(id).value='all');$('master-search').value='';applyFilters()}
-function renderAll(){renderKPIs();renderSummary();renderWarning();renderVerdict();renderMasterlist();updateCharts()}
+
+
+/* =========================
+   CSV
+========================= */
+
+function parseCSV(url,source){
+
+return new Promise((resolve,reject)=>{
+
+Papa.parse(url,{
+
+download:true,
+header:true,
+skipEmptyLines:true,
+
+complete:r=>{
+
+if(r.errors && r.errors.length)
+console.warn(source,r.errors);
+
+resolve(
+(r.data || [])
+.map((x,i)=>parseRow(x,i,source))
+.filter(
+x => Object.values(x).some(v => clean(v))
+)
+);
+
+},
+
+error:e=>reject(e)
+
+});
+
+});
+
+}
+
+
+/* =========================
+   FETCH DATA
+========================= */
+
+async function fetchGoogleSheets(){
+
+const icon = $('refresh-icon');
+
+icon.classList.add('fa-spin');
+
+setStatus(
+'Memuatkan Geran Aktif & Geran Tamat...',
+'loading'
+);
+
+try{
+
+const [a,e] = await Promise.all([
+
+parseCSV(
+activeUrl,
+'Geran Aktif'
+),
+
+parseCSV(
+endedUrl,
+'Geran Tamat'
+)
+
+]);
+
+
+grantsData = [
+...a,
+...e
+];
+
+
+if(!grantsData.length)
+throw new Error('Tiada rekod');
+
+
+setStatus(
+`Disambung • Aktif: ${a.length.toLocaleString()} • Tamat: ${e.length.toLocaleString()}`,
+'ok'
+);
+
+
+populateFilters();
+
+applyFilters();
+
+}
+catch(err){
+
+console.error(err);
+
+setStatus(
+'Gagal membaca Google Sheet',
+'error'
+);
+
+alert(
+'Dashboard tidak dapat membaca salah satu Google Sheet. Pastikan kedua-dua URL masih aktif dan telah Publish to web sebagai CSV.'
+);
+
+}
+finally{
+
+icon.classList.remove('fa-spin');
+
+}
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+function setStatus(text,state){
+
+$('sheet-status-text').innerText = text;
+
+const b = $('sheet-status-badge');
+
+const d = $('status-dot');
+
+b.className =
+'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border';
+
+
+if(state === 'ok'){
+
+b.classList.add(
+'bg-emerald-50',
+'text-emerald-700',
+'border-emerald-200'
+);
+
+d.className =
+'w-2 h-2 rounded-full bg-emerald-500';
+
+}
+else if(state === 'error'){
+
+b.classList.add(
+'bg-rose-50',
+'text-rose-700',
+'border-rose-200'
+);
+
+d.className =
+'w-2 h-2 rounded-full bg-rose-500';
+
+}
+else{
+
+b.classList.add(
+'bg-amber-50',
+'text-amber-700',
+'border-amber-200'
+);
+
+d.className =
+'w-2 h-2 rounded-full bg-amber-500';
+
+}
+
+}
+
+
+/* =========================
+   FILTER OPTIONS
+========================= */
+
+function populateFilters(){
+
+const type =
+$('filter-grant-type');
+
+const category =
+$('filter-grant-category');
+
+const year =
+$('filter-tahun');
+
+
+const types = [
+...new Set(
+grantsData
+.map(x => x.grantType)
+.filter(Boolean)
+)
+].sort();
+
+
+const categories = [
+...new Set(
+grantsData
+.map(x => x.grantCategory)
+.filter(Boolean)
+)
+].sort();
+
+
+const years = [
+...new Set(
+grantsData
+.map(x => x.tahunTamat)
+.filter(Boolean)
+)
+].sort();
+
+
+type.innerHTML =
+'<option value="all">Semua Grant Type</option>' +
+
+types.map(x =>
+`<option value="${escAttr(x)}">${esc(x)}</option>`
+).join('');
+
+
+category.innerHTML =
+'<option value="all">Semua Grant Category</option>' +
+
+categories.map(x =>
+`<option value="${escAttr(x)}">${esc(x)}</option>`
+).join('');
+
+
+year.innerHTML =
+'<option value="all">Semua Tahun</option>' +
+
+years.map(x =>
+`<option value="${escAttr(x)}">${esc(x)}</option>`
+).join('');
+
+}
+
+
+/* =========================
+   APPLY FILTER
+========================= */
+
+function applyFilters(){
+
+const source =
+$('filter-source').value;
+
+const type =
+$('filter-grant-type').value;
+
+const category =
+$('filter-grant-category').value;
+
+const month =
+$('filter-bulan').value;
+
+const year =
+$('filter-tahun').value;
+
+const q =
+$('filter-quartile').value;
+
+const m =
+$('filter-milestone').value;
+
+const pr =
+$('filter-pr').value;
+
+
+filteredData =
+grantsData.filter(x =>
+
+(source === 'all' || x.source === source) &&
+
+(type === 'all' || x.grantType === type) &&
+
+(category === 'all' ||
+x.grantCategory === category) &&
+
+(month === 'all' ||
+x.bulanTamat === month) &&
+
+(year === 'all' ||
+x.tahunTamat === year) &&
+
+(q === 'all' ||
+x.quartile === q) &&
+
+(pr === 'all' ||
+x.prStatus === pr) &&
+
+matchMilestone(
+x.milestone,
+m
+)
+
+);
+
+
+currentPage = 1;
+
+searchData = filteredData;
+
+renderAll();
+
+}
+
+
+function matchMilestone(n,m){
+
+if(m === 'all')
+return true;
+
+if(m === '0-25')
+return n <= 25;
+
+if(m === '26-50')
+return n >= 26 && n <= 50;
+
+if(m === '51-75')
+return n >= 51 && n <= 75;
+
+if(m === '76-99')
+return n >= 76 && n <= 99;
+
+if(m === '100')
+return n === 100;
+
+return true;
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetFilters(){
+
+[
+
+'filter-source',
+'filter-grant-type',
+'filter-grant-category',
+'filter-bulan',
+'filter-tahun',
+'filter-quartile',
+'filter-milestone',
+'filter-pr'
+
+].forEach(
+id => $(id).value = 'all'
+);
+
+
+$('master-search').value = '';
+
+applyFilters();
+
+}
+
+
+/* =========================
+   RENDER ALL
+========================= */
+
+function renderAll(){
+
+renderKPIs();
+
+renderSummary();
+
+renderWarning();
+
+renderVerdict();
+
+renderMasterlist();
+
+updateCharts();
+
+}
+
+
+/* =========================
+   KPI
+========================= */
+
 function renderKPIs(){
-    const total = filteredData.length;
 
-    const a = filteredData.filter(
-        x => x.source === 'Geran Aktif'
-    ).length;
+const total =
+filteredData.length;
 
-    const e = filteredData.filter(
-        x => x.source === 'Geran Tamat'
-    ).length;
 
-    const ms = total
-        ? filteredData.reduce((s,x) => s + x.milestone, 0) / total
-        : 0;
+const a =
+filteredData.filter(
+x => x.source === 'Geran Aktif'
+).length;
 
-    $('kpi-total').innerText = total.toLocaleString();
 
-    $('kpi-active').innerText = a.toLocaleString();
+const e =
+filteredData.filter(
+x => x.source === 'Geran Tamat'
+).length;
 
-    $('kpi-ended').innerText = e.toLocaleString();
 
-    $('kpi-milestone').innerText =
-        Math.round(ms) + '%';
+const ms =
+total
+?
+filteredData.reduce(
+(s,x) => s + x.milestone,
+0
+) / total
+:
+0;
 
-    $('kpi-milestone-bar').style.width =
-        Math.min(100, ms) + '%';
+
+$('kpi-total').innerText =
+total.toLocaleString();
+
+$('kpi-active').innerText =
+a.toLocaleString();
+
+$('kpi-ended').innerText =
+e.toLocaleString();
+
+$('kpi-milestone').innerText =
+Math.round(ms) + '%';
+
+$('kpi-milestone-bar').style.width =
+Math.min(100,ms) + '%';
+
 }
-function renderSummary(){const t=filteredData.length,ms=t?Math.round(filteredData.reduce((s,x)=>s+x.milestone,0)/t):0,end26=filteredData.filter(x=>x.tahunTamat==='2026').length,low=filteredData.filter(x=>x.tahunTamat==='2026'&&x.milestone<50).length,q12=filteredData.filter(x=>['Q1','Q2'].includes(x.quartile)).length;$('summary-milestone').innerHTML=`Purata kemajuan semasa ialah <b>${ms}%</b>. Sebanyak <b>${filteredData.filter(x=>x.milestone===100).length}</b> geran mencapai 100%.`;$('summary-end').innerHTML=`<b>${end26}</b> geran dijadualkan tamat pada 2026; <b>${low}</b> daripadanya mempunyai milestone di bawah 50%.`;$('summary-quartile').innerHTML=`<b>${q12}</b> geran (${t?Math.round(q12/t*100):0}%) berada dalam Q1/Q2.`;const qs=['Q1','Q2','Q3','Q4','Non-Indexed'],cls=['bg-blue-600','bg-emerald-500','bg-amber-500','bg-rose-500','bg-slate-400'];$('quartile-bar').innerHTML=qs.map((q,i)=>{const n=filteredData.filter(x=>x.quartile===q).length;return `<div class="${cls[i]}" style="width:${t?n/t*100:0}%" title="${q}: ${n}"></div>`}).join('');$('quartile-legend').innerHTML=qs.map(q=>`<div>${q}: <b>${filteredData.filter(x=>x.quartile===q).length}</b></div>`).join('');$('q12-total').innerText=`${q12} (${t?Math.round(q12/t*100):0}%)`}
-function renderWarning(){const list=filteredData.filter(x=>x.tahunTamat==='2026'||x.prStatus==='NOT COMPLETED').slice(0,10);$('warning-count').innerText=`${list.length} Kes`;$('warning-body').innerHTML=list.length?list.map(x=>`<tr><td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] ${x.source==='Geran Aktif'?'bg-cyan-50 text-cyan-700':'bg-amber-50 text-amber-700'}">${x.source}</span></td><td class="p-3"><b>${esc(x.kod)}</b><div class="text-[11px] text-slate-500 max-w-md truncate">${esc(x.tajuk)}</div></td><td class="p-3">${esc(x.grantType)}</td><td class="p-3">${x.bulanTamat||'-'}/${x.tahunTamat||'-'}</td><td class="p-3 font-bold text-sky-700">${Math.round(x.milestone)}%</td><td class="p-3">${esc(x.prStatus)}</td><td class="p-3"><button onclick="viewGrant(${x.no},'${escAttr(x.source)}','${escAttr(x.kod)}')" class="text-sky-600 font-semibold">Butiran</button></td></tr>`).join(''):'<tr><td colspan="7" class="p-6 text-center text-slate-400">Tiada rekod memerlukan perhatian.</td></tr>'}
-function renderVerdict(){const types=[...new Set(filteredData.map(x=>x.grantType))].sort();$('verdict-body').innerHTML=types.map(t=>{const a=filteredData.filter(x=>x.grantType===t),fund=a.reduce((s,x)=>s+x.peruntukan,0),ms=a.length?Math.round(a.reduce((s,x)=>s+x.milestone,0)/a.length):0,q=a.filter(x=>['Q1','Q2'].includes(x.quartile)).length,pr=a.filter(x=>x.prStatus==='COMPLETED').length;let act='Dalam Pemantauan Normal';if(ms<25)act='Intervensi Audit Prestasi';else if(pr<a.length*.5)act='Peringatan PR';return `<tr><td class="p-3 font-bold">${esc(t)}</td><td class="p-3 text-center">${a.length}</td><td class="p-3 text-right">RM ${fund.toLocaleString()}</td><td class="p-3 text-center font-bold text-sky-700">${ms}%</td><td class="p-3 text-center">${q}</td><td class="p-3 text-center">${pr}/${a.length}</td><td class="p-3 text-center">${act}</td></tr>`}).join('')||'<tr><td colspan="7" class="p-6 text-center text-slate-400">Tiada data.</td></tr>'}
-function renderMasterlist(){const q=$('master-search').value.toLowerCase();searchData=filteredData.filter(x=>!q||[x.kod,x.tajuk,x.penyelidik,x.grantType,x.source].join(' ').toLowerCase().includes(q));const pages=Math.max(1,Math.ceil(searchData.length/pageSize));currentPage=Math.min(currentPage,pages);const rows=searchData.slice((currentPage-1)*pageSize,currentPage*pageSize);$('master-count').innerText=searchData.length.toLocaleString();$('page-info').innerText=`Halaman ${currentPage} dari ${pages}`;$('prev').disabled=currentPage<=1;$('next').disabled=currentPage>=pages;$('master-body').innerHTML=rows.map((x,i)=>`<tr><td class="p-3">${(currentPage-1)*pageSize+i+1}</td><td class="p-3">${x.source}</td><td class="p-3"><b>${esc(x.kod)}</b><div class="text-[11px] text-slate-500 max-w-sm truncate">${esc(x.tajuk)}</div></td><td class="p-3">${esc(x.grantType)}</td><td class="p-3">${esc(x.penyelidik)}</td><td class="p-3 text-right">RM ${x.peruntukan.toLocaleString()}</td><td class="p-3 text-center">${x.bulanTamat||'-'}/${x.tahunTamat||'-'}</td><td class="p-3 text-center font-bold">${Math.round(x.milestone)}%</td><td class="p-3 text-center">${esc(x.quartile)}</td><td class="p-3 text-center">${esc(x.prStatus)}</td><td class="p-3 text-center"><button onclick="viewGrant(${x.no},'${escAttr(x.source)}','${escAttr(x.kod)}')" class="text-sky-600 font-semibold">Lihat</button></td></tr>`).join('')||'<tr><td colspan="11" class="p-8 text-center text-slate-400">Tiada rekod dijumpai.</td></tr>'}
-function prevPage(){if(currentPage>1){currentPage--;renderMasterlist()}}function nextPage(){const pages=Math.ceil(searchData.length/pageSize);if(currentPage<pages){currentPage++;renderMasterlist()}}
-function initCharts(){charts.source=new Chart($('chartSource'),{type:'doughnut',data:{labels:['Geran Aktif','Geran Tamat'],datasets:[{data:[0,0]}]},options:{responsive:true,maintainAspectRatio:false}});charts.type=new Chart($('chartType'),{type:'bar',data:{labels:[],datasets:[{label:'Bilangan',data:[]}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}});charts.milestone=new Chart($('chartMilestone'),{type:'bar',data:{labels:['0-25%','26-50%','51-75%','76-99%','100%'],datasets:[{label:'Bilangan',data:[0,0,0,0,0]}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}});charts.pr=new Chart($('chartPR'),{type:'pie',data:{labels:[],datasets:[{data:[]}]},options:{responsive:true,maintainAspectRatio:false}})}
-function updateCharts(){if(!charts.source)return;const a=filteredData.filter(x=>x.source==='Geran Aktif').length,e=filteredData.filter(x=>x.source==='Geran Tamat').length;charts.source.data.datasets[0].data=[a,e];charts.source.update();const tc={};filteredData.forEach(x=>tc[x.grantType]=(tc[x.grantType]||0)+1);charts.type.data.labels=Object.keys(tc);charts.type.data.datasets[0].data=Object.values(tc);charts.type.update();charts.milestone.data.datasets[0].data=[filteredData.filter(x=>x.milestone<=25).length,filteredData.filter(x=>x.milestone>=26&&x.milestone<=50).length,filteredData.filter(x=>x.milestone>=51&&x.milestone<=75).length,filteredData.filter(x=>x.milestone>=76&&x.milestone<=99).length,filteredData.filter(x=>x.milestone===100).length];charts.milestone.update();const pc={};filteredData.forEach(x=>pc[x.prStatus]=(pc[x.prStatus]||0)+1);charts.pr.data.labels=Object.keys(pc);charts.pr.data.datasets[0].data=Object.values(pc);charts.pr.update()}
-function switchTab(id){['ringkasan','visual','verdict','masterlist'].forEach(t=>{const b=$('tab-'+t),v=$('view-'+t);if(t===id){b.className='tab-active py-2.5 px-1 inline-flex items-center gap-2 border-b-2 whitespace-nowrap';v.classList.remove('hidden')}else{b.className='text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap';v.classList.add('hidden')}});if(id==='visual')setTimeout(updateCharts,50)}
-function viewGrant(no,source,kod){const x=grantsData.find(g=>g.no===Number(no)&&g.source===source&&g.kod===kod)||grantsData.find(g=>g.source===source&&g.kod===kod);if(!x)return;$('detail-body').innerHTML=`<div class="p-3 bg-slate-50 rounded-xl"><b class="text-sky-700">${esc(x.kod)}</b><h3 class="font-bold text-sm mt-1">${esc(x.tajuk)}</h3></div><div class="grid grid-cols-2 gap-3"><div class="p-3 border rounded-lg"><small> Sumber</small><br><b>${esc(x.source)}</b></div><div class="p-3 border rounded-lg"><small>Grant Type</small><br><b>${esc(x.grantType)}</b></div><div class="p-3 border rounded-lg"><small>Ketua Penyelidik</small><br><b>${esc(x.penyelidik)}</b></div><div class="p-3 border rounded-lg"><small>Peruntukan</small><br><b>RM ${x.peruntukan.toLocaleString()}</b></div><div class="p-3 border rounded-lg"><small>Tarikh Tamat</small><br><b>${x.bulanTamat||'-'}/${x.tahunTamat||'-'}</b></div><div class="p-3 border rounded-lg"><small>Milestone</small><br><b>${Math.round(x.milestone)}%</b></div><div class="p-3 border rounded-lg"><small>Quartile</small><br><b>${esc(x.quartile)}</b></div><div class="p-3 border rounded-lg"><small>PR Status</small><br><b>${esc(x.prStatus)}</b></div></div>`;$('detail-modal').classList.remove('hidden');$('detail-modal').classList.add('flex')}
-function closeDetail(){$('detail-modal').classList.add('hidden');$('detail-modal').classList.remove('flex')}
-function openConfigModal(){$('url-active').value=activeUrl;$('url-ended').value=endedUrl;$('config-modal').classList.remove('hidden');$('config-modal').classList.add('flex')}
-function closeConfigModal(){$('config-modal').classList.add('hidden');$('config-modal').classList.remove('flex')}
-function saveAndFetchSheets(){activeUrl=$('url-active').value.trim();endedUrl=$('url-ended').value.trim();localStorage.setItem('mons_active_url',activeUrl);localStorage.setItem('mons_ended_url',endedUrl);closeConfigModal();fetchGoogleSheets()}
-function reloadData(){fetchGoogleSheets()}
-function exportCSV(){const csv=Papa.unparse(filteredData.map(x=>({'Sumber':x.source,'No':x.no,'Kod':x.kod,'Tajuk':x.tajuk,'Grant Type':x.grantType,'Ketua Penyelidik':x.penyelidik,'Peruntukan (RM)':x.peruntukan,'Bulan Tamat':x.bulanTamat,'Tahun Tamat':x.tahunTamat,'% Milestone':x.milestone,'Quartile':x.quartile,'PR Status':x.prStatus})));const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='MONS_Geran_'+new Date().toISOString().slice(0,10)+'.csv';a.click();URL.revokeObjectURL(url)}
-function esc(v){return clean(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function escAttr(v){return esc(v).replace(/`/g,'')}
-document.addEventListener('DOMContentLoaded',()=>{initCharts();fetchGoogleSheets()});
-</script></body></html>
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+function renderSummary(){
+
+const t =
+filteredData.length;
+
+
+const ms =
+t
+?
+Math.round(
+filteredData.reduce(
+(s,x) => s + x.milestone,
+0
+) / t
+)
+:
+0;
+
+
+const end26 =
+filteredData.filter(
+x => x.tahunTamat === '2026'
+).length;
+
+
+const low =
+filteredData.filter(
+x =>
+x.tahunTamat === '2026' &&
+x.milestone < 50
+).length;
+
+
+const q12 =
+filteredData.filter(
+x =>
+['Q1','Q2'].includes(x.quartile)
+).length;
+
+
+$('summary-milestone').innerHTML =
+`Purata kemajuan semasa ialah <b>${ms}%</b>.
+Sebanyak <b>${filteredData.filter(
+x => x.milestone === 100
+).length}</b> geran mencapai 100%.`;
+
+
+$('summary-end').innerHTML =
+`<b>${end26}</b> geran dijadualkan tamat pada 2026;
+<b>${low}</b> daripadanya mempunyai milestone di bawah 50%.`;
+
+
+$('summary-quartile').innerHTML =
+`<b>${q12}</b> geran
+(${t ? Math.round(q12/t*100) : 0}%)
+berada dalam Q1/Q2.`;
+
+
+const qs =
+[
+'Q1',
+'Q2',
+'Q3',
+'Q4',
+'Non-Indexed'
+];
+
+
+const cls =
+[
+'bg-blue-600',
+'bg-emerald-500',
+'bg-amber-500',
+'bg-rose-500',
+'bg-slate-400'
+];
+
+
+$('quartile-bar').innerHTML =
+qs.map((q,i)=>{
+
+const n =
+filteredData.filter(
+x => x.quartile === q
+).length;
+
+return `
+<div
+class="${cls[i]}"
+style="width:${t ? n/t*100 : 0}%"
+title="${q}: ${n}">
+</div>
+`;
+
+}).join('');
+
+
+$('quartile-legend').innerHTML =
+qs.map(q=>`
+
+<div>
+${q}:
+<b>
+${filteredData.filter(
+x => x.quartile === q
+).length}
+</b>
+</div>
+
+`).join('');
+
+
+$('q12-total').innerText =
+`${q12} (${t ? Math.round(q12/t*100) : 0}%)`;
+
+}
+
+
+/* =========================
+   WARNING
+========================= */
+
+function renderWarning(){
+
+const list =
+filteredData.filter(
+x =>
+x.tahunTamat === '2026' ||
+x.prStatus === 'NOT COMPLETED'
+).slice(0,10);
+
+
+$('warning-count').innerText =
+`${list.length} Kes`;
+
+
+$('warning-body').innerHTML =
+list.length
+
+?
+
+list.map(x=>`
+
+<tr>
+
+<td class="p-3">
+
+<span class="px-2 py-0.5 rounded text-[10px]
+${x.source === 'Geran Aktif'
+?
+'bg-cyan-50 text-cyan-700'
+:
+'bg-amber-50 text-amber-700'}">
+
+${esc(x.source)}
+
+</span>
+
+</td>
+
+
+<td class="p-3">
+
+<b>${esc(x.kod)}</b>
+
+<div class="text-[11px] text-slate-500 max-w-md truncate">
+${esc(x.tajuk)}
+</div>
+
+</td>
+
+
+<td class="p-3">
+${esc(x.grantType)}
+</td>
+
+
+<td class="p-3">
+${esc(x.grantCategory)}
+</td>
+
+
+<td class="p-3">
+${x.bulanTamat || '-'}/${x.tahunTamat || '-'}
+</td>
+
+
+<td class="p-3 font-bold text-sky-700">
+${Math.round(x.milestone)}%
+</td>
+
+
+<td class="p-3">
+${esc(x.prStatus)}
+</td>
+
+
+<td class="p-3">
+
+<button
+onclick="viewGrant(
+'${escAttr(x.source)}',
+'${escAttr(x.kod)}'
+)"
+class="text-sky-600 font-semibold">
+
+Butiran
+
+</button>
+
+</td>
+
+</tr>
+
+`).join('')
+
+:
+
+`
+<tr>
+<td colspan="8"
+class="p-6 text-center text-slate-400">
+Tiada rekod memerlukan perhatian.
+</td>
+</tr>
+`;
+
+}
+
+
+/* =========================
+   VERDICT
+========================= */
+
+function renderVerdict(){
+
+const types =
+[
+...new Set(
+filteredData.map(x => x.grantType)
+)
+].sort();
+
+
+$('verdict-body').innerHTML =
+
+types.map(t=>{
+
+const a =
+filteredData.filter(
+x => x.grantType === t
+);
+
+
+const ms =
+a.length
+?
+Math.round(
+a.reduce(
+(s,x) => s + x.milestone,
+0
+) / a.length
+)
+:
+0;
+
+
+const q =
+a.filter(
+x => ['Q1','Q2'].includes(x.quartile)
+).length;
+
+
+const pr =
+a.filter(
+x => x.prStatus === 'COMPLETED'
+).length;
+
+
+let act =
+'Dalam Pemantauan Normal';
+
+
+if(ms < 25)
+act = 'Intervensi Audit Prestasi';
+
+else if(pr < a.length*.5)
+act = 'Peringatan PR';
+
+
+return `
+
+<tr>
+
+<td class="p-3 font-bold">
+${esc(t)}
+</td>
+
+<td class="p-3 text-center">
+${a.length}
+</td>
+
+<td class="p-3 text-center font-bold text-sky-700">
+${ms}%
+</td>
+
+<td class="p-3 text-center">
+${q}
+</td>
+
+<td class="p-3 text-center">
+${pr}/${a.length}
+</td>
+
+<td class="p-3 text-center">
+${act}
+</td>
+
+</tr>
+
+`;
+
+}).join('')
+
+||
+
+`
+<tr>
+<td colspan="6"
+class="p-6 text-center text-slate-400">
+Tiada data.
+</td>
+</tr>
+`;
+
+}
+
+
+/* =========================
+   MASTERLIST
+========================= */
+
+function renderMasterlist(){
+
+const q =
+$('master-search').value.toLowerCase();
+
+
+searchData =
+filteredData.filter(x =>
+
+!q ||
+
+[
+x.kod,
+x.tajuk,
+x.penyelidik,
+x.grantType,
+x.grantCategory,
+x.source
+]
+.join(' ')
+.toLowerCase()
+.includes(q)
+
+);
+
+
+const pages =
+Math.max(
+1,
+Math.ceil(
+searchData.length/pageSize
+)
+);
+
+
+currentPage =
+Math.min(
+currentPage,
+pages
+);
+
+
+const rows =
+searchData.slice(
+(currentPage-1)*pageSize,
+currentPage*pageSize
+);
+
+
+$('master-count').innerText =
+searchData.length.toLocaleString();
+
+
+$('page-info').innerText =
+`Halaman ${currentPage} dari ${pages}`;
+
+
+$('prev').disabled =
+currentPage <= 1;
+
+
+$('next').disabled =
+currentPage >= pages;
+
+
+$('master-body').innerHTML =
+
+rows.map((x,i)=>`
+
+<tr>
+
+<td class="p-3">
+${(currentPage-1)*pageSize+i+1}
+</td>
+
+
+<td class="p-3">
+${esc(x.source)}
+</td>
+
+
+<td class="p-3 font-semibold">
+${esc(x.kod)}
+</td>
+
+
+<td class="p-3">
+
+<div class="max-w-sm truncate">
+${esc(x.tajuk)}
+</div>
+
+</td>
+
+
+<td class="p-3">
+${esc(x.grantType)}
+</td>
+
+
+<td class="p-3">
+${esc(x.grantCategory)}
+</td>
+
+
+<td class="p-3">
+${esc(x.penyelidik)}
+</td>
+
+
+<td class="p-3 text-center">
+${x.bulanTamat || '-'}/${x.tahunTamat || '-'}
+</td>
+
+
+<td class="p-3 text-center font-bold">
+${Math.round(x.milestone)}%
+</td>
+
+
+<td class="p-3 text-center">
+${esc(x.quartile)}
+</td>
+
+
+<td class="p-3 text-center">
+${esc(x.prStatus)}
+</td>
+
+
+<td class="p-3 text-center">
+
+<button
+onclick="viewGrant(
+'${escAttr(x.source)}',
+'${escAttr(x.kod)}'
+)"
+class="text-sky-600 font-semibold">
+
+Lihat
+
+</button>
+
+</td>
+
+</tr>
+
+`).join('')
+
+||
+
+`
+<tr>
+<td colspan="12"
+class="p-8 text-center text-slate-400">
+Tiada rekod dijumpai.
+</td>
+</tr>
+`;
+
+}
+
+
+function prevPage(){
+
+if(currentPage > 1){
+
+currentPage--;
+
+renderMasterlist();
+
+}
+
+}
+
+
+function nextPage(){
+
+const pages =
+Math.ceil(
+searchData.length/pageSize
+);
+
+
+if(currentPage < pages){
+
+currentPage++;
+
+renderMasterlist();
+
+}
+
+}
+
+
+/* =========================
+   CHARTS
+========================= */
+
+function initCharts(){
+
+charts.source =
+new Chart(
+$('chartSource'),
+{
+type:'doughnut',
+
+data:{
+labels:[
+'Geran Aktif',
+'Geran Tamat'
+],
+
+datasets:[
+{
+data:[0,0]
+}
+]
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+
+}
+);
+
+
+charts.type =
+new Chart(
+$('chartType'),
+{
+type:'bar',
+
+data:{
+labels:[],
+
+datasets:[
+{
+label:'Bilangan',
+data:[]
+}
+]
+
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false,
+
+scales:{
+y:{
+beginAtZero:true
+}
+}
+
+}
+
+}
+);
+
+
+charts.category =
+new Chart(
+$('chartCategory'),
+{
+type:'bar',
+
+data:{
+labels:[],
+
+datasets:[
+{
+label:'Bilangan',
+data:[]
+}
+]
+
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false,
+
+scales:{
+y:{
+beginAtZero:true
+}
+}
+
+}
+
+}
+);
+
+
+charts.milestone =
+new Chart(
+$('chartMilestone'),
+{
+type:'bar',
+
+data:{
+labels:[
+'0-25%',
+'26-50%',
+'51-75%',
+'76-99%',
+'100%'
+],
+
+datasets:[
+{
+label:'Bilangan',
+data:[0,0,0,0,0]
+}
+]
+
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false,
+
+scales:{
+y:{
+beginAtZero:true
+}
+}
+
+}
+
+}
+);
+
+
+charts.pr =
+new Chart(
+$('chartPR'),
+{
+type:'pie',
+
+data:{
+labels:[],
+datasets:[
+{
+data:[]
+}
+]
+
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+
+}
+);
+
+}
+
+
+/* =========================
+   UPDATE CHARTS
+========================= */
+
+function updateCharts(){
+
+if(!charts.source)
+return;
+
+
+const a =
+filteredData.filter(
+x => x.source === 'Geran Aktif'
+).length;
+
+
+const e =
+filteredData.filter(
+x => x.source === 'Geran Tamat'
+).length;
+
+
+charts.source.data.datasets[0].data =
+[a,e];
+
+charts.source.update();
+
+
+/* Grant Type */
+
+const tc = {};
+
+filteredData.forEach(x => {
+
+tc[x.grantType] =
+(tc[x.grantType] || 0) + 1;
+
+});
+
+
+charts.type.data.labels =
+Object.keys(tc);
+
+charts.type.data.datasets[0].data =
+Object.values(tc);
+
+charts.type.update();
+
+
+/* Grant Category */
+
+const gc = {};
+
+filteredData.forEach(x => {
+
+gc[x.grantCategory] =
+(gc[x.grantCategory] || 0) + 1;
+
+});
+
+
+charts.category.data.labels =
+Object.keys(gc);
+
+charts.category.data.datasets[0].data =
+Object.values(gc);
+
+charts.category.update();
+
+
+/* Milestone */
+
+charts.milestone.data.datasets[0].data = [
+
+filteredData.filter(
+x => x.milestone <= 25
+).length,
+
+filteredData.filter(
+x => x.milestone >= 26 &&
+x.milestone <= 50
+).length,
+
+filteredData.filter(
+x => x.milestone >= 51 &&
+x.milestone <= 75
+).length,
+
+filteredData.filter(
+x => x.milestone >= 76 &&
+x.milestone <= 99
+).length,
+
+filteredData.filter(
+x => x.milestone === 100
+).length
+
+];
+
+charts.milestone.update();
+
+
+/* PR */
+
+const pc = {};
+
+filteredData.forEach(x => {
+
+pc[x.prStatus] =
+(pc[x.prStatus] || 0) + 1;
+
+});
+
+
+charts.pr.data.labels =
+Object.keys(pc);
+
+charts.pr.data.datasets[0].data =
+Object.values(pc);
+
+charts.pr.update();
+
+}
+
+
+/* =========================
+   TAB
+========================= */
+
+function switchTab(id){
+
+[
+'ringkasan',
+'visual',
+'verdict',
+'masterlist'
+].forEach(t=>{
+
+const b =
+$('tab-'+t);
+
+const v =
+$('view-'+t);
+
+
+if(t === id){
+
+b.className =
+'tab-active py-2.5 px-1 inline-flex items-center gap-2 border-b-2 whitespace-nowrap';
+
+v.classList.remove('hidden');
+
+}
+else{
+
+b.className =
+'text-slate-500 py-2.5 px-1 inline-flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap';
+
+v.classList.add('hidden');
+
+}
+
+});
+
+
+if(id === 'visual')
+setTimeout(
+updateCharts,
+50
+);
+
+}
+
+
+/* =========================
+   DETAIL
+========================= */
+
+function viewGrant(source,kod){
+
+const x =
+grantsData.find(
+g =>
+g.source === source &&
+g.kod === kod
+);
+
+
+if(!x)
+return;
+
+
+$('detail-body').innerHTML = `
+
+<div class="p-3 bg-slate-50 rounded-xl">
+
+<b class="text-sky-700">
+${esc(x.kod)}
+</b>
+
+<h3 class="font-bold text-sm mt-1">
+${esc(x.tajuk)}
+</h3>
+
+</div>
+
+
+<div class="grid grid-cols-2 gap-3">
+
+
+<div class="p-3 border rounded-lg">
+
+<small>Sumber</small>
+
+<br>
+
+<b>
+${esc(x.source)}
+</b>
+
+</div>
+
+
+<div class="p-3 border rounded-lg">
+
+<small>Grant Type</small>
+
+<br>
+
+<b>
+${esc(x.grantType)}
+</b>
+
+</div>
+
+
+<div class="p-3 border rounded-lg">
+
+<small>Grant Category</small>
+
+<br>
+
+<b>
+${esc(x.grantCategory)}
+</b>
+
+</div>
+
+
+<div class="p-3 border rounded-lg">
+
+<small>Staff Name</small>
+
+<br>
+
+<b>
+${esc(x.penyelidik)}
+</b>
+
+</div>
+
+
+<div class="p-3 border rounded-lg">
+
+<small>Tarikh Tamat</small>
+
+<br>
+
+<b>
+${x.bulanTamat || '-'}/${x.tahunTamat || '-'}
+</b>
+
+</div>
+
+
+<div class="p-3 border rounded-lg">
+
+<small>Milestone</small>
+
+<br>
+
+<b>
+${Math.round(x.milestone)}%
+</b>
+
+</div>
+
+
+<div class="p-3 border rounded-lg">
+
+<small>Quartile</small>
+
+<br>
+
+<b>
+${esc(x.quartile)}
+</b>
+
+</div>
+
+
+<div class="p-3 border rounded-lg">
+
+<small>PR Status</small>
+
+<br>
+
+<b>
+${esc(x.prStatus)}
+</b>
+
+</div>
+
+
+</div>
+
+`;
+
+
+$('detail-modal').classList.remove('hidden');
+
+$('detail-modal').classList.add('flex');
+
+}
+
+
+function closeDetail(){
+
+$('detail-modal').classList.add('hidden');
+
+$('detail-modal').classList.remove('flex');
+
+}
+
+
+/* =========================
+   CONFIG
+========================= */
+
+function openConfigModal(){
+
+$('url-active').value =
+activeUrl;
+
+$('url-ended').value =
+endedUrl;
+
+$('config-modal').classList.remove('hidden');
+
+$('config-modal').classList.add('flex');
+
+}
+
+
+function closeConfigModal(){
+
+$('config-modal').classList.add('hidden');
+
+$('config-modal').classList.remove('flex');
+
+}
+
+
+function saveAndFetchSheets(){
+
+activeUrl =
+$('url-active').value.trim();
+
+endedUrl =
+$('url-ended').value.trim();
+
+
+localStorage.setItem(
+'mons_active_url',
+activeUrl
+);
+
+localStorage.setItem(
+'mons_ended_url',
+endedUrl
+);
+
+
+closeConfigModal();
+
+fetchGoogleSheets();
+
+}
+
+
+function reloadData(){
+
+fetchGoogleSheets();
+
+}
+
+
+/* =========================
+   EXPORT
+========================= */
+
+function exportCSV(){
+
+const csv =
+Papa.unparse(
+
+filteredData.map(x => ({
+
+'Sumber':
+x.source,
+
+'Cost Centre No':
+x.kod,
+
+'Grant Title':
+x.tajuk,
+
+'Grant Type':
+x.grantType,
+
+'Grant Category':
+x.grantCategory,
+
+'Staff Name':
+x.penyelidik,
+
+'Bulan Tamat':
+x.bulanTamat,
+
+'Tahun Tamat':
+x.tahunTamat,
+
+'% Milestone':
+x.milestone,
+
+'Quartile':
+x.quartile,
+
+'PR Status':
+x.prStatus
+
+}))
+
+);
+
+
+const blob =
+new Blob(
+[csv],
+{
+type:'text/csv;charset=utf-8'
+}
+);
+
+
+const url =
+URL.createObjectURL(blob);
+
+
+const a =
+document.createElement('a');
+
+a.href = url;
+
+a.download =
+'MONS_Geran_' +
+new Date()
+.toISOString()
+.slice(0,10) +
+'.csv';
+
+
+a.click();
+
+URL.revokeObjectURL(url);
+
+}
+
+
+/* =========================
+   ESCAPE
+========================= */
+
+function esc(v){
+
+return clean(v)
+.replace(
+/[&<>"']/g,
+m =>
+({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[m])
+);
+
+}
+
+
+function escAttr(v){
+
+return esc(v)
+.replace(/`/g,'');
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+document.addEventListener(
+'DOMContentLoaded',
+()=>{
+
+initCharts();
+
+fetchGoogleSheets();
+
+}
+);
+
+</script>
+
+</body>
+</html>
