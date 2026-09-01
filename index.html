@@ -55,7 +55,110 @@ function findVal(row,candidates){const keys=Object.keys(row);for(const c of cand
 function number(v){if(typeof v==='number')return v;let s=clean(v).replace(/rm/ig,'').replace(/,/g,'').replace(/\s/g,'');if(!s)return 0;let n=parseFloat(s.replace(/[^0-9.-]/g,''));return Number.isFinite(n)?n:0}
 function percent(v){let n=number(v);if(String(v).includes('%'))return Math.max(0,Math.min(100,n));if(n>0&&n<=1)return n*100;return Math.max(0,Math.min(100,n))}
 function dateParts(v){let s=clean(v);if(!s)return {month:'',year:''};let m=s.match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);if(m)return {month:m[2].padStart(2,'0'),year:m[3]};let y=s.match(/(19|20)\d{2}/);if(y){let mon=s.match(/\b(0?[1-9]|1[0-2])\b/);return {month:mon?mon[1].padStart(2,'0'):'',year:y[0]}}return {month:'',year:''}}
-function parseRow(row,index,source){const end=findVal(row,['Bulan_Tamat','bulan tamat','month end','end month','Tarikh Tamat','End Date','New End Date','Grant End Date','Revised Date']);const dp=dateParts(end);return {no:parseInt(findVal(row,['No','Bil','Bilangan','No.']))||index+1,kod:clean(findVal(row,['Kod','Grant No','Grant Number','Vot No','VOT','Project Code','Grant Code']))||`G-${index+1}`,tajuk:clean(findVal(row,['Tajuk','Title','Project Title','Tajuk Projek','Project']))||'Geran Penyelidikan',grantType:clean(findVal(row,['Grant_Type','Grant Type','GrantType','Jenis Geran','Type']))||'Tidak Dinyatakan',penyelidik:clean(findVal(row,['Ketua_Penyelidik','Ketua Penyelidik','Principal Investigator','PI','Researcher','Nama Ketua Projek']))||'Tidak Dinyatakan',peruntukan:number(findVal(row,['Peruntukan','Jumlah Peruntukan','Allocation','Fund','Approved Amount','Amount'])),bulanTamat:clean(findVal(row,['Bulan_Tamat','Bulan Tamat','Month']))?.padStart(2,'0')||dp.month,tahunTamat:clean(findVal(row,['Tahun_Tamat','Tahun Tamat','Year']))||dp.year||'',milestone:percent(findVal(row,['Milestone','% Milestone','Milestone %','Achievement','Progress','Progress %'])),quartile:clean(findVal(row,['Quartile','Quartile Monitored','Publication Quartile','Q']))||'Non-Indexed',prStatus:clean(findVal(row,['PR_Status','PR Status','Progress Report','PR Jun 2026','PR']))||'NOT COMPLETED',source};}
+function parseRow(row,index,source){
+    const keys = Object.keys(row);
+
+    // Column C = Cost Centre No
+    const costCentreNo = clean(row[keys[2]]);
+
+    // Column E = Grant Title
+    const grantTitle = clean(row[keys[4]]);
+
+    const end = findVal(row,[
+        'Bulan_Tamat',
+        'bulan tamat',
+        'month end',
+        'end month',
+        'Tarikh Tamat',
+        'End Date',
+        'New End Date',
+        'Grant End Date',
+        'Revised Date'
+    ]);
+
+    const dp = dateParts(end);
+
+    return {
+        no: parseInt(findVal(row,[
+            'No',
+            'Bil',
+            'Bilangan',
+            'No.'
+        ])) || index + 1,
+
+        // COLUMN C
+        kod: costCentreNo || `G-${index+1}`,
+
+        // COLUMN E
+        tajuk: grantTitle || 'Geran Penyelidikan',
+
+        grantType: clean(findVal(row,[
+            'Grant_Type',
+            'Grant Type',
+            'GrantType',
+            'Jenis Geran',
+            'Type'
+        ])) || 'Tidak Dinyatakan',
+
+        penyelidik: clean(findVal(row,[
+            'Ketua_Penyelidik',
+            'Ketua Penyelidik',
+            'Principal Investigator',
+            'PI',
+            'Researcher',
+            'Nama Ketua Projek'
+        ])) || 'Tidak Dinyatakan',
+
+        peruntukan: number(findVal(row,[
+            'Peruntukan',
+            'Jumlah Peruntukan',
+            'Allocation',
+            'Fund',
+            'Approved Amount',
+            'Amount'
+        ])),
+
+        bulanTamat:
+            clean(findVal(row,[
+                'Bulan_Tamat',
+                'Bulan Tamat',
+                'Month'
+            ]))?.padStart(2,'0') || dp.month,
+
+        tahunTamat:
+            clean(findVal(row,[
+                'Tahun_Tamat',
+                'Tahun Tamat',
+                'Year'
+            ])) || dp.year || '',
+
+        milestone: percent(findVal(row,[
+            'Milestone',
+            '% Milestone',
+            'Milestone %',
+            'Achievement',
+            'Progress',
+            'Progress %'
+        ])),
+
+        quartile: clean(findVal(row,[
+            'Quartile',
+            'Quartile Monitored',
+            'Publication Quartile',
+            'Q'
+        ])) || 'Non-Indexed',
+
+        prStatus: clean(findVal(row,[
+            'PR_Status',
+            'PR Status',
+            'Progress Report',
+            'PR Jun 2026',
+            'PR'
+        ])) || 'NOT COMPLETED',
+
+        source
+    };
+}
 function parseCSV(url,source){return new Promise((resolve,reject)=>Papa.parse(url,{download:true,header:true,skipEmptyLines:true,complete:r=>{if(r.errors&&r.errors.length)console.warn(source,r.errors);resolve((r.data||[]).map((x,i)=>parseRow(x,i,source)).filter(x=>Object.values(x).some(v=>clean(v))))},error:e=>reject(e)}))}
 async function fetchGoogleSheets(){const icon=$('refresh-icon');icon.classList.add('fa-spin');setStatus('Memuatkan Geran Aktif & Geran Tamat...','loading');try{const [a,e]=await Promise.all([parseCSV(activeUrl,'Geran Aktif'),parseCSV(endedUrl,'Geran Tamat')]);grantsData=[...a,...e];if(!grantsData.length)throw new Error('Tiada rekod');setStatus(`Disambung • Aktif: ${a.length.toLocaleString()} • Tamat: ${e.length.toLocaleString()}`,'ok');populateFilters();applyFilters()}catch(err){console.error(err);setStatus('Gagal membaca Google Sheet','error');alert('Dashboard tidak dapat membaca salah satu Google Sheet. Pastikan kedua-dua URL masih aktif dan telah Publish to web sebagai CSV.')}finally{icon.classList.remove('fa-spin')}}
 function setStatus(text,state){$('sheet-status-text').innerText=text;const b=$('sheet-status-badge'),d=$('status-dot');b.className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border';if(state==='ok'){b.classList.add('bg-emerald-50','text-emerald-700','border-emerald-200');d.className='w-2 h-2 rounded-full bg-emerald-500'}else if(state==='error'){b.classList.add('bg-rose-50','text-rose-700','border-rose-200');d.className='w-2 h-2 rounded-full bg-rose-500'}else{b.classList.add('bg-amber-50','text-amber-700','border-amber-200');d.className='w-2 h-2 rounded-full bg-amber-500'}}
