@@ -692,228 +692,72 @@
             showToast(msg, 'info');
         }
 
-        let grantsData = [
-            {
-                id: "GRANT-001",
-                code: "FRGS/1/2025/STG01/UKM",
-                title: "Pembangunan Bahan Termaju berasaskan Grafena untuk Sel Solar Perovskite",
-                researcher: "Prof. Dr. Ahmad Razali",
-                piType: "PI",
-                agency: "KPT",
-                amount: 185000,
-                quartile: "Q1",
-                verdict: "CEMERLANG",
-                progress: 85,
-                status: "AKTIF",
-                lastUpdate: "2026-02-15",
-                kpiAudit: {
-                    milestone: true,
-                    expenditure: true,
-                    hcd: true,
-                    publication: true,
-                    ipr: true,
-                    note: "Semua indikator KPI dicapai mengikut jadual."
-                }
-            },
-            {
-                id: "GRANT-002",
-                code: "MOSTI/TDF/2024/MECH-04",
-                title: "Sistem Pemantauan Dron Pintar dengan Kecerdasan Buatan (AI) bagi Pertanian Jitu",
-                researcher: "Dr. Siti Nurhaliza Ismail",
-                piType: "PI",
-                agency: "MOSTI",
-                amount: 450000,
-                quartile: "Q2",
-                verdict: "BEHIND_SCHEDULE",
-                progress: 45,
-                status: "AKTIF",
-                lastUpdate: "2026-01-20",
-                kpiAudit: {
-                    milestone: false,
-                    expenditure: false,
-                    hcd: true,
-                    publication: true,
-                    ipr: false,
-                    note: "Fasa integrasi perkakasan dron lewat 3 bulan. Perbelanjaan alatan tergendala."
-                }
-            },
-            {
-                id: "GRANT-003",
-                code: "CRADLE/CIP500/2025/12",
-                title: "Platform Logistik IoT berasaskan Rangkaian Blok (Blockchain)",
-                researcher: "Ir. Tan Kah Hock",
-                piType: "NON_PI",
-                agency: "CRADLE",
-                amount: 350000,
-                quartile: "Q3",
-                verdict: "NEED_CLOSE_MONITORING",
-                progress: 40,
-                status: "AKTIF",
-                lastUpdate: "2026-02-02",
-                kpiAudit: {
-                    milestone: false,
-                    expenditure: false,
-                    hcd: false,
-                    publication: true,
-                    ipr: false,
-                    note: "Pengambilan pelajar PhD (HCD) dan permohonan paten (IPR) terlewat. Perlu pemantauan bulanan."
-                }
-            },
-            {
-                id: "GRANT-004",
-                code: "PRGS/2/2024/TK05/UM",
-                title: "Prototaip Kit Ujian Pantas Penyakit Bawaan Air berasaskan Bionanosensor",
-                researcher: "Prof. Madya Dr. Maria Zulkifli",
-                piType: "PI",
-                agency: "KPT",
-                amount: 210000,
-                quartile: "Q4",
-                verdict: "CEMERLANG",
-                progress: 92,
-                status: "AKTIF",
-                lastUpdate: "2026-02-28",
-                kpiAudit: {
-                    milestone: true,
-                    expenditure: true,
-                    hcd: true,
-                    publication: true,
-                    ipr: true,
-                    note: "Paten telah difailkan dan 2 artikel Q1 telah diterbitkan."
-                }
-            },
-            {
-                id: "GRANT-005",
-                code: "MDEC/DIGITAL/2025/88",
-                title: "Pembangunan Ekosistem Analitik Data Kesihatan Kebangsaan",
-                researcher: "Encik Kavitha A/L Subramaniam",
-                piType: "NON_PI",
-                agency: "MDEC",
-                amount: 600000,
-                quartile: "UNMONITORED",
-                verdict: "KRITIKAL",
-                progress: 15,
-                status: "DALAM_SEMAKAN",
-                lastUpdate: "2025-11-10",
-                kpiAudit: {
-                    milestone: false,
-                    expenditure: false,
-                    hcd: false,
-                    publication: false,
-                    ipr: false,
-                    note: "Gagal menyerahkan laporan milestone dan perbelanjaan kewangan bagi suku ke-3."
-                }
-            },
-            {
-                id: "GRANT-006",
-                code: "MARA/TECH/2024/09",
-                title: "Pusat Inkubator Keusahawanan Teknologi Robotik Automasi Industri",
-                researcher: "Dr. Khairul Azman",
-                piType: "PI",
-                agency: "MARA",
-                amount: 280000,
-                quartile: "Q1",
-                verdict: "MEMUASKAN",
-                progress: 75,
-                status: "AKTIF",
-                lastUpdate: "2026-02-10",
-                kpiAudit: {
-                    milestone: true,
-                    expenditure: true,
-                    hcd: true,
-                    publication: false,
-                    ipr: true,
-                    note: "Penerbitan jurnal masih dalam peringkat penyediaan draft."
-                }
-            },
-            {
-                id: "GRANT-007",
-                code: "FRGS/1/2024/WAB02/UTM",
-                title: "Kajian Keselamatan Siber berasaskan Kuantum Cryptography",
-                researcher: "Dr. Lim Wei Chun",
-                piType: "NON_PI",
-                agency: "KPT",
-                amount: 145000,
-                quartile: "UNMONITORED",
-                verdict: "BEHIND_SCHEDULE",
-                progress: 20,
-                status: "TANGGUH",
-                lastUpdate: "2025-10-05",
-                kpiAudit: {
-                    milestone: false,
-                    expenditure: false,
-                    hcd: false,
-                    publication: false,
-                    ipr: false,
-                    note: "Projek ditangguhkan akibat pertukaran ahli pasukan penyelidik utama."
-                }
-            },
-            {
-                id: "GRANT-008",
-                code: "MOSTI/TIF/2025/BIO-02",
-                title: "Pengeluaran Enzim Komersial berasaskan Sisa Kelapa Sawit",
-                researcher: "Prof. Dr. Zainab Hashim",
-                piType: "PI",
-                agency: "MOSTI",
-                amount: 520000,
-                quartile: "Q2",
-                verdict: "NEED_CLOSE_MONITORING",
-                progress: 50,
-                status: "AKTIF",
-                lastUpdate: "2026-01-14",
-                kpiAudit: {
-                    milestone: true,
-                    expenditure: false,
-                    hcd: true,
-                    publication: false,
-                    ipr: false,
-                    note: "Kadar perbelanjaan rendah (<30%) dan tiada permohonan IPR lagi."
-                }
-            },
-            {
-                id: "GRANT-009",
-                code: "CRADLE/SEED/2024/31",
-                title: "Aplikasi Pasaran B2B bagi Bahan Binaan Lestari",
-                researcher: "Encik Amirul Syahmi",
-                piType: "NON_PI",
-                agency: "CRADLE",
-                amount: 150000,
-                quartile: "Q3",
-                verdict: "BEHIND_SCHEDULE",
-                progress: 30,
-                status: "AKTIF",
-                lastUpdate: "2026-01-30",
-                kpiAudit: {
-                    milestone: false,
-                    expenditure: false,
-                    hcd: true,
-                    publication: true,
-                    ipr: false,
-                    note: "Kelewatan fasa pengujian pengguna dan pendaftaran harta intelek."
-                }
-            },
-            {
-                id: "GRANT-010",
-                code: "FRGS/2/2023/SS01/UKM",
-                title: "Kajian Impak Sosio-Ekonomi Pembelajaran Digital di Kawasan Luar Bandar",
-                researcher: "Dr. Farah Nabilah",
-                piType: "PI",
-                agency: "KPT",
-                amount: 95000,
-                quartile: "Q4",
-                verdict: "CEMERLANG",
-                progress: 100,
-                status: "SELESAI",
-                lastUpdate: "2025-12-20",
-                kpiAudit: {
-                    milestone: true,
-                    expenditure: true,
-                    hcd: true,
-                    publication: true,
-                    ipr: true,
-                    note: "Semua sasaran KPI telah dilengkapkan dengan jaya."
-                }
+       // 1. Perosotkan pemboleh ubah data menjadi array kosong pada permulaan
+let grantsData = [];
+
+// 2. Masukkan URL Google Sheets (format CSV yang telah di-Publish to Web)
+const GOOGLE_SHEET_CSV_URL = 'MASUKKAN_LINK_PUBLISH_TO_WEB_CSV_ANDA_DI_SINI';
+
+// 3. Fungsi untuk mengambil data dari Google Sheets & convert CSV ke JSON
+async function fetchGoogleSheetData() {
+    showToast('Sedang memuat turun data dari Google Sheets...', 'info');
+    try {
+        const response = await fetch(GOOGLE_SHEET_CSV_URL);
+        const csvText = await response.text();
+        
+        // Tukar teks CSV kepada Array JavaScript
+        grantsData = parseCSVToGrants(csvText);
+        
+        // Kemaskini paparan UI & Chart selepas data diterima
+        applyFilters();
+        showToast('Data Google Sheets berjaya dikemaskini!', 'success');
+    } catch (error) {
+        console.error("Gagal mengambil data Google Sheet:", error);
+        showToast('Gagal memuat turun data dari Google Sheets', 'warning');
+    }
+}
+
+// Helper Function: Tukar baris CSV ke Format Struktur Data Dashboard
+function parseCSVToGrants(csvText) {
+    const lines = csvText.trim().split('\n');
+    const result = [];
+    
+    // Abaikan baris pertama (Header/Tajuk Kolum)
+    for (let i = 1; i < lines.length; i++) {
+        // Asumsi format CSV dipisahkan oleh koma (mengambil kira teks berkoma dalam pengikat quotes)
+        const cols = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+        const cleanCols = cols.map(c => c.replace(/^"|"$/g, '').trim());
+
+        if (cleanCols.length < 5) continue; // Abaikan baris kosong
+
+        result.push({
+            id: cleanCols[0] || `GRANT-${i}`,
+            code: cleanCols[1] || '',
+            title: cleanCols[2] || '',
+            researcher: cleanCols[3] || '',
+            piType: cleanCols[4] || 'PI',
+            agency: cleanCols[5] || 'KPT',
+            amount: parseFloat(cleanCols[6]) || 0,
+            quartile: cleanCols[7] || 'UNMONITORED',
+            verdict: cleanCols[8] || 'CEMERLANG',
+            progress: parseInt(cleanCols[15]) || 0,
+            status: cleanCols[16] || 'AKTIF',
+            lastUpdate: new Date().toISOString().split('T')[0],
+            kpiAudit: {
+                milestone: cleanCols[9]?.toLowerCase() === 'true',
+                expenditure: cleanCols[10]?.toLowerCase() === 'true',
+                hcd: cleanCols[11]?.toLowerCase() === 'true',
+                publication: cleanCols[12]?.toLowerCase() === 'true',
+                ipr: cleanCols[13]?.toLowerCase() === 'true',
+                note: cleanCols[14] || ''
             }
-        ];
+        });
+    }
+    return result;
+}
+
+            {
+                       ];
 
         function getFilteredData() {
             const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -1601,7 +1445,7 @@
         // Initialize application on window load
         window.onload = function() {
             initCharts();
-            applyFilters();
+           fetchGoogleSheetData(); // <--- Panggil fungsi fetch Google Sheets di sini 
         };
     </script>
 </body>
