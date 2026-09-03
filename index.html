@@ -12,7 +12,7 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- PapaParse with secondary CDN fallback -->
+  <!-- PapaParse with fallback -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script>
     if (typeof Papa === 'undefined') {
@@ -428,7 +428,6 @@
   </header>
 
   <main class="content">
-    <!-- Navigation Tabs -->
     <div class="card p-2 mb-5">
       <div class="flex flex-wrap gap-2">
         <button id="tabSummary" class="tab-btn active" onclick="switchTab('summary')">
@@ -529,7 +528,6 @@
       </div>
     </section>
 
-    <!-- Loading & Error Indicators -->
     <div id="loadingPanel" class="card loading mb-5">
       <div class="spinner"></div>
       <div id="loadingText" class="text-sm font-semibold text-gray-600 mt-2">Sedang memuatkan data Google Sheet...</div>
@@ -551,7 +549,7 @@
       <section id="summaryTab">
         <!-- KPI Cards Grid -->
         <div id="kpiContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-5">
-          <!-- Shared KPI 1: Jumlah Geran -->
+          <!-- Shared KPI: Jumlah Geran -->
           <div class="card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Jumlah Geran</div>
             <div id="kpiTotal" class="kpi-number text-gray-900">0</div>
@@ -572,18 +570,18 @@
             <div class="text-[11px] text-gray-400">Quartile kosong / tidak dipantau</div>
           </div>
 
-          <!-- Geran Tamat: Tamat Tahun 2026 (Column K) -->
+          <!-- Geran Tamat: Tamat Tahun 2026 (Kolum K Sahaja) -->
           <div id="kpiTamat2026Card" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat Tahun 2026</div>
             <div id="kpiTamat2026" class="kpi-number text-blue-800">0</div>
-            <div class="text-[11px] text-gray-400">Berdasarkan Column K</div>
+            <div class="text-[11px] text-gray-400">Berdasarkan Kolum K sahaja</div>
           </div>
 
           <!-- Geran Tamat: Tamat 2026 Tanpa Ext -->
           <div id="kpiTamat2026NoExtCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat 2026 (Tanpa Ext)</div>
             <div id="kpiTamat2026NoExt" class="kpi-number text-emerald-700">0</div>
-            <div class="text-[11px] text-gray-400">Column K (tiada Ext di L)</div>
+            <div class="text-[11px] text-gray-400">Kolum K 2026 (tiada Ext di L)</div>
           </div>
 
           <!-- Geran Tamat: Submit Final Report -->
@@ -600,15 +598,15 @@
             <div class="text-[11px] text-gray-400">Not completed & Draft sahaja</div>
           </div>
 
-          <!-- Geran Tamat: Masih Grace Period (Column AJ) -->
+          <!-- Geran Tamat: Masih Grace Period (Kolum AJ) -->
           <div id="kpiGracePeriodCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Masih Grace Period</div>
             <div id="kpiGracePeriod" class="kpi-number text-purple-700">0</div>
-            <div class="text-[11px] text-gray-400">Column AJ (Bagi Belum Submit FR)</div>
+            <div class="text-[11px] text-gray-400">Kolum AJ (Bagi Belum Submit FR)</div>
           </div>
         </div>
 
-        <!-- Quartile Summary Matrix (Geran Aktif Sahaja) -->
+        <!-- Quartile Summary Card (Geran Aktif) -->
         <div id="quartileSummaryCard" class="card mb-5">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <div>
@@ -639,7 +637,7 @@
           </div>
         </div>
 
-        <!-- Verdict Summary Matrix -->
+        <!-- Verdict Summary Card -->
         <div class="card mb-5">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <div>
@@ -673,7 +671,7 @@
           </div>
         </div>
 
-        <!-- Strategic Summary Analysis -->
+        <!-- Strategic Summary Box -->
         <div class="card mb-5">
           <div class="p-5 border-b border-gray-200">
             <h3 class="font-bold text-gray-900 text-sm md:text-base">
@@ -702,7 +700,6 @@
           </div>
         </div>
 
-        <!-- Warning Cases Table (Bermasalah Sahaja) -->
         <div class="card">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -823,7 +820,6 @@
         </div>
       </section>
 
-      <!-- Verdict Statistics Tab -->
       <section id="verdictTab" class="hidden space-y-5">
         <div id="verdictMonitoredNotice" class="card p-3.5 bg-blue-50/70 border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-blue-900">
           <div class="flex items-center gap-2 font-medium">
@@ -862,27 +858,40 @@
           </div>
         </div>
 
-        <!-- Jadual Ringkasan Mengikut Grant Category -->
         <div class="card">
-          <div class="p-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div class="p-5 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div>
-              <h3 class="font-bold text-gray-900 text-sm md:text-base">
-                <i class="fa-solid fa-clipboard-check mr-2 text-blue-600"></i>
-                Rekod Statistik New Verdict & Analisis Item Tidak Capai
-              </h3>
-              <p class="text-xs text-gray-500 mt-0.5">
-                Pecahan mengikut Grant Category bagi Milestone (S), Expenditure (V), HCD (Y), Publication (AB), dan IPR (AE).
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-gray-900 text-sm md:text-base">
+                  <i class="fa-solid fa-clipboard-check mr-2 text-blue-600"></i>
+                  Rekod Statistik New Verdict & Analisis Item Tidak Capai
+                </h3>
+              </div>
+              <p id="verdictMatrixSubtitle" class="text-xs text-gray-500 mt-0.5">
+                Pecahan analisis mengikut <strong>Monitored Quartile (Q1 – Q5)</strong> bagi Milestone (S), Expenditure (V), HCD (Y), Publication (AB), dan IPR (AE).
               </p>
             </div>
-            <span id="verdictTabSourceBadge" class="text-xs font-bold bg-blue-50 text-blue-700 px-3 py-1 rounded-full self-start sm:self-auto">
-              Monitored Quartile (Q1 – Q5) Sahaja
-            </span>
+            
+            <div class="flex items-center gap-2 self-start md:self-auto">
+              <div class="inline-flex bg-gray-100 p-1 rounded-lg border border-gray-200">
+                <button id="verdictViewQuartileBtn" class="px-3 py-1 text-xs font-bold rounded-md transition-all bg-white text-gray-900 shadow-sm" onclick="setVerdictMatrixView('quartile')">
+                  Mengikut Quartile
+                </button>
+                <button id="verdictViewCategoryBtn" class="px-3 py-1 text-xs font-semibold rounded-md transition-all text-gray-500 hover:text-gray-900" onclick="setVerdictMatrixView('category')">
+                  Mengikut Grant Category
+                </button>
+              </div>
+              <span id="verdictTabSourceBadge" class="text-xs font-bold bg-blue-50 text-blue-700 px-3 py-1 rounded-full whitespace-nowrap">
+                Monitored Quartile (Q1 – Q5) Sahaja
+              </span>
+            </div>
           </div>
+          
           <div class="table-wrapper">
             <table>
               <thead>
                 <tr>
-                  <th>Grant Category</th>
+                  <th id="verdictMatrixFirstColHeader">Quartile</th>
                   <th class="text-center">Jumlah Geran</th>
                   <th class="text-center text-red-700">Milestone (S)</th>
                   <th class="text-center text-amber-700">Expenditure (V)</th>
@@ -899,7 +908,7 @@
           </div>
         </div>
 
-        <!-- Senarai Terperinci Geran dengan Item Tidak Capai -->
+        <!-- Senarai Geran Mempunyai Item Tidak Capai -->
         <div class="card">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -924,6 +933,7 @@
                   <th>Cost Centre No</th>
                   <th>Grant Title & Category</th>
                   <th>Staff Name</th>
+                  <th class="text-center">Quartile</th>
                   <th class="text-center">Milestone (S)</th>
                   <th class="text-center">Expenditure (V)</th>
                   <th class="text-center">HCD (Y)</th>
@@ -952,7 +962,6 @@
         </div>
       </section>
 
-      <!-- Masterlist Directory Tab -->
       <section id="masterTab" class="hidden">
         <div class="card">
           <div class="p-5 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -1119,6 +1128,8 @@ const WARNING_ITEMS_PER_PAGE = 15;
 let unachievedCurrentPage = 1;
 const UNACHIEVED_ITEMS_PER_PAGE = 15;
 
+let verdictMatrixView = "quartile"; // 'quartile' | 'category'
+
 let charts = {
   quartile: null,
   grantType: null,
@@ -1129,8 +1140,8 @@ let charts = {
 
 // Urutan Kategori Geran Khusus
 const CATEGORY_ORDER = ["MOHE", "MOSTI", "RUG", "JTNCPI", "GERAN LUAR", "ICC", "CCIN", "CRAEG"];
+const MONITORED_QUARTILES = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
 
-// Built-in RFC-4180 compliant CSV parser as fallback if Papa is blocked
 function parseCSVText(text) {
   const lines = [];
   let row = [];
@@ -1202,6 +1213,7 @@ async function selectSource(source) {
   currentSource = source;
   currentPage = 1;
   warningCurrentPage = 1;
+  unachievedCurrentPage = 1;
   resetFilters(false);
   updateSourceButtons();
   updateSourceUI();
@@ -1279,12 +1291,6 @@ function updateSourceUI() {
   const warningFRHeader = document.getElementById("warningFRHeader");
   if (warningFRHeader) warningFRHeader.classList.toggle("hidden", !isTamat);
 
-  const verdictFRHeader = document.getElementById("verdictFRHeader");
-  if (verdictFRHeader) verdictFRHeader.classList.toggle("hidden", !isTamat);
-
-  const verdictMonitoredHeader = document.getElementById("verdictMonitoredHeader");
-  if (verdictMonitoredHeader) verdictMonitoredHeader.classList.toggle("hidden", isTamat);
-
   const verdictMonitoredBadge = document.getElementById("verdictMonitoredBadge");
   if (verdictMonitoredBadge) verdictMonitoredBadge.classList.toggle("hidden", isTamat);
 
@@ -1321,7 +1327,6 @@ async function fetchCurrentSource() {
     const url = sourceUrls[currentSource];
     if (!url) throw new Error("URL Google Sheet tidak ditetapkan.");
 
-    // Fetch CSV text via HTTP
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Ralat pelayan: ${res.status} ${res.statusText}`);
     const csvString = await res.text();
@@ -1331,11 +1336,12 @@ async function fetchCurrentSource() {
       const parsed = Papa.parse(csvString, { skipEmptyLines: true });
       rows = parsed.data || [];
     } else {
-      // Fallback to built-in parser
       rows = parseCSVText(csvString);
     }
 
-    if (rows.length < 2) throw new Error("Google Sheet tidak mengandungi data yang mencukupi.");
+    if (!rows || rows.length < 2) {
+      throw new Error("Google Sheet tidak mengandungi data yang mencukupi.");
+    }
 
     grantsData = rows.slice(1)
       .map((row, index) => parseGrantRow(row, index + 2))
@@ -1352,17 +1358,71 @@ async function fetchCurrentSource() {
   }
 }
 
-function parseGrantRow(row, sheetRowNumber) {
-  const costCentre = clean(row[COL.COST_CENTRE]);
-  const grantType = clean(row[COL.GRANT_TYPE]) || "Tidak Dinyatakan";
-  const grantTitle = clean(row[COL.GRANT_TITLE]) || "Tiada Tajuk";
-  const staffName = clean(row[COL.STAFF_NAME]) || "Tidak Dinyatakan";
+function clean(value) {
+  if (value === null || value === undefined) return "";
+  return String(value).trim();
+}
 
-  // Dates
-  const jRaw = clean(row[COL.PROJECT_START]);
-  const kRaw = clean(row[COL.PROJECT_END]);
-  const lRaw = clean(row[COL.NEW_END_DATE]);
-  const ajRaw = clean(row[COL.GRACE_PERIOD]);
+function isItemNotAchieved(rawVal) {
+  if (!rawVal) return false;
+  const val = String(rawVal).trim().toUpperCase();
+  if (val === "" || val === "-" || val === "N/A" || val === "TIADA" || val === "NONE") return false;
+
+  if (
+    val === "CAPAI" ||
+    val === "ACHIEVED" ||
+    val === "SELESAI" ||
+    val === "COMPLETED" ||
+    val === "YA" ||
+    val === "YES" ||
+    val === "Y" ||
+    val === "PW" ||
+    val === "OS" ||
+    val === "PROGRESSING WELL" ||
+    val === "ON SCHEDULE"
+  ) {
+    return false;
+  }
+
+  if (
+    val.includes("TIDAK") ||
+    val.includes("BELUM") ||
+    val.includes("NOT") ||
+    val.includes("GAGAL") ||
+    val.includes("FAIL") ||
+    val.includes("BEHIND") ||
+    val === "BS" ||
+    val === "NCM" ||
+    val.includes("BERMASALAH") ||
+    val.includes("KURANG") ||
+    val === "NO" ||
+    val === "TC" ||
+    val === "0" ||
+    val === "0%"
+  ) {
+    return true;
+  }
+
+  if (/^0(?:\.0+)?%?$/.test(val) || /^0\s*\/\s*[1-9]/.test(val)) {
+    return true;
+  }
+
+  return false;
+}
+
+function parseGrantRow(row, sheetRowNumber) {
+  const getCellText = (idx) => clean(row[idx]);
+
+  const costCentre = getCellText(COL.COST_CENTRE);
+  const grantType = getCellText(COL.GRANT_TYPE) || "Tidak Dinyatakan";
+  const grantTitle = getCellText(COL.GRANT_TITLE) || "Tiada Tajuk";
+  const staffName = getCellText(COL.STAFF_NAME) || "Tidak Dinyatakan";
+
+  // Tarikh Projek
+  const jRaw = getCellText(COL.PROJECT_START);
+  const kRaw = getCellText(COL.PROJECT_END);
+  const lRaw = getCellText(COL.NEW_END_DATE);
+  const ajRaw = getCellText(COL.GRACE_PERIOD);
 
   const startDate = parseDateValue(jRaw);
   const kDate = parseDateValue(kRaw);
@@ -1372,16 +1432,16 @@ function parseGrantRow(row, sheetRowNumber) {
   const effectiveEndRaw = hasExtension ? lRaw : kRaw;
   const effectiveEndDate = hasExtension ? lDate : kDate;
 
-  const quartile = normalizeQuartile(row[COL.QUARTILE]);
-  const verdict = clean(row[COL.VERDICT]) || "Tidak Dinyatakan";
-  const grantCategory = clean(row[COL.GRANT_CATEGORY]) || "Tidak Dinyatakan";
+  const quartile = normalizeQuartile(getCellText(COL.QUARTILE));
+  const verdict = getCellText(COL.VERDICT) || "Tidak Dinyatakan";
+  const grantCategory = getCellText(COL.GRANT_CATEGORY) || "Tidak Dinyatakan";
 
   // Item Pencapaian: S, V, Y, AB, AE
-  const milestone = clean(row[COL.MILESTONE]);
-  const expenditure = clean(row[COL.EXPENDITURE]);
-  const hcd = clean(row[COL.HCD]);
-  const publication = clean(row[COL.PUBLICATION]);
-  const ipr = clean(row[COL.IPR]);
+  const milestone = getCellText(COL.MILESTONE);
+  const expenditure = getCellText(COL.EXPENDITURE);
+  const hcd = getCellText(COL.HCD);
+  const publication = getCellText(COL.PUBLICATION);
+  const ipr = getCellText(COL.IPR);
 
   const milestoneNotAchieved = isItemNotAchieved(milestone);
   const expenditureNotAchieved = isItemNotAchieved(expenditure);
@@ -1393,7 +1453,7 @@ function parseGrantRow(row, sheetRowNumber) {
 
   let frStatus = "";
   if (currentSource === "Geran Tamat") {
-    frStatus = clean(row[COL.FR_STATUS]) || "Tidak Dinyatakan";
+    frStatus = getCellText(COL.FR_STATUS) || "Tidak Dinyatakan";
   }
 
   const kYear = kDate ? String(kDate.getFullYear()) : "";
@@ -1436,61 +1496,6 @@ function parseGrantRow(row, sheetRowNumber) {
   };
 }
 
-function clean(value) {
-  if (value === null || value === undefined) return "";
-  return String(value).trim();
-}
-
-function isItemNotAchieved(rawVal) {
-  if (!rawVal) return false;
-  const val = String(rawVal).trim().toUpperCase();
-  if (val === "" || val === "-" || val === "N/A" || val === "TIADA" || val === "NONE") return false;
-
-  // Status capai / selesai / positif
-  if (
-    val === "CAPAI" ||
-    val === "ACHIEVED" ||
-    val === "SELESAI" ||
-    val === "COMPLETED" ||
-    val === "YA" ||
-    val === "YES" ||
-    val === "Y" ||
-    val === "PW" ||
-    val === "OS" ||
-    val === "PROGRESSING WELL" ||
-    val === "ON SCHEDULE"
-  ) {
-    return false;
-  }
-
-  // Kata kunci ketidaktercapaian (Tidak capai, belum capai, behind, dsb.)
-  if (
-    val.includes("TIDAK") ||
-    val.includes("BELUM") ||
-    val.includes("NOT") ||
-    val.includes("GAGAL") ||
-    val.includes("FAIL") ||
-    val.includes("BEHIND") ||
-    val === "BS" ||
-    val === "NCM" ||
-    val.includes("BERMASALAH") ||
-    val.includes("KURANG") ||
-    val === "NO" ||
-    val === "TC" ||
-    val === "0" ||
-    val === "0%"
-  ) {
-    return true;
-  }
-
-  // Corak pecahan sifar seperti "0/1" atau "0.0%"
-  if (/^0(?:\.0+)?%?$/.test(val) || /^0\s*\/\s*[1-9]/.test(val)) {
-    return true;
-  }
-
-  return false;
-}
-
 function isMeaningfulDateValue(value) {
   const t = clean(value).toUpperCase();
   return t !== "" && t !== "-" && t !== "N/A" && t !== "TIADA" && t !== "NONE" && t !== "NO";
@@ -1518,7 +1523,6 @@ function parseDateValue(value) {
   if (value instanceof Date) return isNaN(value) ? null : value;
   const text = clean(value);
 
-  // dd/mm/yyyy or dd-mm-yyyy
   let match = text.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if (match) {
     const day = Number(match[1]);
@@ -1530,7 +1534,6 @@ function parseDateValue(value) {
     }
   }
 
-  // yyyy-mm-dd or yyyy/mm/dd
   match = text.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
   if (match) {
     const year = Number(match[1]);
@@ -1542,7 +1545,6 @@ function parseDateValue(value) {
     }
   }
 
-  // Excel serial number
   if (/^\d{5}(?:\.\d+)?$/.test(text)) {
     const serial = Number(text);
     if (serial > 20000) {
@@ -1592,6 +1594,27 @@ function compareVerdicts(a, b) {
   return String(a).localeCompare(String(b), "ms", { numeric: true });
 }
 
+function populateSelect(elementId, values, firstLabel, formatter = v => v) {
+  const select = document.getElementById(elementId);
+  if (!select) return;
+  const currentVal = select.value;
+  const unique = [...new Set(values.map(clean).filter(Boolean))];
+
+  select.innerHTML = `<option value="ALL">${firstLabel}</option>`;
+  unique.forEach(value => {
+    const opt = document.createElement("option");
+    opt.value = value;
+    opt.textContent = formatter(value);
+    select.appendChild(opt);
+  });
+
+  if (unique.includes(currentVal)) {
+    select.value = currentVal;
+  } else {
+    select.value = "ALL";
+  }
+}
+
 function populateFilters() {
   populateSelect("filterGrantType", grantsData.map(d => d.grantType), "Semua Grant Type");
 
@@ -1625,19 +1648,6 @@ function populateFilters() {
   if (currentSource === "Geran Tamat") {
     populateSelect("filterFRStatus", grantsData.map(d => d.frStatus), "Semua FR Status");
   }
-}
-
-function populateSelect(elementId, values, firstLabel, formatter = v => v) {
-  const select = document.getElementById(elementId);
-  if (!select) return;
-  const unique = [...new Set(values.filter(v => clean(v) !== ""))].sort((a,b) => String(a).localeCompare(String(b), "ms", { numeric: true }));
-  select.innerHTML = `<option value="ALL">${firstLabel}</option>`;
-  unique.forEach(value => {
-    const opt = document.createElement("option");
-    opt.value = value;
-    opt.textContent = formatter(value);
-    select.appendChild(opt);
-  });
 }
 
 function applyFilters() {
@@ -1749,7 +1759,7 @@ function getWarningList() {
       const fr = clean(item.frStatus).toUpperCase();
       if (fr.includes("TERMINATED")) return false;
     }
-    return getVerdictOrderIndex(item.verdict) === 3; // Bermasalah
+    return getVerdictOrderIndex(item.verdict) === 3;
   });
 }
 
@@ -1758,8 +1768,7 @@ function renderKPIs() {
   document.getElementById("kpiTotal").innerText = total.toLocaleString();
 
   if (currentSource === "Geran Aktif") {
-    const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
-    const monitored = filteredData.filter(d => monitoredList.includes(d.quartile)).length;
+    const monitored = filteredData.filter(d => MONITORED_QUARTILES.includes(d.quartile)).length;
     const notMonitored = total - monitored;
 
     const kpiMonitored = document.getElementById("kpiMonitored");
@@ -1866,10 +1875,9 @@ function renderVerdictMatrix() {
   if (!tbody || !tfoot) return;
 
   const isTamat = currentSource === "Geran Tamat";
-  const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
   const targetData = isTamat
     ? filteredData
-    : filteredData.filter(d => monitoredList.includes(d.quartile));
+    : filteredData.filter(d => MONITORED_QUARTILES.includes(d.quartile));
 
   const categories = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
   if (!categories.length) {
@@ -1925,8 +1933,7 @@ function renderVerdictMatrix() {
 
 function renderStrategicSummary() {
   if (currentSource === "Geran Aktif") {
-    const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
-    const mon = filteredData.filter(d => monitoredList.includes(d.quartile)).length;
+    const mon = filteredData.filter(d => MONITORED_QUARTILES.includes(d.quartile)).length;
     const notMon = filteredData.length - mon;
     const el = document.getElementById("summaryMonitoredText");
     if (el) {
@@ -2280,11 +2287,9 @@ function renderOrUpdateDoughnutChart(chartKey, canvasId, labels, data, colors) {
 
 function updateCharts() {
   const isTamat = currentSource === "Geran Tamat";
-  const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
-
   const visualData = isTamat
     ? filteredData
-    : filteredData.filter(d => monitoredList.includes(d.quartile));
+    : filteredData.filter(d => MONITORED_QUARTILES.includes(d.quartile));
 
   const totalBadge = document.getElementById("visualMonitoredTotalBadge");
   if (totalBadge) totalBadge.innerText = `${visualData.length.toLocaleString()} Geran`;
@@ -2341,8 +2346,41 @@ function updateCharts() {
 function getVerdictTabData() {
   const isTamat = currentSource === "Geran Tamat";
   if (isTamat) return filteredData;
-  const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
-  return filteredData.filter(d => monitoredList.includes(d.quartile));
+  return filteredData.filter(d => MONITORED_QUARTILES.includes(d.quartile));
+}
+
+function setVerdictMatrixView(view) {
+  verdictMatrixView = view;
+  const qBtn = document.getElementById("verdictViewQuartileBtn");
+  const cBtn = document.getElementById("verdictViewCategoryBtn");
+  const colHeader = document.getElementById("verdictMatrixFirstColHeader");
+  const subtitle = document.getElementById("verdictMatrixSubtitle");
+
+  if (view === "quartile") {
+    if (qBtn) {
+      qBtn.className = "px-3 py-1 text-xs font-bold rounded-md transition-all bg-white text-gray-900 shadow-sm";
+    }
+    if (cBtn) {
+      cBtn.className = "px-3 py-1 text-xs font-semibold rounded-md transition-all text-gray-500 hover:text-gray-900";
+    }
+    if (colHeader) colHeader.innerText = "Quartile";
+    if (subtitle) {
+      subtitle.innerHTML = "Pecahan analisis mengikut <strong>Monitored Quartile (Q1 – Q5)</strong> bagi Milestone (S), Expenditure (V), HCD (Y), Publication (AB), dan IPR (AE).";
+    }
+  } else {
+    if (cBtn) {
+      cBtn.className = "px-3 py-1 text-xs font-bold rounded-md transition-all bg-white text-gray-900 shadow-sm";
+    }
+    if (qBtn) {
+      qBtn.className = "px-3 py-1 text-xs font-semibold rounded-md transition-all text-gray-500 hover:text-gray-900";
+    }
+    if (colHeader) colHeader.innerText = "Grant Category";
+    if (subtitle) {
+      subtitle.innerHTML = "Pecahan analisis mengikut <strong>Grant Category</strong> bagi Milestone (S), Expenditure (V), HCD (Y), Publication (AB), dan IPR (AE).";
+    }
+  }
+
+  renderVerdictCategoryMatrix();
 }
 
 function renderVerdictCategoryMatrix() {
@@ -2355,7 +2393,6 @@ function renderVerdictCategoryMatrix() {
   const totalBadge = document.getElementById("verdictMonitoredTotalBadge");
   if (totalBadge) totalBadge.innerText = `${targetData.length.toLocaleString()} Geran Dipantau`;
 
-  // Hitung jumlah keseluruhan bagi 5 kad metrik
   let totalMilestone = 0;
   let totalExpenditure = 0;
   let totalHCD = 0;
@@ -2382,9 +2419,12 @@ function renderVerdictCategoryMatrix() {
   if (kpiP) kpiP.innerText = totalPublication.toLocaleString();
   if (kpiI) kpiI.innerText = totalIPR.toLocaleString();
 
-  // Kumpulkan mengikut Grant Category
-  let categories = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
-  if (!categories.length) {
+  const isQuartileView = verdictMatrixView === "quartile" && currentSource === "Geran Aktif";
+  const rowGroups = isQuartileView
+    ? MONITORED_QUARTILES
+    : [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
+
+  if (!rowGroups.length) {
     tbody.innerHTML = `<tr><td colspan="9" class="py-8 text-center text-gray-400 italic">Tiada rekod data geran ditemui.</td></tr>`;
     tfoot.innerHTML = "";
     return;
@@ -2398,13 +2438,13 @@ function renderVerdictCategoryMatrix() {
   let grandTotalI = 0;
   let grandTotalAffected = 0;
 
-  tbody.innerHTML = categories.map(cat => {
-    const catRecords = targetData.filter(d => d.grantCategory === cat);
-    const catTotal = catRecords.length;
+  tbody.innerHTML = rowGroups.map(groupKey => {
+    const groupRecords = targetData.filter(d => isQuartileView ? d.quartile === groupKey : d.grantCategory === groupKey);
+    const groupTotal = groupRecords.length;
 
     let cM = 0, cE = 0, cH = 0, cP = 0, cI = 0, cAffected = 0;
 
-    catRecords.forEach(d => {
+    groupRecords.forEach(d => {
       if (d.milestoneNotAchieved) cM++;
       if (d.expenditureNotAchieved) cE++;
       if (d.hcdNotAchieved) cH++;
@@ -2413,7 +2453,7 @@ function renderVerdictCategoryMatrix() {
       if (d.hasUnachievedItem) cAffected++;
     });
 
-    grandTotalGrants += catTotal;
+    grandTotalGrants += groupTotal;
     grandTotalM += cM;
     grandTotalE += cE;
     grandTotalH += cH;
@@ -2421,12 +2461,16 @@ function renderVerdictCategoryMatrix() {
     grandTotalI += cI;
     grandTotalAffected += cAffected;
 
-    const percentAffected = catTotal > 0 ? ((cAffected / catTotal) * 100).toFixed(1) : "0.0";
+    const percentAffected = groupTotal > 0 ? ((cAffected / groupTotal) * 100).toFixed(1) : "0.0";
+
+    const labelCell = isQuartileView
+      ? `<span class="badge ${quartileBadgeClass(groupKey)} text-xs px-2.5 py-1">${escapeHtml(groupKey)}</span>`
+      : `<span class="font-bold text-gray-900">${escapeHtml(groupKey)}</span>`;
 
     return `
       <tr>
-        <td class="font-bold text-gray-900">${escapeHtml(cat)}</td>
-        <td class="text-center font-bold text-gray-900">${catTotal.toLocaleString()}</td>
+        <td>${labelCell}</td>
+        <td class="text-center font-bold text-gray-900">${groupTotal.toLocaleString()}</td>
         <td class="text-center font-semibold ${cM > 0 ? 'text-red-600 bg-red-50/50' : 'text-gray-400'}">${cM}</td>
         <td class="text-center font-semibold ${cE > 0 ? 'text-amber-600 bg-amber-50/50' : 'text-gray-400'}">${cE}</td>
         <td class="text-center font-semibold ${cH > 0 ? 'text-blue-600 bg-blue-50/50' : 'text-gray-400'}">${cH}</td>
@@ -2445,7 +2489,7 @@ function renderVerdictCategoryMatrix() {
       <td class="text-gray-900 font-extrabold">JUMLAH KESELURUHAN</td>
       <td class="text-center text-gray-900 font-extrabold">${grandTotalGrants.toLocaleString()}</td>
       <td class="text-center text-red-700 font-extrabold">${grandTotalM}</td>
-      <td class="text-center text-amber-700 font-extrabold">${grandTotalE}</td>
+      <td class="text-center text-red-700 font-extrabold">${grandTotalE}</td>
       <td class="text-center text-blue-700 font-extrabold">${grandTotalH}</td>
       <td class="text-center text-purple-700 font-extrabold">${grandTotalP}</td>
       <td class="text-center text-pink-700 font-extrabold">${grandTotalI}</td>
@@ -2489,7 +2533,7 @@ function renderUnachievedGrantsTable() {
   if (!totalCases) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="11" class="py-8 text-center text-gray-400 italic">
+        <td colspan="12" class="py-8 text-center text-gray-400 italic">
           Tiada geran yang mempunyai item tidak capai dalam filter semasa.
         </td>
       </tr>
@@ -2518,6 +2562,7 @@ function renderUnachievedGrantsTable() {
         <div class="text-[11px] text-gray-500 mt-0.5 font-bold">${escapeHtml(item.grantCategory)}</div>
       </td>
       <td>${escapeHtml(item.staffName)}</td>
+      <td class="text-center"><span class="badge ${quartileBadgeClass(item.quartile)}">${escapeHtml(item.quartile)}</span></td>
       <td class="text-center">${formatItemBadge(item.milestoneNotAchieved, item.milestone)}</td>
       <td class="text-center">${formatItemBadge(item.expenditureNotAchieved, item.expenditure)}</td>
       <td class="text-center">${formatItemBadge(item.hcdNotAchieved, item.hcd)}</td>
@@ -2547,6 +2592,7 @@ function nextUnachievedPage() {
     renderUnachievedGrantsTable();
   }
 }
+
 function viewGrant(id) {
   const item = grantsData.find(d => d.id === id);
   if (!item) return;
