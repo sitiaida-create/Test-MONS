@@ -765,39 +765,39 @@
           <div id="kpiNotMonitoredCard" class="card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Grant Not Monitored</div>
             <div id="kpiNotMonitored" class="kpi-number text-gray-600">0</div>
-            <div class="text-xs text-gray-400 mt-1">Not Monitored for Progress Report Jun 2026</div>
+            <div class="text-xs text-gray-400 mt-1">Quartile kosong / tidak dikenal</div>
           </div>
 
           <!-- KPI GERAN TAMAT -->
           <div id="kpiTamat2026Card" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat Tahun 2026</div>
             <div id="kpiTamat2026" class="kpi-number text-blue-700">0</div>
-            
+            <div class="text-xs text-gray-400 mt-1">Kolum K (Project End) dalam 2026</div>
           </div>
 
           <div id="kpiTamat2026NoExtCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat 2026 (Tanpa Ext)</div>
             <div id="kpiTamat2026NoExt" class="kpi-number text-teal-700">0</div>
-            
+            <div class="text-xs text-gray-400 mt-1">Kolum K 2026 & Tiada Ext Kolum L</div>
           </div>
 
           <div id="kpiFRSubmittedCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Submit Final Report</div>
             <div id="kpiFRSubmitted" class="kpi-number text-emerald-700">0</div>
-          
+            <div class="text-xs text-gray-400 mt-1">Kolum AN selain Not completed &amp; Draft (kecuali Terminated)</div>
           </div>
 
           <div id="kpiFRPendingCard" class="hidden card kpi-card">
-            <div class="text-xs font-bold text-gray-500 uppercase">Belum Submit Final Report</div>
+            <div class="text-xs font-bold text-gray-500 uppercase">Belum Submit FR</div>
             <div id="kpiFRPending" class="kpi-number text-rose-700">0</div>
-            
+            <div class="text-xs text-gray-400 mt-1">Kolum AN: Not completed / Draft</div>
           </div>
 
           <!-- KPI GRACE PERIOD -->
           <div id="kpiGracePeriodCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Masih Dalam Grace Period</div>
             <div id="kpiGracePeriod" class="kpi-number text-amber-600">0</div>
-            <div class="text-xs text-gray-400 mt-1">Bagi yang belum submit FR</div>
+            <div class="text-xs text-gray-400 mt-1">Kolum AJ (FR: Not completed / Draft)</div>
           </div>
         </div>
 
@@ -1178,6 +1178,7 @@
             <div>D &rarr; Grant Type</div>
             <div>E &rarr; Grant Title</div>
             <div>F &rarr; Staff Name</div>
+            <div>J &rarr; Project Start</div>
             <div>K &rarr; Project End</div>
             <div>L &rarr; New End Date / Ext.</div>
             <div>P &rarr; Quartile</div>
@@ -1340,6 +1341,7 @@ const COL = {
   GRANT_TYPE: 3,        // D
   GRANT_TITLE: 4,       // E
   STAFF_NAME: 5,        // F
+  PROJECT_START: 9,     // J
   PROJECT_END: 10,      // K
   NEW_END_DATE: 11,     // L
   QUARTILE: 15,         // P
@@ -1745,9 +1747,11 @@ function parseGrantRow(row, sheetRowNumber) {
   const grantType = clean(row[COL.GRANT_TYPE]) || "Tidak Dinyatakan";
   const grantTitle = clean(row[COL.GRANT_TITLE]) || "Tiada Tajuk";
   const staffName = clean(row[COL.STAFF_NAME]) || "Tidak Dinyatakan";
+  const jDateRaw = clean(row[COL.PROJECT_START]);
   const kDateRaw = clean(row[COL.PROJECT_END]);
   const lDateRaw = clean(row[COL.NEW_END_DATE]);
 
+  const startDate = parseDateValue(jDateRaw);
   const kDate = parseDateValue(kDateRaw);
   const kYear = extractYear(kDate, kDateRaw);
 
@@ -1775,6 +1779,8 @@ function parseGrantRow(row, sheetRowNumber) {
     grantType,
     grantTitle,
     staffName,
+    projectStartRaw: jDateRaw || "-",
+    projectStartDisplay: formatDate(startDate, jDateRaw),
     kDateRaw: kDateRaw || "-",
     kDate: kDate,
     kYear: kYear,
@@ -2753,9 +2759,9 @@ function viewGrant(id) {
       ${detailItem("Grant Type", item.grantType)}
       ${detailItem("Grant Category", item.grantCategory)}
       ${detailItem("Staff Name", item.staffName)}
-      ${detailItem("Project End Asal (Kolum K)", item.kDateRaw)}
-      ${detailItem("New End Date / Ext. (Kolum L)", item.lDateRaw)}
-      ${detailItem("Tarikh Tamat Digunakan", `${item.projectEndDisplay} (${item.effectiveSource})`)}
+      ${detailItem("Project Start (Kolum J)", item.projectStartDisplay)}
+      ${detailItem("Project End (Kolum K)", item.kDateRaw)}
+      ${detailItem("New End Date (Kolum L)", item.lDateRaw)}
       ${!isTamat ? detailItem("Quartile", item.quartile) : ""}
       ${detailItem("Verdict", item.verdict)}
       ${isTamat ? detailItem("Grace Period (Kolum AJ)", item.gracePeriodRaw || "-") : ""}
