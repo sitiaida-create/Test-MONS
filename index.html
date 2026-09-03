@@ -793,15 +793,17 @@
       <section id="summaryTab">
 
 
-        <!-- KPI -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-5">
+        <!-- KPI — GERAN AKTIF SAHAJA -->
+        <div
+          id="kpiSection"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5"
+        >
 
-
-          <!-- Jumlah Geran -->
+          <!-- Jumlah Keseluruhan -->
           <div class="card kpi-card">
 
             <div class="text-xs font-bold text-gray-500 uppercase">
-              Jumlah Geran
+              Jumlah Keseluruhan
             </div>
 
             <div
@@ -818,7 +820,7 @@
           </div>
 
 
-          <!-- Monitored -->
+          <!-- Total Grant by Monitored Quartile -->
           <div class="card kpi-card">
 
             <div class="text-xs font-bold text-gray-500 uppercase">
@@ -833,17 +835,17 @@
             </div>
 
             <div class="text-xs text-gray-400 mt-1">
-              Q1 hingga Q5
+              Q1 hingga Q5 (Extension)
             </div>
 
           </div>
 
 
-          <!-- Not Monitored -->
+          <!-- Total Grant Not Monitored -->
           <div class="card kpi-card">
 
             <div class="text-xs font-bold text-gray-500 uppercase">
-              Grant Not Monitored
+              Total Grant Not Monitored
             </div>
 
             <div
@@ -855,48 +857,6 @@
 
             <div class="text-xs text-gray-400 mt-1">
               Quartile tidak dikenal/kosong
-            </div>
-
-          </div>
-
-
-          <!-- Q1 -->
-          <div class="card kpi-card">
-
-            <div class="text-xs font-bold text-gray-500 uppercase">
-              Q1
-            </div>
-
-            <div
-              id="kpiQ1"
-              class="kpi-number"
-            >
-              0
-            </div>
-
-            <div class="text-xs text-gray-400 mt-1">
-              Quartile 1
-            </div>
-
-          </div>
-
-
-          <!-- Q2 -->
-          <div class="card kpi-card">
-
-            <div class="text-xs font-bold text-gray-500 uppercase">
-              Q2
-            </div>
-
-            <div
-              id="kpiQ2"
-              class="kpi-number"
-            >
-              0
-            </div>
-
-            <div class="text-xs text-gray-400 mt-1">
-              Quartile 2
             </div>
 
           </div>
@@ -2310,6 +2270,15 @@
       currentSource === "Geran Tamat";
 
 
+    /* KPI hanya dipaparkan untuk Geran Aktif */
+    document
+      .getElementById("kpiSection")
+      .classList.toggle(
+        "hidden",
+        isEnded
+      );
+
+
     /* FR filter */
     document
       .getElementById("frFilterWrap")
@@ -2831,18 +2800,6 @@
       "kpiNotMonitored"
     ).textContent =
       notMonitored.toLocaleString();
-
-
-    document.getElementById(
-      "kpiQ1"
-    ).textContent =
-      q1.toLocaleString();
-
-
-    document.getElementById(
-      "kpiQ2"
-    ).textContent =
-      q2.toLocaleString();
 
   }
 
