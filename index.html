@@ -2759,13 +2759,13 @@ function viewGrant(id) {
       ${detailItem("Grant Type", item.grantType)}
       ${detailItem("Grant Category", item.grantCategory)}
       ${detailItem("Staff Name", item.staffName)}
-      ${detailItem("Project Start (Kolum J)", item.projectStartDisplay)}
-      ${detailItem("Project End (Kolum K)", item.kDateRaw)}
-      ${detailItem("New End Date (Kolum L)", item.lDateRaw)}
+      ${detailItem("Project Start Date", item.projectStartDisplay)}
+      ${detailItem("Project End Date", item.kDateRaw)}
+      ${detailItem("New End Date (Extension)", item.lDateRaw)}
       ${!isTamat ? detailItem("Quartile", item.quartile) : ""}
       ${detailItem("Verdict", item.verdict)}
-      ${isTamat ? detailItem("Grace Period (Kolum AJ)", item.gracePeriodRaw || "-") : ""}
-      ${isTamat ? detailItem("FR Status", item.frStatus || "-") : ""}
+      ${isTamat ? detailItem("Grace Period", item.gracePeriodRaw || "-") : ""}
+      ${isTamat ? detailItem("Final Report Status", item.frStatus || "-") : ""}
     </div>
   `;
 
