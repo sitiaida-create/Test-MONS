@@ -3,61 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Dashboard Geran Penyelidikan</title>
 
   <!-- =========================================================
        LIBRARIES
   ========================================================== -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-  >
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.3/papaparse.min.js"></script>
-
 
   <!-- =========================================================
        CUSTOM STYLE
   ========================================================== -->
   <style>
-
     * {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       background: #f5f7fb;
       color: #1f2937;
     }
 
     /* ================= SIDEBAR ================= */
-
     .sidebar {
       width: 250px;
       min-height: 100vh;
       background: #ffffff;
       border-right: 1px solid #e5e7eb;
-
       position: fixed;
       left: 0;
       top: 0;
       bottom: 0;
-
       z-index: 50;
-
       display: flex;
       flex-direction: column;
     }
@@ -76,18 +58,13 @@
       width: 100%;
       border: none;
       background: transparent;
-
       padding: 14px 16px;
       margin-bottom: 8px;
-
       border-radius: 10px;
-
       text-align: left;
       cursor: pointer;
-
       color: #4b5563;
       font-weight: 600;
-
       transition: all .2s ease;
     }
 
@@ -101,7 +78,6 @@
     }
 
     /* ================= MAIN ================= */
-
     .main-wrapper {
       margin-left: 250px;
       min-height: 100vh;
@@ -110,9 +86,7 @@
     .top-header {
       background: #ffffff;
       border-bottom: 1px solid #e5e7eb;
-
       padding: 18px 28px;
-
       position: sticky;
       top: 0;
       z-index: 30;
@@ -123,12 +97,10 @@
     }
 
     /* ================= CARDS ================= */
-
     .card {
       background: #ffffff;
       border-radius: 14px;
       border: 1px solid #e5e7eb;
-
       box-shadow: 0 2px 8px rgba(0,0,0,.04);
     }
 
@@ -144,56 +116,40 @@
     }
 
     /* ================= FILTER ================= */
-
     .filter-label {
       font-size: 12px;
       font-weight: 700;
       color: #6b7280;
-
       margin-bottom: 6px;
-
       display: block;
     }
 
     .filter-select,
     .search-input {
       width: 100%;
-
       padding: 10px 12px;
-
       border: 1px solid #d1d5db;
       border-radius: 8px;
-
       background: #ffffff;
-
       font-size: 13px;
-
       outline: none;
     }
 
     .filter-select:focus,
     .search-input:focus {
       border-color: #6b7280;
-
-      box-shadow:
-        0 0 0 2px rgba(107,114,128,.12);
+      box-shadow: 0 0 0 2px rgba(107,114,128,.12);
     }
 
     /* ================= TABS ================= */
-
     .tab-btn {
       padding: 10px 16px;
-
       border-radius: 8px;
-
       border: none;
       background: transparent;
-
       cursor: pointer;
-
       font-weight: 600;
       color: #6b7280;
-
       transition: all .2s ease;
     }
 
@@ -207,14 +163,12 @@
     }
 
     /* ================= CHART ================= */
-
     .chart-container {
       position: relative;
       height: 320px;
     }
 
     /* ================= TABLE ================= */
-
     .table-wrapper {
       overflow-x: auto;
     }
@@ -227,28 +181,19 @@
 
     th {
       background: #f9fafb;
-
       color: #4b5563;
-
       font-size: 11px;
       font-weight: 700;
-
       padding: 12px 10px;
-
       border-bottom: 1px solid #e5e7eb;
-
       text-align: left;
-
       white-space: nowrap;
     }
 
     td {
       padding: 12px 10px;
-
       border-bottom: 1px solid #f0f0f0;
-
       font-size: 13px;
-
       vertical-align: top;
     }
 
@@ -257,18 +202,13 @@
     }
 
     /* ================= BADGES ================= */
-
     .badge {
       display: inline-flex;
       align-items: center;
-
       padding: 4px 9px;
-
       border-radius: 999px;
-
       font-size: 11px;
       font-weight: 700;
-
       white-space: nowrap;
     }
 
@@ -308,20 +248,18 @@
     }
 
     /* ================= BUTTON ================= */
-
     .btn {
       border: none;
-
       border-radius: 8px;
-
       padding: 9px 13px;
-
       cursor: pointer;
-
       font-weight: 600;
       font-size: 13px;
-
       transition: all .2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .btn-dark {
@@ -342,21 +280,25 @@
       background: #e5e7eb;
     }
 
-    /* ================= MODAL ================= */
+    .btn-outline-red {
+      background: #ffffff;
+      border: 1px solid #f87171;
+      color: #b91c1c;
+    }
 
+    .btn-outline-red:hover {
+      background: #fef2f2;
+    }
+
+    /* ================= MODAL ================= */
     .modal-overlay {
       position: fixed;
       inset: 0;
-
       background: rgba(0,0,0,.5);
-
       z-index: 100;
-
       display: none;
-
       align-items: center;
       justify-content: center;
-
       padding: 20px;
     }
 
@@ -366,81 +308,56 @@
 
     .modal {
       background: #ffffff;
-
       border-radius: 14px;
-
       width: 100%;
       max-width: 900px;
-
       max-height: 90vh;
-
       overflow-y: auto;
     }
 
     .detail-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
     }
 
     .detail-item {
       background: #f9fafb;
-
       padding: 14px;
-
       border-radius: 8px;
     }
 
     .detail-label {
       font-size: 10px;
-
       color: #6b7280;
-
       font-weight: 700;
-
       margin-bottom: 5px;
-
       text-transform: uppercase;
     }
 
     .detail-value {
       font-size: 14px;
-
       font-weight: 600;
-
       color: #111827;
-
       word-break: break-word;
     }
 
     /* ================= LOADING ================= */
-
     .loading {
       min-height: 300px;
-
       display: flex;
-
       align-items: center;
       justify-content: center;
-
       flex-direction: column;
-
       gap: 12px;
     }
 
     .spinner {
       width: 35px;
       height: 35px;
-
       border: 4px solid #e5e7eb;
-
       border-top-color: #111827;
-
       border-radius: 50%;
-
       animation: spin .8s linear infinite;
     }
 
@@ -450,585 +367,299 @@
       }
     }
 
-    /* ================= PROGRESS ================= */
-
-    .progress-track {
-      width: 100%;
-
-      height: 8px;
-
-      background: #f1f5f9;
-
-      border-radius: 999px;
-
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-
-      border-radius: 999px;
-
-      transition: width .4s ease;
-    }
-
     /* ================= MOBILE ================= */
-
     .mobile-menu-btn {
       display: none;
     }
 
     @media (max-width: 900px) {
-
       .sidebar {
         transform: translateX(-100%);
-
-        transition:
-          transform .25s ease;
+        transition: transform .25s ease;
       }
-
       .sidebar.mobile-open {
         transform: translateX(0);
       }
-
       .main-wrapper {
         margin-left: 0;
       }
-
       .mobile-menu-btn {
         display: inline-flex;
       }
-
       .content {
         padding: 18px;
       }
-
       .top-header {
         padding: 14px 18px;
       }
-
       .detail-grid {
         grid-template-columns: 1fr;
       }
-
     }
-
   </style>
-
 </head>
 
-
 <body>
-
 
 <!-- =========================================================
      SIDEBAR
 ========================================================= -->
-
 <aside id="sidebar" class="sidebar">
-
   <div class="sidebar-logo">
-
     <div class="flex items-center gap-3">
-
-      <div
-        class="w-10 h-10 rounded-xl bg-gray-900 text-white flex items-center justify-center"
-      >
+      <div class="w-10 h-10 rounded-xl bg-gray-900 text-white flex items-center justify-center">
         <i class="fa-solid fa-chart-line"></i>
       </div>
-
       <div>
-
-        <div class="font-extrabold text-gray-900">
-          Dashboard Geran
-        </div>
-
-        <div class="text-xs text-gray-500">
-          Pemantauan RMC
-        </div>
-
+        <div class="font-extrabold text-gray-900">Dashboard Geran</div>
+        <div class="text-xs text-gray-500">Pemantauan RMC</div>
       </div>
-
     </div>
-
   </div>
 
-
   <div class="sidebar-menu">
-
     <div class="text-xs font-bold text-gray-400 uppercase px-3 mb-3">
       Sumber Data
     </div>
-
 
     <button
       id="sourceAktifBtn"
       class="source-btn active"
       onclick="selectSource('Geran Aktif')"
     >
-
       <i class="fa-solid fa-folder-open mr-3"></i>
-
       Geran Aktif
-
     </button>
-
 
     <button
       id="sourceTamatBtn"
       class="source-btn"
       onclick="selectSource('Geran Tamat')"
     >
-
       <i class="fa-solid fa-folder-closed mr-3"></i>
-
       Geran Tamat
-
     </button>
-
   </div>
-
 
   <div class="p-4 border-t border-gray-200">
-
-    <div class="text-xs text-gray-400">
-      Dashboard Pemantauan
-    </div>
-
-    <div class="text-xs font-semibold text-gray-600 mt-1">
-      RMC
-    </div>
-
+    <div class="text-xs text-gray-400">Dashboard Pemantauan</div>
+    <div class="text-xs font-semibold text-gray-600 mt-1">RMC</div>
   </div>
-
 </aside>
-
-
 
 <!-- =========================================================
      MAIN
 ========================================================= -->
-
 <div class="main-wrapper">
 
-
   <!-- ================= HEADER ================= -->
-
   <header class="top-header">
-
     <div class="flex items-center justify-between gap-4">
-
       <div class="flex items-center gap-3">
-
         <button
           class="mobile-menu-btn btn btn-light"
           onclick="toggleMobileSidebar()"
         >
-
           <i class="fa-solid fa-bars"></i>
-
         </button>
 
-
         <div>
-
-          <h1
-            class="text-xl md:text-2xl font-extrabold text-gray-900"
-          >
+          <h1 class="text-xl md:text-2xl font-extrabold text-gray-900">
             Dashboard Geran Penyelidikan
           </h1>
 
-
           <div class="flex items-center gap-2 mt-1">
-
-            <span
-              id="sourceBadge"
-              class="badge badge-dark"
-            >
+            <span id="sourceBadge" class="badge badge-dark">
               Geran Aktif
             </span>
-
-
-            <span
-              id="recordStatus"
-              class="text-xs text-gray-500"
-            >
+            <span id="recordStatus" class="text-xs text-gray-500">
               Memuatkan data...
             </span>
-
           </div>
-
         </div>
-
       </div>
 
-
       <div class="flex items-center gap-2">
+        <!-- Input Fail CSV Manual Tersembunyi -->
+        <input
+          type="file"
+          id="localFileInput"
+          accept=".csv,.txt"
+          class="hidden"
+          onchange="handleLocalFileUpload(event)"
+        >
+
+        <button
+          class="btn btn-light"
+          onclick="triggerLocalFile()"
+          title="Muat naik fail CSV secara manual jika capaian online disekat"
+        >
+          <i class="fa-solid fa-upload"></i>
+          <span class="hidden md:inline">Muat Naik CSV</span>
+        </button>
 
         <button
           class="btn btn-light"
           onclick="reloadData()"
           title="Refresh"
         >
-
-          <i
-            id="refreshIcon"
-            class="fa-solid fa-rotate-right"
-          ></i>
-
-          <span class="hidden md:inline ml-1">
-            Refresh
-          </span>
-
+          <i id="refreshIcon" class="fa-solid fa-rotate-right"></i>
+          <span class="hidden md:inline">Refresh</span>
         </button>
-
 
         <button
           class="btn btn-light"
           onclick="exportCSV()"
           title="Export"
         >
-
           <i class="fa-solid fa-file-export"></i>
-
-          <span class="hidden md:inline ml-1">
-            Export
-          </span>
-
+          <span class="hidden md:inline">Export</span>
         </button>
-
 
         <button
           class="btn btn-light"
           onclick="openConfigModal()"
           title="Konfigurasi"
         >
-
           <i class="fa-solid fa-gear"></i>
-
         </button>
-
       </div>
-
     </div>
-
   </header>
-
-
 
   <!-- =========================================================
        CONTENT
   ========================================================== -->
-
   <main class="content">
 
-
     <!-- ================= TABS ================= -->
-
     <div class="card p-2 mb-5">
-
       <div class="flex flex-wrap gap-2">
-
         <button
           id="tabSummary"
           class="tab-btn active"
           onclick="switchTab('summary')"
         >
-
           <i class="fa-solid fa-house mr-2"></i>
-
           Ringkasan Eksekutif
-
         </button>
-
 
         <button
           id="tabVisual"
           class="tab-btn"
           onclick="switchTab('visual')"
         >
-
           <i class="fa-solid fa-chart-pie mr-2"></i>
-
           Dashboard Visual & Analisis
-
         </button>
-
 
         <button
           id="tabVerdict"
           class="tab-btn"
           onclick="switchTab('verdict')"
         >
-
           <i class="fa-solid fa-table-list mr-2"></i>
-
           Rekod Statistik New Verdict
-
         </button>
-
 
         <button
           id="tabMaster"
           class="tab-btn"
           onclick="switchTab('master')"
         >
-
           <i class="fa-solid fa-database mr-2"></i>
-
           Masterlist Direktori
-
         </button>
-
       </div>
-
     </div>
-
-
 
     <!-- =======================================================
          FILTER
     ======================================================== -->
-
     <section class="card p-5 mb-5">
-
       <div class="flex items-center justify-between mb-4">
-
         <div>
-
           <h2 class="font-bold text-gray-900">
-
             <i class="fa-solid fa-filter mr-2"></i>
-
             Filter Data
-
           </h2>
-
           <p class="text-xs text-gray-500 mt-1">
-
             Filter mengikut sumber data yang sedang dipilih.
-
           </p>
-
         </div>
 
-
-        <button
-          class="btn btn-light"
-          onclick="resetFilters()"
-        >
-
+        <button class="btn btn-light" onclick="resetFilters()">
           <i class="fa-solid fa-rotate-left mr-1"></i>
-
           Reset
-
         </button>
-
       </div>
 
-
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4"
-      >
-
-
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         <!-- Grant Type -->
-
         <div>
-
-          <label class="filter-label">
-            Grant Type
-          </label>
-
-          <select
-            id="filterGrantType"
-            class="filter-select"
-            onchange="applyFilters()"
-          >
-
-            <option value="ALL">
-              Semua Grant Type
-            </option>
-
+          <label class="filter-label">Grant Type</label>
+          <select id="filterGrantType" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Grant Type</option>
           </select>
-
         </div>
-
 
         <!-- Grant Category -->
-
         <div>
-
-          <label class="filter-label">
-            Grant Category
-          </label>
-
-          <select
-            id="filterGrantCategory"
-            class="filter-select"
-            onchange="applyFilters()"
-          >
-
-            <option value="ALL">
-              Semua Grant Category
-            </option>
-
+          <label class="filter-label">Grant Category</label>
+          <select id="filterGrantCategory" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Grant Category</option>
           </select>
-
         </div>
-
 
         <!-- Month -->
-
         <div>
-
-          <label class="filter-label">
-            Bulan Project End
-          </label>
-
-          <select
-            id="filterMonth"
-            class="filter-select"
-            onchange="applyFilters()"
-          >
-
-            <option value="ALL">
-              Semua Bulan
-            </option>
-
+          <label class="filter-label">Bulan Project End</label>
+          <select id="filterMonth" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Bulan</option>
           </select>
-
         </div>
-
 
         <!-- Year -->
-
         <div>
-
-          <label class="filter-label">
-            Tahun Project End
-          </label>
-
-          <select
-            id="filterYear"
-            class="filter-select"
-            onchange="applyFilters()"
-          >
-
-            <option value="ALL">
-              Semua Tahun
-            </option>
-
+          <label class="filter-label">Tahun Project End</label>
+          <select id="filterYear" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Tahun</option>
           </select>
-
         </div>
 
-
-        <!-- Quartile -->
-
-        <div>
-
-          <label class="filter-label">
-            Quartile
-          </label>
-
-          <select
-            id="filterQuartile"
-            class="filter-select"
-            onchange="applyFilters()"
-          >
-
-            <option value="ALL">
-              Semua Quartile
-            </option>
-
-            <option value="Q1">
-              Q1
-            </option>
-
-            <option value="Q2">
-              Q2
-            </option>
-
-            <option value="Q3">
-              Q3
-            </option>
-
-            <option value="Q4">
-              Q4
-            </option>
-
-            <option value="Q5 (Extension)">
-              Q5 (Extension)
-            </option>
-
-            <option value="Grant Not Monitored">
-              Grant Not Monitored
-            </option>
-
+        <!-- Quartile (Geran Aktif sahaja) -->
+        <div id="quartileFilterWrap">
+          <label class="filter-label">Quartile</label>
+          <select id="filterQuartile" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Quartile</option>
+            <option value="Q1">Q1</option>
+            <option value="Q2">Q2</option>
+            <option value="Q3">Q3</option>
+            <option value="Q4">Q4</option>
+            <option value="Q5 (Extension)">Q5 (Extension)</option>
+            <option value="Grant Not Monitored">Grant Not Monitored</option>
           </select>
-
         </div>
-
 
         <!-- Verdict -->
-
         <div>
-
-          <label class="filter-label">
-            Verdict
-          </label>
-
-          <select
-            id="filterVerdict"
-            class="filter-select"
-            onchange="applyFilters()"
-          >
-
-            <option value="ALL">
-              Semua Verdict
-            </option>
-
+          <label class="filter-label">Verdict</label>
+          <select id="filterVerdict" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Verdict</option>
           </select>
-
         </div>
 
-
-        <!-- FR STATUS
-             Geran Tamat sahaja -->
-
-        <div
-          id="frFilterWrap"
-          class="hidden"
-        >
-
-          <label class="filter-label">
-            FR Status
-          </label>
-
-          <select
-            id="filterFRStatus"
-            class="filter-select"
-            onchange="applyFilters()"
-          >
-
-            <option value="ALL">
-              Semua FR Status
-            </option>
-
+        <!-- FR STATUS (Geran Tamat sahaja) -->
+        <div id="frFilterWrap" class="hidden">
+          <label class="filter-label">FR Status</label>
+          <select id="filterFRStatus" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua FR Status</option>
           </select>
-
         </div>
-
 
         <!-- Search -->
-
         <div>
-
-          <label class="filter-label">
-            Carian
-          </label>
-
+          <label class="filter-label">Carian</label>
           <input
             id="filterSearch"
             class="search-input"
@@ -1036,4649 +667,2309 @@
             placeholder="Cost Centre, tajuk, nama staf..."
             oninput="applyFilters()"
           >
-
         </div>
-
-
       </div>
-
     </section>
 
-
-
     <!-- ================= LOADING ================= -->
-
-    <div
-      id="loadingPanel"
-      class="card loading mb-5"
-    >
-
+    <div id="loadingPanel" class="card loading mb-5">
       <div class="spinner"></div>
-
-      <div
-        id="loadingText"
-        class="text-sm text-gray-500"
-      >
+      <div id="loadingText" class="text-sm text-gray-500 font-medium">
         Sedang memuatkan data Google Sheet...
       </div>
-
-    </div>
-
-
-
-    <!-- ================= ERROR ================= -->
-
-    <div
-      id="errorPanel"
-      class="hidden card p-6 mb-5 border-red-200 bg-red-50"
-    >
-
-      <div class="flex items-start gap-3">
-
-        <div
-          class="w-9 h-9 rounded-lg bg-red-100 text-red-600 flex items-center justify-center"
-        >
-          <i class="fa-solid fa-triangle-exclamation"></i>
-        </div>
-
-        <div>
-
-          <h3 class="font-bold text-red-800">
-            Gagal Memuatkan Data
-          </h3>
-
-          <p
-            id="errorMessage"
-            class="text-xs text-red-700 mt-1"
-          ></p>
-
-        </div>
-
+      <div id="loadingSubtext" class="text-xs text-gray-400">
+        Menghubungi pelayan Google...
       </div>
-
     </div>
 
+    <!-- ================= ERROR PANEL (DINAIS TARAF) ================= -->
+    <div id="errorPanel" class="hidden card p-6 mb-5 border-red-200 bg-red-50/70">
+      <div class="flex flex-col md:flex-row items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-bold text-red-900 text-base">
+            Gagal Memuatkan Data Google Sheet
+          </h3>
+          <p id="errorMessage" class="text-xs text-red-700 mt-1 font-medium"></p>
 
+          <!-- Panduan Penyelesaian Masalah -->
+          <div class="mt-4 p-4 bg-white rounded-xl border border-red-200 shadow-sm">
+            <h4 class="text-xs font-bold text-gray-800 uppercase tracking-wide mb-2 flex items-center gap-2">
+              <i class="fa-solid fa-wrench text-amber-500"></i>
+              Langkah-Langkah Pembaikan:
+            </h4>
+            <ul class="text-xs text-gray-600 space-y-2 list-disc list-inside">
+              <li>
+                <strong>Buka Google Sheet:</strong> Pastikan fail di Google Sheet telah diterbitkan ke Web melalui menu 
+                <span class="bg-gray-100 px-1.5 py-0.5 rounded font-mono text-gray-800">File &gt; Share &gt; Publish to web</span> 
+                dan pilih format <span class="font-semibold text-gray-900">Comma-separated values (.csv)</span>.
+              </li>
+              <li>
+                <strong>Akses Awam:</strong> Pastikan tetapan capaian <span class="bg-gray-100 px-1.5 py-0.5 rounded font-mono text-gray-800">General Access</span> Google Sheet adalah 
+                <span class="font-semibold text-gray-900">"Anyone with the link" (Viewer)</span> dan bukannya disekat untuk staf/organisasi tertentu sahaja.
+              </li>
+              <li>
+                <strong>Isu Protokol Fail Komputer (file:///):</strong> Jika membuka fail HTML ini secara terus dari komputer tanpa pelayan web (contohnya Live Server), pelayar anda mungkin menyekat capaian CORS. Gunakan butang 
+                <span class="font-semibold text-gray-900">"Muat Naik CSV Manual"</span> di bawah.
+              </li>
+            </ul>
 
-    <!-- ================= DASHBOARD ================= -->
+            <div class="mt-4 flex flex-wrap gap-2 pt-3 border-t border-gray-100">
+              <button class="btn btn-dark" onclick="triggerLocalFile()">
+                <i class="fa-solid fa-file-csv mr-1"></i>
+                Muat Naik CSV Manual Dari Komputer
+              </button>
+              <button class="btn btn-light" onclick="reloadData()">
+                <i class="fa-solid fa-rotate-right mr-1"></i>
+                Cuba Semula
+              </button>
+              <button class="btn btn-light" onclick="openConfigModal()">
+                <i class="fa-solid fa-gear mr-1"></i>
+                Semak URL di Konfigurasi
+              </button>
+              <button class="btn btn-outline-red" onclick="resetToDefaultUrls()">
+                <i class="fa-solid fa-trash-can mr-1"></i>
+                Reset Pautan Asal
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <div
-      id="dashboardContent"
-      class="hidden"
-    >
-
+    <!-- ================= DASHBOARD CONTENT ================= -->
+    <div id="dashboardContent" class="hidden">
 
       <!-- =====================================================
-           TAB 1 — SUMMARY
+            TAB 1 — SUMMARY
       ====================================================== -->
-
       <section id="summaryTab">
-
-
         <!-- KPI -->
-
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5"
-        >
-
-
-          <!-- Jumlah Geran -->
-
+        <div id="kpiContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
+          <!-- Jumlah Geran (Kekal untuk kedua-dua Aktif & Tamat) -->
           <div class="card kpi-card">
-
-            <div
-              class="text-xs font-bold text-gray-500 uppercase"
-            >
-              Jumlah Geran
-            </div>
-
-            <div
-              id="kpiTotal"
-              class="kpi-number text-gray-900"
-            >
-              0
-            </div>
-
-            <div class="text-xs text-gray-400 mt-1">
-              Berdasarkan filter semasa
-            </div>
-
+            <div class="text-xs font-bold text-gray-500 uppercase">Jumlah Geran</div>
+            <div id="kpiTotal" class="kpi-number text-gray-900">0</div>
+            <div class="text-xs text-gray-400 mt-1">Berdasarkan filter semasa</div>
           </div>
 
-
-          <!-- Monitored Quartile -->
-
-          <div class="card kpi-card">
-
-            <div
-              class="text-xs font-bold text-gray-500 uppercase"
-            >
-              Total Grant by Monitored Quartile
-            </div>
-
-            <div
-              id="kpiMonitored"
-              class="kpi-number text-blue-700"
-            >
-              0
-            </div>
-
-            <div class="text-xs text-gray-400 mt-1">
-              Q1 hingga Q5 (Extension)
-            </div>
-
+          <!-- KPI GERAN AKTIF -->
+          <div id="kpiMonitoredCard" class="card kpi-card">
+            <div class="text-xs font-bold text-gray-500 uppercase">Total Grant by Monitored Quartile</div>
+            <div id="kpiMonitored" class="kpi-number text-blue-700">0</div>
+            <div class="text-xs text-gray-400 mt-1">Q1 hingga Q5 (Extension)</div>
           </div>
 
-
-          <!-- Not Monitored -->
-
-          <div class="card kpi-card">
-
-            <div
-              class="text-xs font-bold text-gray-500 uppercase"
-            >
-              Grant Not Monitored
-            </div>
-
-            <div
-              id="kpiNotMonitored"
-              class="kpi-number text-gray-600"
-            >
-              0
-            </div>
-
-            <div class="text-xs text-gray-400 mt-1">
-              Quartile kosong / tidak dikenal
-            </div>
-
+          <div id="kpiNotMonitoredCard" class="card kpi-card">
+            <div class="text-xs font-bold text-gray-500 uppercase">Grant Not Monitored</div>
+            <div id="kpiNotMonitored" class="kpi-number text-gray-600">0</div>
+            <div class="text-xs text-gray-400 mt-1">Quartile kosong / tidak dikenal</div>
           </div>
 
-
-          <!-- Q1 Q2 -->
-
-          <div class="card kpi-card">
-
-            <div
-              class="text-xs font-bold text-gray-500 uppercase"
-            >
-              Q1 + Q2
-            </div>
-
-            <div
-              id="kpiQ1Q2"
-              class="kpi-number text-emerald-700"
-            >
-              0
-            </div>
-
-            <div class="text-xs text-gray-400 mt-1">
-
-              Geran dalam Q1 dan Q2
-
-            </div>
-
+          <!-- KPI GERAN TAMAT -->
+          <div id="kpiTamat2026Card" class="hidden card kpi-card">
+            <div class="text-xs font-bold text-gray-500 uppercase">Tamat Tahun 2026</div>
+            <div id="kpiTamat2026" class="kpi-number text-blue-700">0</div>
+            <div class="text-xs text-gray-400 mt-1">Kolum K (Project End) dalam 2026</div>
           </div>
 
+          <div id="kpiTamat2026NoExtCard" class="hidden card kpi-card">
+            <div class="text-xs font-bold text-gray-500 uppercase">Tamat 2026 (Tanpa Ext)</div>
+            <div id="kpiTamat2026NoExt" class="kpi-number text-teal-700">0</div>
+            <div class="text-xs text-gray-400 mt-1">Kolum K 2026 & Tiada Ext Kolum L</div>
+          </div>
+
+          <div id="kpiFRSubmittedCard" class="hidden card kpi-card">
+            <div class="text-xs font-bold text-gray-500 uppercase">Submit Final Report</div>
+            <div id="kpiFRSubmitted" class="kpi-number text-emerald-700">0</div>
+            <div class="text-xs text-gray-400 mt-1">Kolum AN selain Not completed &amp; Draft (kecuali Terminated)</div>
+          </div>
+
+          <div id="kpiFRPendingCard" class="hidden card kpi-card">
+            <div class="text-xs font-bold text-gray-500 uppercase">Belum Submit FR</div>
+            <div id="kpiFRPending" class="kpi-number text-rose-700">0</div>
+            <div class="text-xs text-gray-400 mt-1">Kolum AN: Not completed / Draft</div>
+          </div>
+
+          <!-- KPI GRACE PERIOD -->
+          <div id="kpiGracePeriodCard" class="hidden card kpi-card">
+            <div class="text-xs font-bold text-gray-500 uppercase">Masih Dalam Grace Period</div>
+            <div id="kpiGracePeriod" class="kpi-number text-amber-600">0</div>
+            <div class="text-xs text-gray-400 mt-1">Kolum AJ (FR: Not completed / Draft)</div>
+          </div>
         </div>
 
-
-
-        <!-- SUMMARY TABLE -->
-
-        <div
-          class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5"
-        >
-
-
-          <!-- Quartile -->
-
-          <div class="card">
-
-            <div
-              class="p-5 border-b border-gray-200"
-            >
-
-              <h3 class="font-bold">
-                Ringkasan Quartile
-              </h3>
-
-              <p class="text-xs text-gray-500 mt-1">
-                Taburan geran mengikut kategori quartile.
-              </p>
-
-            </div>
-
-
-            <div class="table-wrapper">
-
-              <table>
-
-                <thead>
-
-                  <tr>
-
-                    <th>Quartile</th>
-
-                    <th>Jumlah</th>
-
-                    <th>%</th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody
-                  id="quartileSummaryBody"
-                ></tbody>
-
-              </table>
-
-            </div>
-
+        <!-- SUMMARY TABLE - QUARTILE BY GRANT CATEGORY (Geran Aktif Sahaja) -->
+        <div id="quartileSummaryCard" class="card mb-5">
+          <div class="p-5 border-b border-gray-200">
+            <h3 class="font-bold">Ringkasan Quartile Mengikut Grant Category</h3>
+            <p class="text-xs text-gray-500 mt-1">Taburan bilangan quartile yang dipantau (Q1 - Q5) mengikut kategori geran.</p>
           </div>
-
-
-
-          <!-- Verdict -->
-
-          <div class="card">
-
-            <div
-              class="p-5 border-b border-gray-200"
-            >
-
-              <h3 class="font-bold">
-                Ringkasan Verdict
-              </h3>
-
-              <p class="text-xs text-gray-500 mt-1">
-                Taburan geran mengikut verdict.
-              </p>
-
-            </div>
-
-
-            <div class="table-wrapper">
-
-              <table>
-
-                <thead>
-
-                  <tr>
-
-                    <th>Verdict</th>
-
-                    <th>Jumlah</th>
-
-                    <th>%</th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody
-                  id="verdictSummaryBody"
-                ></tbody>
-
-              </table>
-
-            </div>
-
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Grant Category</th>
+                  <th class="text-center">Q1</th>
+                  <th class="text-center">Q2</th>
+                  <th class="text-center">Q3</th>
+                  <th class="text-center">Q4</th>
+                  <th class="text-center">Q5 (Ext)</th>
+                  <th class="text-center">Jumlah</th>
+                </tr>
+              </thead>
+              <tbody id="quartileSummaryBody"></tbody>
+              <tfoot id="quartileSummaryFoot"></tfoot>
+            </table>
           </div>
-
         </div>
 
-
+        <!-- SUMMARY TABLE - VERDICT BY GRANT CATEGORY -->
+        <div class="card mb-5">
+          <div class="p-5 border-b border-gray-200">
+            <h3 class="font-bold">Ringkasan Verdict Mengikut Grant Category</h3>
+            <p id="verdictSummaryDesc" class="text-xs text-gray-500 mt-1">Taburan bilangan verdict bagi geran yang dipantau (Q1 - Q5) mengikut kategori geran.</p>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead id="verdictSummaryHead"></thead>
+              <tbody id="verdictSummaryBody"></tbody>
+              <tfoot id="verdictSummaryFoot"></tfoot>
+            </table>
+          </div>
+        </div>
 
         <!-- STRATEGIC SUMMARY -->
-
         <div class="card mb-5">
-
-          <div
-            class="p-5 border-b border-gray-200"
-          >
-
+          <div class="p-5 border-b border-gray-200">
             <div class="flex items-center gap-3">
-
-              <div
-                class="w-9 h-9 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center"
-              >
-
+              <div class="w-9 h-9 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
                 <i class="fa-solid fa-chart-line"></i>
-
               </div>
-
               <div>
-
-                <h3 class="font-bold">
-                  Ringkasan Analisis
-                </h3>
-
-                <p class="text-xs text-gray-500 mt-1">
-                  Ringkasan automatik berdasarkan data yang sedang ditapis.
-                </p>
-
+                <h3 class="font-bold">Ringkasan Analisis</h3>
+                <p class="text-xs text-gray-500 mt-1">Ringkasan automatik berdasarkan data yang sedang ditapis.</p>
               </div>
-
             </div>
-
           </div>
-
 
           <div class="p-5">
-
-            <div
-              class="grid grid-cols-1 md:grid-cols-3 gap-4"
-            >
-
-
-              <div
-                class="p-4 bg-blue-50 rounded-xl border border-blue-100"
-              >
-
-                <div class="text-xs font-bold text-blue-800">
-                  Monitored Quartile
-                </div>
-
-                <div
-                  id="summaryMonitoredText"
-                  class="text-sm text-blue-900 mt-2 leading-relaxed"
-                >
-                  -
-                </div>
-
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div id="summaryMonitoredBox" class="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                <div class="text-xs font-bold text-blue-800 uppercase tracking-wide">Monitored Quartile</div>
+                <div id="summaryMonitoredText" class="text-sm text-blue-900 mt-2 leading-relaxed">-</div>
               </div>
 
-
-              <div
-                class="p-4 bg-emerald-50 rounded-xl border border-emerald-100"
-              >
-
-                <div class="text-xs font-bold text-emerald-800">
-                  Q1 + Q2
-                </div>
-
-                <div
-                  id="summaryQ1Q2Text"
-                  class="text-sm text-emerald-900 mt-2 leading-relaxed"
-                >
-                  -
-                </div>
-
+              <div id="summaryTamat2026Box" class="hidden p-4 bg-teal-50 rounded-xl border border-teal-100">
+                <div class="text-xs font-bold text-teal-800 uppercase tracking-wide">Status Tamat 2026</div>
+                <div id="summaryTamat2026Text" class="text-sm text-teal-900 mt-2 leading-relaxed">-</div>
               </div>
 
-
-              <div
-                id="summaryFRBox"
-                class="hidden p-4 bg-purple-50 rounded-xl border border-purple-100"
-              >
-
-                <div class="text-xs font-bold text-purple-800">
-                  FR Status
-                </div>
-
-                <div
-                  id="summaryFRText"
-                  class="text-sm text-purple-900 mt-2 leading-relaxed"
-                >
-                  -
-                </div>
-
+              <div id="summaryFRBox" class="hidden p-4 bg-purple-50 rounded-xl border border-purple-100">
+                <div class="text-xs font-bold text-purple-800 uppercase tracking-wide">FR Status</div>
+                <div id="summaryFRText" class="text-sm text-purple-900 mt-2 leading-relaxed">-</div>
               </div>
-
-
             </div>
-
           </div>
-
         </div>
-
-
 
         <!-- WARNING -->
-
         <div class="card">
-
-          <div
-            class="p-5 border-b border-gray-200"
-          >
-
-            <div
-              class="flex items-center justify-between gap-3"
-            >
-
+          <div class="p-5 border-b border-gray-200">
+            <div class="flex items-center justify-between gap-3">
               <div class="flex items-center gap-3">
-
-                <div
-                  class="w-9 h-9 rounded-lg bg-yellow-100 text-yellow-700 flex items-center justify-center"
-                >
-
+                <div class="w-9 h-9 rounded-lg bg-yellow-100 text-yellow-700 flex items-center justify-center">
                   <i class="fa-solid fa-triangle-exclamation"></i>
-
                 </div>
-
                 <div>
-
-                  <h3 class="font-bold">
-                    Perhatian Pemantauan
-                  </h3>
-
-                  <p
-                    id="warningDescription"
-                    class="text-xs text-gray-500 mt-1"
-                  >
-                    Senarai geran yang memerlukan perhatian.
+                  <h3 class="font-bold">Perhatian Pemantauan</h3>
+                  <p id="warningDescription" class="text-xs text-gray-500 mt-1">
+                    Senarai geran berstatus Bermasalah (NCM / Need Closer Monitoring).
                   </p>
-
                 </div>
-
               </div>
-
-
-              <span
-                id="warningCasesBadge"
-                class="badge badge-yellow"
-              >
-                0 Kes
-              </span>
-
+              <span id="warningCasesBadge" class="badge badge-yellow">0 Kes</span>
             </div>
-
           </div>
 
-
           <div class="table-wrapper">
-
             <table>
-
               <thead>
-
                 <tr>
-
                   <th>No.</th>
-
                   <th>Cost Centre No</th>
-
                   <th>Grant Title</th>
-
                   <th>Staff Name</th>
-
                   <th>Project End</th>
-
-                  <th>Quartile</th>
-
+                  <th id="warningQuartileHeader">Quartile</th>
                   <th>Verdict</th>
-
-                  <th
-                    id="warningFRHeader"
-                    class="hidden"
-                  >
-                    FR Status
-                  </th>
-
+                  <th id="warningFRHeader" class="hidden">FR Status</th>
                   <th>Tindakan</th>
-
                 </tr>
-
               </thead>
-
-              <tbody
-                id="warningBody"
-              ></tbody>
-
+              <tbody id="warningBody"></tbody>
             </table>
-
           </div>
 
-        </div>
-
-
-      </section>
-
-
-
-      <!-- =====================================================
-           TAB 2 — VISUAL
-      ====================================================== -->
-
-      <section
-        id="visualTab"
-        class="hidden space-y-5"
-      >
-
-
-        <div
-          class="grid grid-cols-1 lg:grid-cols-2 gap-5"
-        >
-
-
-          <!-- Quartile Chart -->
-
-          <div class="card p-5">
-
-            <h3 class="font-bold text-sm mb-4">
-
-              <i class="fa-solid fa-chart-column mr-2 text-blue-600"></i>
-
-              Bilangan Geran Mengikut Quartile
-
-            </h3>
-
-            <div class="chart-container">
-
-              <canvas id="chartQuartile"></canvas>
-
-            </div>
-
-          </div>
-
-
-
-          <!-- Grant Type -->
-
-          <div class="card p-5">
-
-            <h3 class="font-bold text-sm mb-4">
-
-              <i class="fa-solid fa-chart-pie mr-2 text-blue-600"></i>
-
-              Bilangan Geran Mengikut Grant Type
-
-            </h3>
-
-            <div class="chart-container">
-
-              <canvas id="chartGrantType"></canvas>
-
-            </div>
-
-          </div>
-
-
-
-          <!-- Grant Category -->
-
-          <div class="card p-5">
-
-            <h3 class="font-bold text-sm mb-4">
-
-              <i class="fa-solid fa-layer-group mr-2 text-emerald-600"></i>
-
-              Bilangan Geran Mengikut Grant Category
-
-            </h3>
-
-            <div class="chart-container">
-
-              <canvas id="chartGrantCategory"></canvas>
-
-            </div>
-
-          </div>
-
-
-
-          <!-- Verdict -->
-
-          <div class="card p-5">
-
-            <h3 class="font-bold text-sm mb-4">
-
-              <i class="fa-solid fa-scale-balanced mr-2 text-amber-600"></i>
-
-              Bilangan Geran Mengikut Verdict
-
-            </h3>
-
-            <div class="chart-container">
-
-              <canvas id="chartVerdict"></canvas>
-
-            </div>
-
-          </div>
-
-
-
-          <!-- FR Status -->
-
-          <div
-            id="frChartCard"
-            class="hidden card p-5 lg:col-span-2"
-          >
-
-            <h3 class="font-bold text-sm mb-4">
-
-              <i class="fa-solid fa-file-circle-check mr-2 text-purple-600"></i>
-
-              Bilangan Geran Mengikut FR Status
-
-            </h3>
-
-            <div class="chart-container">
-
-              <canvas id="chartFRStatus"></canvas>
-
-            </div>
-
-          </div>
-
-
-        </div>
-
-      </section>
-
-
-
-      <!-- =====================================================
-           TAB 3 — VERDICT
-      ====================================================== -->
-
-      <section
-        id="verdictTab"
-        class="hidden"
-      >
-
-        <div class="card">
-
-          <div
-            class="p-5 border-b border-gray-200"
-          >
-
-            <h3 class="font-bold">
-
-              <i
-                class="fa-solid fa-scale-balanced mr-2 text-blue-600"
-              ></i>
-
-              Rekod Statistik New Verdict
-
-            </h3>
-
-            <p class="text-xs text-gray-500 mt-1">
-
-              Ringkasan mengikut Grant Type dan Grant Category.
-
-            </p>
-
-          </div>
-
-
-          <div class="table-wrapper">
-
-            <table>
-
-              <thead>
-
-                <tr>
-
-                  <th>Grant Type</th>
-
-                  <th>Grant Category</th>
-
-                  <th>Jumlah Geran</th>
-
-                  <th>Monitored</th>
-
-                  <th>Q1 + Q2</th>
-
-                  <th>Verdict Utama</th>
-
-                  <th
-                    id="verdictFRHeader"
-                    class="hidden"
-                  >
-                    FR Status
-                  </th>
-
-                  <th>Tindakan</th>
-
-                </tr>
-
-              </thead>
-
-
-              <tbody
-                id="verdictTableBody"
-              ></tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-
-      <!-- =====================================================
-           TAB 4 — MASTERLIST
-      ====================================================== -->
-
-      <section
-        id="masterTab"
-        class="hidden"
-      >
-
-        <div class="card">
-
-          <div class="p-5">
-
-            <div
-              class="flex flex-col md:flex-row md:items-center md:justify-between gap-3"
-            >
-
-              <div>
-
-                <h3 class="font-bold">
-
-                  <i
-                    class="fa-solid fa-database mr-2 text-blue-600"
-                  ></i>
-
-                  Masterlist Direktori
-
-                </h3>
-
-                <p class="text-xs text-gray-500 mt-1">
-
-                  Senarai penuh berdasarkan filter semasa.
-
-                </p>
-
-              </div>
-
-
-              <div class="text-xs text-gray-500">
-
-                Memaparkan
-
-                <strong
-                  id="masterlistCount"
-                  class="text-gray-900"
-                >
-                  0
-                </strong>
-
-                rekod
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div class="table-wrapper">
-
-            <table>
-
-              <thead>
-
-                <tr>
-
-                  <th>No.</th>
-
-                  <th>Cost Centre No</th>
-
-                  <th>Grant Title</th>
-
-                  <th>Grant Type</th>
-
-                  <th>Grant Category</th>
-
-                  <th>Staff Name</th>
-
-                  <th>Project End</th>
-
-                  <th>Quartile</th>
-
-                  <th>Verdict</th>
-
-                  <th
-                    id="masterFRHeader"
-                    class="hidden"
-                  >
-                    FR Status
-                  </th>
-
-                  <th>Tindakan</th>
-
-                </tr>
-
-              </thead>
-
-
-              <tbody
-                id="masterlistBody"
-              ></tbody>
-
-            </table>
-
-          </div>
-
-
-          <div
-            id="emptyMasterlist"
-            class="hidden p-10 text-center"
-          >
-
-            <div
-              class="w-12 h-12 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-3"
-            >
-
-              <i class="fa-solid fa-folder-open"></i>
-
-            </div>
-
-            <div class="font-semibold text-gray-700">
-              Tiada Geran Ditemui
-            </div>
-
-            <div class="text-xs text-gray-500 mt-1">
-              Sila ubah filter atau carian.
-            </div>
-
-          </div>
-
-
-          <!-- Pagination -->
-
-          <div
-            class="p-4 border-t border-gray-200 flex items-center justify-between"
-          >
-
-            <div
-              id="paginationInfo"
-              class="text-xs text-gray-500"
-            >
+          <!-- Pagination Warning -->
+          <div id="warningPaginationWrap" class="p-4 border-t border-gray-200 flex items-center justify-between">
+            <div id="warningPaginationInfo" class="text-xs text-gray-500">
               Halaman 1 daripada 1
             </div>
 
-
             <div class="flex gap-2">
-
-              <button
-                id="prevPageBtn"
-                class="btn btn-light"
-                onclick="prevPage()"
-              >
+              <button id="prevWarningPageBtn" class="btn btn-light" onclick="prevWarningPage()">
                 Sebelumnya
               </button>
-
-              <button
-                id="nextPageBtn"
-                class="btn btn-light"
-                onclick="nextPage()"
-              >
+              <button id="nextWarningPageBtn" class="btn btn-light" onclick="nextWarningPage()">
                 Seterusnya
               </button>
-
             </div>
-
           </div>
-
         </div>
-
       </section>
 
+      <!-- =====================================================
+            TAB 2 — VISUAL
+      ====================================================== -->
+      <section id="visualTab" class="hidden space-y-5">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <!-- Quartile Chart (Geran Aktif Sahaja) -->
+          <div id="quartileChartCard" class="card p-5">
+            <h3 class="font-bold text-sm mb-4">
+              <i class="fa-solid fa-chart-column mr-2 text-blue-600"></i>
+              Bilangan Geran Mengikut Quartile
+            </h3>
+            <div class="chart-container">
+              <canvas id="chartQuartile"></canvas>
+            </div>
+          </div>
+
+          <!-- Grant Type -->
+          <div class="card p-5">
+            <h3 class="font-bold text-sm mb-4">
+              <i class="fa-solid fa-chart-pie mr-2 text-blue-600"></i>
+              Bilangan Geran Mengikut Grant Type
+            </h3>
+            <div class="chart-container">
+              <canvas id="chartGrantType"></canvas>
+            </div>
+          </div>
+
+          <!-- Grant Category -->
+          <div class="card p-5">
+            <h3 class="font-bold text-sm mb-4">
+              <i class="fa-solid fa-layer-group mr-2 text-emerald-600"></i>
+              Bilangan Geran Mengikut Grant Category
+            </h3>
+            <div class="chart-container">
+              <canvas id="chartGrantCategory"></canvas>
+            </div>
+          </div>
+
+          <!-- Verdict -->
+          <div class="card p-5">
+            <h3 class="font-bold text-sm mb-4">
+              <i class="fa-solid fa-scale-balanced mr-2 text-amber-600"></i>
+              Bilangan Geran Mengikut Verdict
+            </h3>
+            <div class="chart-container">
+              <canvas id="chartVerdict"></canvas>
+            </div>
+          </div>
+
+          <!-- FR Status (Geran Tamat Sahaja) -->
+          <div id="frChartCard" class="hidden card p-5 lg:col-span-2">
+            <h3 class="font-bold text-sm mb-4">
+              <i class="fa-solid fa-file-circle-check mr-2 text-purple-600"></i>
+              Bilangan Geran Mengikut FR Status
+            </h3>
+            <div class="chart-container">
+              <canvas id="chartFRStatus"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+            TAB 3 — VERDICT
+      ====================================================== -->
+      <section id="verdictTab" class="hidden">
+        <div class="card">
+          <div class="p-5 border-b border-gray-200">
+            <h3 class="font-bold">
+              <i class="fa-solid fa-scale-balanced mr-2 text-blue-600"></i>
+              Rekod Statistik New Verdict
+            </h3>
+            <p class="text-xs text-gray-500 mt-1">
+              Ringkasan mengikut Grant Type dan Grant Category.
+            </p>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Grant Type</th>
+                  <th>Grant Category</th>
+                  <th>Jumlah Geran</th>
+                  <th id="verdictMonitoredHeader">Monitored</th>
+                  <th>Verdict Utama</th>
+                  <th id="verdictFRHeader" class="hidden">FR Status</th>
+                  <th>Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="verdictTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+            TAB 4 — MASTERLIST
+      ====================================================== -->
+      <section id="masterTab" class="hidden">
+        <div class="card">
+          <div class="p-5">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div>
+                <h3 class="font-bold">
+                  <i class="fa-solid fa-database mr-2 text-blue-600"></i>
+                  Masterlist Direktori
+                </h3>
+                <p class="text-xs text-gray-500 mt-1">
+                  Senarai penuh berdasarkan filter semasa.
+                </p>
+              </div>
+
+              <div class="text-xs text-gray-500">
+                Memaparkan
+                <strong id="masterlistCount" class="text-gray-900">0</strong>
+                rekod
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Cost Centre No</th>
+                  <th>Grant Title</th>
+                  <th>Grant Type</th>
+                  <th>Grant Category</th>
+                  <th>Staff Name</th>
+                  <th>Project End</th>
+                  <th id="masterQuartileHeader">Quartile</th>
+                  <th>Verdict</th>
+                  <th id="masterFRHeader" class="hidden">FR Status</th>
+                  <th>Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="masterlistBody"></tbody>
+            </table>
+          </div>
+
+          <div id="emptyMasterlist" class="hidden p-10 text-center">
+            <div class="w-12 h-12 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-3">
+              <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <div class="font-semibold text-gray-700">Tiada Geran Ditemui</div>
+            <div class="text-xs text-gray-500 mt-1">Sila ubah filter atau carian.</div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="p-4 border-t border-gray-200 flex items-center justify-between">
+            <div id="paginationInfo" class="text-xs text-gray-500">
+              Halaman 1 daripada 1
+            </div>
+
+            <div class="flex gap-2">
+              <button id="prevPageBtn" class="btn btn-light" onclick="prevPage()">
+                Sebelumnya
+              </button>
+              <button id="nextPageBtn" class="btn btn-light" onclick="nextPage()">
+                Seterusnya
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </div>
-
   </main>
-
-
 
   <!-- =========================================================
        DETAIL MODAL
   ========================================================== -->
-
   <div
     id="detailModal"
     class="modal-overlay"
     onclick="closeModalOnOverlay(event,'detailModal')"
   >
-
     <div class="modal max-w-3xl">
-
-      <div
-        class="p-5 border-b border-gray-200 flex items-center justify-between"
-      >
-
+      <div class="p-5 border-b border-gray-200 flex items-center justify-between">
         <div>
-
-          <h2 class="text-lg font-extrabold">
-            Butiran Lengkap Geran
-          </h2>
-
-          <p class="text-xs text-gray-500 mt-1">
-            Maklumat berdasarkan rekod Google Sheet.
-          </p>
-
+          <h2 class="text-lg font-extrabold">Butiran Lengkap Geran</h2>
+          <p class="text-xs text-gray-500 mt-1">Maklumat berdasarkan rekod Google Sheet.</p>
         </div>
-
-
-        <button
-          class="btn btn-light"
-          onclick="closeModal('detailModal')"
-        >
-
+        <button class="btn btn-light" onclick="closeModal('detailModal')">
           <i class="fa-solid fa-xmark"></i>
-
         </button>
-
       </div>
 
+      <div id="detailBody" class="p-5"></div>
 
-      <div
-        id="detailBody"
-        class="p-5"
-      ></div>
-
-
-      <div
-        class="p-5 border-t border-gray-200 flex justify-end"
-      >
-
-        <button
-          class="btn btn-light"
-          onclick="closeModal('detailModal')"
-        >
+      <div class="p-5 border-t border-gray-200 flex justify-end">
+        <button class="btn btn-light" onclick="closeModal('detailModal')">
           Tutup
         </button>
-
       </div>
-
     </div>
-
   </div>
-
-
 
   <!-- =========================================================
        CONFIG MODAL
   ========================================================== -->
-
   <div
     id="configModal"
     class="modal-overlay"
     onclick="closeModalOnOverlay(event,'configModal')"
   >
-
     <div class="modal max-w-2xl">
-
-      <div
-        class="p-5 border-b border-gray-200 flex items-center justify-between"
-      >
-
+      <div class="p-5 border-b border-gray-200 flex items-center justify-between">
         <div>
-
-          <h2 class="text-lg font-extrabold">
-            Konfigurasi Google Sheet
-          </h2>
-
-          <p class="text-xs text-gray-500 mt-1">
-            Tetapan sumber CSV untuk setiap tab.
-          </p>
-
+          <h2 class="text-lg font-extrabold">Konfigurasi Google Sheet</h2>
+          <p class="text-xs text-gray-500 mt-1">Tetapan sumber CSV untuk setiap tab.</p>
         </div>
-
-
-        <button
-          class="btn btn-light"
-          onclick="closeModal('configModal')"
-        >
-
+        <button class="btn btn-light" onclick="closeModal('configModal')">
           <i class="fa-solid fa-xmark"></i>
-
         </button>
-
       </div>
 
-
       <div class="p-5 space-y-5">
-
-
         <div>
-
-          <label class="filter-label">
-            Geran Aktif CSV URL
-          </label>
-
+          <label class="filter-label">Geran Aktif CSV URL</label>
           <textarea
             id="configAktifUrl"
             class="search-input"
-            rows="4"
+            rows="3"
+            placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"
           ></textarea>
-
         </div>
 
-
         <div>
-
-          <label class="filter-label">
-            Geran Tamat CSV URL
-          </label>
-
+          <label class="filter-label">Geran Tamat CSV URL</label>
           <textarea
             id="configTamatUrl"
             class="search-input"
-            rows="4"
+            rows="3"
+            placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"
           ></textarea>
-
         </div>
 
-
-        <div
-          class="bg-gray-50 p-4 rounded-lg text-xs text-gray-600"
-        >
-
-          <div class="font-bold text-gray-800 mb-2">
-            Mapping Column
+        <div class="bg-gray-50 p-4 rounded-lg text-xs text-gray-600">
+          <div class="font-bold text-gray-800 mb-2">Pemetaan Kolum Google Sheet</div>
+          <div class="grid grid-cols-2 gap-1 font-mono">
+            <div>C &rarr; Cost Centre No</div>
+            <div>D &rarr; Grant Type</div>
+            <div>E &rarr; Grant Title</div>
+            <div>F &rarr; Staff Name</div>
+            <div>K &rarr; Project End</div>
+            <div>L &rarr; New End Date / Ext.</div>
+            <div>P &rarr; Quartile</div>
+            <div>AG &rarr; Verdict</div>
+            <div>AJ &rarr; Grace Period</div>
+            <div>AK &rarr; Grant Category</div>
+            <div>AN &rarr; FR Status (Tamat)</div>
           </div>
-
-          <div>C → Cost Centre No</div>
-
-          <div>D → Grant Type</div>
-
-          <div>E → Grant Title</div>
-
-          <div>F → Staff Name</div>
-
-          <div>K → Project End</div>
-
-          <div>L → New End Date / Extension</div>
-
-          <div>P → Quartile</div>
-
-          <div>AG → Verdict</div>
-
-          <div>AK → Grant Category</div>
-
-          <div>
-            AN → FR Status
-            <strong>(Geran Tamat sahaja)</strong>
-          </div>
-
         </div>
 
-
-        <div
-          class="bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-800"
-        >
-
-          <strong>Nota:</strong>
-
-          Project End akan menggunakan Column L sekiranya Column L mempunyai
-          nilai. Jika Column L kosong, sistem akan menggunakan Column K.
-
+        <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-800">
+          <strong>Nota Penting:</strong>
+          Pautan mestilah dijana daripada menu <strong>File &gt; Share &gt; Publish to web</strong> dengan memilih format <strong>Comma-separated values (.csv)</strong>.
         </div>
-
       </div>
 
-
-      <div
-        class="p-5 border-t border-gray-200 flex justify-end gap-2"
-      >
-
-        <button
-          class="btn btn-light"
-          onclick="closeModal('configModal')"
-        >
-          Batal
+      <div class="p-5 border-t border-gray-200 flex items-center justify-between">
+        <button class="btn btn-outline-red" onclick="resetToDefaultUrls()">
+          <i class="fa-solid fa-rotate-left mr-1"></i>
+          Set Semula Asal
         </button>
-
-
-        <button
-          class="btn btn-dark"
-          onclick="saveConfig()"
-        >
-
-          <i class="fa-solid fa-floppy-disk mr-1"></i>
-
-          Simpan
-
-        </button>
-
+        <div class="flex gap-2">
+          <button class="btn btn-light" onclick="closeModal('configModal')">
+            Batal
+          </button>
+          <button class="btn btn-dark" onclick="saveConfig()">
+            <i class="fa-solid fa-floppy-disk mr-1"></i>
+            Simpan
+          </button>
+        </div>
       </div>
-
     </div>
-
   </div>
-
-
 
   <!-- =========================================================
        FOOTER
   ========================================================== -->
-
-  <footer
-    class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-400"
-  >
-
-    Dashboard Pemantauan Geran Penyelidikan © 2026 RMC
-
+  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-400">
+    Dashboard Pemantauan Geran Penyelidikan &copy; 2026 RMC
   </footer>
 
+</div>
 
 <!-- =========================================================
      JAVASCRIPT
 ========================================================= -->
-
 <script>
 
+/* Fallback polyfill for PapaParse in case CDN is blocked or unavailable in iframe */
+if (typeof window.Papa === 'undefined') {
+  window.Papa = {
+    parse: function(input, config = {}) {
+      const skipEmpty = config.skipEmptyLines !== false;
+      const parseCsvText = (text) => {
+        const rows = [];
+        let currentRow = [];
+        let currentField = '';
+        let insideQuotes = false;
+
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i];
+          const nextChar = text[i + 1];
+
+          if (char === '"') {
+            if (insideQuotes && nextChar === '"') {
+              currentField += '"';
+              i++;
+            } else {
+              insideQuotes = !insideQuotes;
+            }
+          } else if (char === ',' && !insideQuotes) {
+            currentRow.push(currentField);
+            currentField = '';
+          } else if ((char === '\r' || char === '\n') && !insideQuotes) {
+            if (char === '\r' && nextChar === '\n') {
+              i++;
+            }
+            currentRow.push(currentField);
+            currentField = '';
+            if (!skipEmpty || currentRow.some(c => String(c).trim() !== '')) {
+              rows.push(currentRow);
+            }
+            currentRow = [];
+          } else {
+            currentField += char;
+          }
+        }
+        if (currentField !== '' || currentRow.length > 0) {
+          currentRow.push(currentField);
+          if (!skipEmpty || currentRow.some(c => String(c).trim() !== '')) {
+            rows.push(currentRow);
+          }
+        }
+        return { data: rows, errors: [] };
+      };
+
+      if (config.download && typeof input === 'string') {
+        fetch(input)
+          .then(res => {
+            if (!res.ok) throw new Error("HTTP error " + res.status);
+            return res.text();
+          })
+          .then(text => {
+            const results = parseCsvText(text);
+            if (typeof config.complete === 'function') config.complete(results);
+          })
+          .catch(err => {
+            if (typeof config.error === 'function') config.error(err);
+          });
+        return;
+      }
+
+      if (input instanceof File || input instanceof Blob) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const results = parseCsvText(e.target.result);
+          if (typeof config.complete === 'function') config.complete(results);
+        };
+        reader.onerror = (e) => {
+          if (typeof config.error === 'function') config.error(e);
+        };
+        reader.readAsText(input);
+        return;
+      }
+
+      if (typeof input === 'string') {
+        const results = parseCsvText(input);
+        if (typeof config.complete === 'function') config.complete(results);
+        return results;
+      }
+    },
+    unparse: function(rows) {
+      if (!Array.isArray(rows) || rows.length === 0) return '';
+      if (Array.isArray(rows[0])) {
+        return rows.map(row => row.map(val => `"${String(val ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+      }
+      const headers = Object.keys(rows[0]);
+      const lines = [headers.map(h => `"${String(h).replace(/"/g, '""')}"`).join(',')];
+      for (const row of rows) {
+        lines.push(headers.map(h => `"${String(row[h] ?? '').replace(/"/g, '""')}"`).join(','));
+      }
+      return lines.join('\r\n');
+    }
+  };
+}
 
 /* =========================================================
    GOOGLE SHEET SOURCES
 ========================================================= */
-
 const DEFAULT_URLS = {
-
-  "Geran Aktif":
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSqpPENTFIzT-l9tEdvytJSgI4TXReZVYs3KGsL8xuzT9NA8LPWFoGnVrf_uIeEAw0F87U64VcTiCnI/pub?gid=892877893&single=true&output=csv",
-
-  "Geran Tamat":
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSqpPENTFIzT-l9tEdvytJSgI4TXReZVYs3KGsL8xuzT9NA8LPWFoGnVrf_uIeEAw0F87U64VcTiCnI/pub?gid=619542785&single=true&output=csv"
-
+  "Geran Aktif": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSqpPENTFIzT-l9tEdvytJSgI4TXReZVYs3KGsL8xuzT9NA8LPWFoGnVrf_uIeEAw0F87U64VcTiCnI/pub?gid=892877893&single=true&output=csv",
+  "Geran Tamat": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSqpPENTFIzT-l9tEdvytJSgI4TXReZVYs3KGsL8xuzT9NA8LPWFoGnVrf_uIeEAw0F87U64VcTiCnI/pub?gid=619542785&single=true&output=csv"
 };
-
-
 
 /* =========================================================
    COLUMN MAPPING
 ========================================================= */
-
 const COL = {
-
   COST_CENTRE: 2,       // C
-
   GRANT_TYPE: 3,        // D
-
   GRANT_TITLE: 4,       // E
-
   STAFF_NAME: 5,        // F
-
   PROJECT_END: 10,      // K
-
   NEW_END_DATE: 11,     // L
-
   QUARTILE: 15,         // P
-
   VERDICT: 32,          // AG
-
+  GRACE_PERIOD: 35,     // AJ
   GRANT_CATEGORY: 36,   // AK
-
   FR_STATUS: 39         // AN
-
 };
 
+const GRANT_CATEGORY_ORDER = [
+  "MOHE",
+  "MOSTI",
+  "RUG",
+  "JTNCPI",
+  "GERAN LUAR",
+  "ICC",
+  "CCIN",
+  "CRAEG"
+];
 
+function getCategoryOrderIndex(catName) {
+  const name = clean(catName).toUpperCase();
+  // Padanan tepat
+  let idx = GRANT_CATEGORY_ORDER.findIndex(item => item.toUpperCase() === name);
+  if (idx !== -1) return idx;
+  // Padanan sebahagian perkataan
+  idx = GRANT_CATEGORY_ORDER.findIndex(item => name.includes(item.toUpperCase()) || item.toUpperCase().includes(name));
+  return idx !== -1 ? idx : 999;
+}
+
+function compareGrantCategories(a, b) {
+  const idxA = getCategoryOrderIndex(a);
+  const idxB = getCategoryOrderIndex(b);
+  if (idxA !== idxB) return idxA - idxB;
+  return String(a).localeCompare(String(b), "ms", { numeric: true });
+}
+
+const VERDICT_ORDER = [
+  { key: "CEMERLANG", patterns: ["CEMERLANG", "EXCELLENT", "PW", "PROGRESSING WELL"] },
+  { key: "MEMUASKAN", patterns: ["MEMUASKAN", "SATISFACTORY", "OS", "ON SCHEDULE"] },
+  { key: "KURANG MEMUASKAN", patterns: ["KURANG MEMUASKAN", "LESS SATISFACTORY", "BS", "BEHIND SCHEDULE", "BEHIND"] },
+  { key: "BERMASALAH", patterns: ["BERMASALAH", "MASALAH", "PROBLEM", "NCM", "NEED CLOSER MONITORING", "KRITIKAL", "CRITICAL", "GAGAL"] }
+];
+
+function getVerdictOrderIndex(verdictName) {
+  const name = clean(verdictName).toUpperCase();
+
+  // Semakan keutamaan khusus bagi mengelakkan pertembungan rentetan (cth: 'KURANG MEMUASKAN' vs 'MEMUASKAN')
+  if (name.includes("KURANG MEMUASKAN") || name.includes("LESS SATISFACTORY")) {
+    return 2; // Kurang Memuaskan
+  }
+  if (name.includes("CEMERLANG") || name.includes("EXCELLENT") || /\bPW\b/.test(name) || name.includes("PROGRESSING WELL")) {
+    return 0; // Cemerlang
+  }
+  if (name.includes("MEMUASKAN") || name.includes("SATISFACTORY") || /\bOS\b/.test(name) || name.includes("ON SCHEDULE")) {
+    return 1; // Memuaskan
+  }
+  if (name.includes("BERMASALAH") || name.includes("MASALAH") || /\bNCM\b/.test(name) || name.includes("NEED CLOSER MONITORING") || name.includes("KRITIKAL") || name.includes("CRITICAL") || name.includes("GAGAL")) {
+    return 3; // Bermasalah
+  }
+  if (/\bBS\b/.test(name) || name.includes("BEHIND SCHEDULE") || name.includes("BEHIND")) {
+    return 2; // Kurang Memuaskan (Behind Schedule)
+  }
+
+  return 999;
+}
+
+function compareVerdicts(a, b) {
+  const idxA = getVerdictOrderIndex(a);
+  const idxB = getVerdictOrderIndex(b);
+  if (idxA !== idxB) return idxA - idxB;
+  return String(a).localeCompare(String(b), "ms", { numeric: true });
+}
 
 /* =========================================================
    STATE
 ========================================================= */
-
 let currentSource = "Geran Aktif";
 
 let sourceUrls = {
-
-  "Geran Aktif":
-    localStorage.getItem("geranAktifUrl")
-    || DEFAULT_URLS["Geran Aktif"],
-
-  "Geran Tamat":
-    localStorage.getItem("geranTamatUrl")
-    || DEFAULT_URLS["Geran Tamat"]
-
+  "Geran Aktif": localStorage.getItem("geranAktifUrl") || DEFAULT_URLS["Geran Aktif"],
+  "Geran Tamat": localStorage.getItem("geranTamatUrl") || DEFAULT_URLS["Geran Tamat"]
 };
-
 
 let grantsData = [];
-
 let filteredData = [];
-
 let currentPage = 1;
-
 const ITEMS_PER_PAGE = 15;
 
+let currentWarningPage = 1;
+const WARNING_ITEMS_PER_PAGE = 15;
 
 let charts = {
-
   quartile: null,
-
   grantType: null,
-
   grantCategory: null,
-
   verdict: null,
-
   frStatus: null
-
 };
-
-
 
 /* =========================================================
    INITIALIZATION
 ========================================================= */
-
 document.addEventListener("DOMContentLoaded", () => {
-
   initDashboard();
-
 });
 
-
 async function initDashboard() {
-
   updateSourceButtons();
-
   updateSourceUI();
-
-  initEmptyCharts();
-
   await fetchCurrentSource();
-
 }
-
-
 
 /* =========================================================
    SOURCE SWITCH
 ========================================================= */
-
 async function selectSource(source) {
-
-  if (source === currentSource) {
-    return;
-  }
+  if (source === currentSource) return;
 
   currentSource = source;
-
   currentPage = 1;
-
+  currentWarningPage = 1;
   resetFilters(false);
-
   updateSourceButtons();
-
   updateSourceUI();
-
   closeMobileSidebar();
-
   await fetchCurrentSource();
-
 }
-
 
 function updateSourceButtons() {
+  const aktifBtn = document.getElementById("sourceAktifBtn");
+  const tamatBtn = document.getElementById("sourceTamatBtn");
 
-  const aktifBtn =
-    document.getElementById("sourceAktifBtn");
-
-  const tamatBtn =
-    document.getElementById("sourceTamatBtn");
-
-
-  aktifBtn.classList.toggle(
-    "active",
-    currentSource === "Geran Aktif"
-  );
-
-
-  tamatBtn.classList.toggle(
-    "active",
-    currentSource === "Geran Tamat"
-  );
-
+  aktifBtn.classList.toggle("active", currentSource === "Geran Aktif");
+  tamatBtn.classList.toggle("active", currentSource === "Geran Tamat");
 }
-
 
 function updateSourceUI() {
-
-  const badge =
-    document.getElementById("sourceBadge");
-
+  const badge = document.getElementById("sourceBadge");
   badge.innerText = currentSource;
 
+  const isTamat = currentSource === "Geran Tamat";
 
-  const isTamat =
-    currentSource === "Geran Tamat";
+  // Selaras reka letak grid kontena KPI mengikut bilangan kad
+  const kpiContainer = document.getElementById("kpiContainer");
+  if (kpiContainer) {
+    if (isTamat) {
+      kpiContainer.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 mb-5";
+    } else {
+      kpiContainer.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5";
+    }
+  }
 
+  // Kawalan KPI Geran Aktif
+  const kpiMonitoredCard = document.getElementById("kpiMonitoredCard");
+  const kpiNotMonitoredCard = document.getElementById("kpiNotMonitoredCard");
+  if (kpiMonitoredCard) kpiMonitoredCard.classList.toggle("hidden", isTamat);
+  if (kpiNotMonitoredCard) kpiNotMonitoredCard.classList.toggle("hidden", isTamat);
 
-  /* FR FILTER */
+  // Kawalan KPI Geran Tamat
+  const kpiTamat2026Card = document.getElementById("kpiTamat2026Card");
+  const kpiTamat2026NoExtCard = document.getElementById("kpiTamat2026NoExtCard");
+  const kpiFRSubmittedCard = document.getElementById("kpiFRSubmittedCard");
+  const kpiFRPendingCard = document.getElementById("kpiFRPendingCard");
+  const kpiGracePeriodCard = document.getElementById("kpiGracePeriodCard");
 
-  document
-    .getElementById("frFilterWrap")
-    .classList.toggle(
-      "hidden",
-      !isTamat
-    );
+  if (kpiTamat2026Card) kpiTamat2026Card.classList.toggle("hidden", !isTamat);
+  if (kpiTamat2026NoExtCard) kpiTamat2026NoExtCard.classList.toggle("hidden", !isTamat);
+  if (kpiFRSubmittedCard) kpiFRSubmittedCard.classList.toggle("hidden", !isTamat);
+  if (kpiFRPendingCard) kpiFRPendingCard.classList.toggle("hidden", !isTamat);
+  if (kpiGracePeriodCard) kpiGracePeriodCard.classList.toggle("hidden", !isTamat);
 
+  // KAWALAN QUARTILE: Sembunyikan pada Geran Tamat
+  const quartileFilterWrap = document.getElementById("quartileFilterWrap");
+  if (quartileFilterWrap) quartileFilterWrap.classList.toggle("hidden", isTamat);
 
-  /* FR CHART */
+  const quartileSummaryCard = document.getElementById("quartileSummaryCard");
+  if (quartileSummaryCard) quartileSummaryCard.classList.toggle("hidden", isTamat);
 
-  document
-    .getElementById("frChartCard")
-    .classList.toggle(
-      "hidden",
-      !isTamat
-    );
+  const summaryMonitoredBox = document.getElementById("summaryMonitoredBox");
+  if (summaryMonitoredBox) summaryMonitoredBox.classList.toggle("hidden", isTamat);
 
+  const summaryTamat2026Box = document.getElementById("summaryTamat2026Box");
+  if (summaryTamat2026Box) summaryTamat2026Box.classList.toggle("hidden", !isTamat);
 
-  /* FR SUMMARY */
+  const quartileChartCard = document.getElementById("quartileChartCard");
+  if (quartileChartCard) quartileChartCard.classList.toggle("hidden", isTamat);
 
-  document
-    .getElementById("summaryFRBox")
-    .classList.toggle(
-      "hidden",
-      !isTamat
-    );
+  const warningQuartileHeader = document.getElementById("warningQuartileHeader");
+  if (warningQuartileHeader) warningQuartileHeader.classList.toggle("hidden", isTamat);
 
+  const verdictMonitoredHeader = document.getElementById("verdictMonitoredHeader");
+  if (verdictMonitoredHeader) verdictMonitoredHeader.classList.toggle("hidden", isTamat);
 
-  /* WARNING FR HEADER */
+  const masterQuartileHeader = document.getElementById("masterQuartileHeader");
+  if (masterQuartileHeader) masterQuartileHeader.classList.toggle("hidden", isTamat);
 
-  document
-    .getElementById("warningFRHeader")
-    .classList.toggle(
-      "hidden",
-      !isTamat
-    );
+  const verdictDesc = document.getElementById("verdictSummaryDesc");
+  if (verdictDesc) {
+    verdictDesc.innerText = isTamat
+      ? "Taburan bilangan verdict geran tamat mengikut kategori geran."
+      : "Taburan bilangan verdict bagi geran yang dipantau (Q1 - Q5) mengikut kategori geran.";
+  }
 
-
-  /* VERDICT FR HEADER */
-
-  document
-    .getElementById("verdictFRHeader")
-    .classList.toggle(
-      "hidden",
-      !isTamat
-    );
-
-
-  /* MASTERLIST FR HEADER */
-
-  document
-    .getElementById("masterFRHeader")
-    .classList.toggle(
-      "hidden",
-      !isTamat
-    );
-
+  // Kawalan PR / FR Status: Aktif tiada FR Status, Tamat ada FR Status
+  document.getElementById("frFilterWrap").classList.toggle("hidden", !isTamat);
+  document.getElementById("frChartCard").classList.toggle("hidden", !isTamat);
+  document.getElementById("summaryFRBox").classList.toggle("hidden", !isTamat);
+  document.getElementById("warningFRHeader").classList.toggle("hidden", !isTamat);
+  document.getElementById("verdictFRHeader").classList.toggle("hidden", !isTamat);
+  document.getElementById("masterFRHeader").classList.toggle("hidden", !isTamat);
 }
-
-
 
 /* =========================================================
    FETCH GOOGLE SHEET
 ========================================================= */
-
 async function fetchCurrentSource() {
-
-  const loading =
-    document.getElementById("loadingPanel");
-
-  const dashboard =
-    document.getElementById("dashboardContent");
-
-  const errorPanel =
-    document.getElementById("errorPanel");
-
+  const loading = document.getElementById("loadingPanel");
+  const dashboard = document.getElementById("dashboardContent");
+  const errorPanel = document.getElementById("errorPanel");
 
   loading.classList.remove("hidden");
-
   dashboard.classList.add("hidden");
-
   errorPanel.classList.add("hidden");
 
+  document.getElementById("loadingText").innerText = `Sedang memuatkan data ${currentSource}...`;
+  document.getElementById("recordStatus").innerText = "Memuatkan data...";
 
-  document.getElementById("loadingText").innerText =
-    `Sedang memuatkan data ${currentSource}...`;
+  const targetUrl = sourceUrls[currentSource] || DEFAULT_URLS[currentSource];
 
-
-  document.getElementById("recordStatus").innerText =
-    "Memuatkan data...";
-
-
-  try {
-
-    const url =
-      sourceUrls[currentSource];
-
-
-    if (!url) {
-      throw new Error(
-        "URL Google Sheet tidak ditetapkan."
-      );
-    }
-
-
-    Papa.parse(url, {
-
-      download: true,
-
-      header: false,
-
-      skipEmptyLines: true,
-
-      complete: function(results) {
-
-        try {
-
-          const rows =
-            results.data || [];
-
-
-          if (rows.length < 2) {
-
-            throw new Error(
-              "Google Sheet tidak mengandungi data yang mencukupi."
-            );
-
-          }
-
-
-          grantsData =
-            rows
-              .slice(1)
-              .map((row, index) =>
-                parseGrantRow(
-                  row,
-                  index + 2
-                )
-              )
-              .filter(item =>
-                item.costCentre ||
-                item.grantTitle ||
-                item.staffName
-              );
-
-
-          populateFilters();
-
-          applyFilters();
-
-
-          loading.classList.add("hidden");
-
-          dashboard.classList.remove("hidden");
-
-
-          document.getElementById(
-            "recordStatus"
-          ).innerText =
-            `${grantsData.length.toLocaleString()} rekod`;
-
-
-        } catch (error) {
-
-          showError(error.message);
-
-        }
-
-      },
-
-      error: function(error) {
-
-        showError(
-          error?.message
-          || "Tidak dapat membaca Google Sheet."
-        );
-
-      }
-
-    });
-
-
-  } catch (error) {
-
-    showError(error.message);
-
+  if (!targetUrl || targetUrl.trim() === "") {
+    showError("URL Google Sheet bagi sumber ini kosong. Sila masukkan URL dalam Konfigurasi.");
+    return;
   }
 
+  // Memuat data secara terus menggunakan PapaParse (kaedah asal yang stabil)
+  Papa.parse(targetUrl, {
+    download: true,
+    header: false,
+    skipEmptyLines: true,
+    complete: function(results) {
+      try {
+        const rows = results.data || [];
+
+        if (rows.length < 2) {
+          throw new Error("Google Sheet tidak mengandungi rekod data yang mencukupi.");
+        }
+
+        grantsData = rows
+          .slice(1)
+          .map((row, index) => parseGrantRow(row, index + 2))
+          .filter(item => item.costCentre || item.grantTitle || item.staffName);
+
+        if (grantsData.length === 0) {
+          throw new Error("Tiada rekod sah yang ditemui dalam Google Sheet tersebut.");
+        }
+
+        populateFilters();
+        applyFilters();
+
+        loading.classList.add("hidden");
+        dashboard.classList.remove("hidden");
+        document.getElementById("recordStatus").innerText = `${grantsData.length.toLocaleString()} rekod`;
+      } catch (err) {
+        showError(err.message);
+      }
+    },
+    error: function(parseErr) {
+      // Sandaran terus menggunakan fetch sekiranya sekatan khusus berlaku
+      fetch(targetUrl)
+        .then(response => {
+          if (!response.ok) throw new Error("Gagal menyambung ke Google Sheet (Status: " + response.status + ")");
+          return response.text();
+        })
+        .then(csvText => {
+          processCsvData(csvText);
+        })
+        .catch(fetchErr => {
+          showError("Ralat semasa memuatkan fail Google Sheet: " + (parseErr?.message || fetchErr?.message || "Sekatan akses pelayar."));
+        });
+    }
+  });
 }
 
+function processCsvData(csvText) {
+  Papa.parse(csvText, {
+    header: false,
+    skipEmptyLines: true,
+    complete: function(results) {
+      try {
+        const rows = results.data || [];
 
+        if (rows.length < 2) {
+          throw new Error("Google Sheet tidak mengandungi rekod data yang mencukupi (kurang daripada 2 baris).");
+        }
+
+        grantsData = rows
+          .slice(1)
+          .map((row, index) => parseGrantRow(row, index + 2))
+          .filter(item => item.costCentre || item.grantTitle || item.staffName);
+
+        if (grantsData.length === 0) {
+          throw new Error("Tiada rekod sah yang ditemui dalam fail CSV tersebut.");
+        }
+
+        populateFilters();
+        applyFilters();
+
+        document.getElementById("loadingPanel").classList.add("hidden");
+        document.getElementById("dashboardContent").classList.remove("hidden");
+        document.getElementById("recordStatus").innerText = `${grantsData.length.toLocaleString()} rekod`;
+
+      } catch (err) {
+        showError(err.message);
+      }
+    },
+    error: function(parseErr) {
+      showError("Ralat semasa membaca struktur CSV: " + (parseErr?.message || "Format fail tidak sah."));
+    }
+  });
+}
+
+/* =========================================================
+   LOCAL FILE UPLOAD SUPPORT (OFFLINE / BYPASS CORS)
+========================================================= */
+function triggerLocalFile() {
+  document.getElementById("localFileInput").click();
+}
+
+function handleLocalFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const loading = document.getElementById("loadingPanel");
+  const dashboard = document.getElementById("dashboardContent");
+  const errorPanel = document.getElementById("errorPanel");
+
+  loading.classList.remove("hidden");
+  dashboard.classList.add("hidden");
+  errorPanel.classList.add("hidden");
+
+  document.getElementById("loadingText").innerText = `Sedang memuat naik ${file.name}...`;
+  document.getElementById("loadingSubtext").innerText = "Membaca fail tempatan...";
+
+  Papa.parse(file, {
+    header: false,
+    skipEmptyLines: true,
+    complete: function(results) {
+      try {
+        const rows = results.data || [];
+        if (rows.length < 2) {
+          throw new Error("Fail CSV tempatan tidak mempunyai data yang mencukupi.");
+        }
+
+        grantsData = rows
+          .slice(1)
+          .map((row, index) => parseGrantRow(row, index + 2))
+          .filter(item => item.costCentre || item.grantTitle || item.staffName);
+
+        populateFilters();
+        applyFilters();
+
+        loading.classList.add("hidden");
+        dashboard.classList.remove("hidden");
+        document.getElementById("recordStatus").innerText = `${grantsData.length.toLocaleString()} rekod (Fail Tempatan)`;
+        
+        // Reset input supaya fail yang sama boleh dipilih semula
+        event.target.value = "";
+      } catch (err) {
+        showError(err.message);
+      }
+    },
+    error: function(err) {
+      showError("Gagal membaca fail tempatan: " + err.message);
+    }
+  });
+}
 
 /* =========================================================
    PARSE ROW
 ========================================================= */
+function isMeaningfulDateValue(val) {
+  if (val === null || val === undefined) return false;
+  const text = clean(val);
+  if (!text) return false;
+  const upper = text.toUpperCase();
+  const invalidTokens = ["-", "--", "---", "N/A", "NA", "NO", "TIADA", "NONE", "NIL", "NULL", "0", "TIDAK"];
+  if (invalidTokens.includes(upper)) return false;
+  if (upper.includes("TIADA") || upper === "NO EXTENSION" || upper === "NO EXT") return false;
+  return true;
+}
+
+function extractYear(dateObj, rawText) {
+  if (dateObj && !isNaN(dateObj.getTime())) {
+    return String(dateObj.getFullYear());
+  }
+  const match = clean(rawText).match(/\b(20\d{2})\b/);
+  return match ? match[1] : "";
+}
 
 function parseGrantRow(row, sheetRowNumber) {
+  const costCentre = clean(row[COL.COST_CENTRE]);
+  const grantType = clean(row[COL.GRANT_TYPE]) || "Tidak Dinyatakan";
+  const grantTitle = clean(row[COL.GRANT_TITLE]) || "Tiada Tajuk";
+  const staffName = clean(row[COL.STAFF_NAME]) || "Tidak Dinyatakan";
+  const kDateRaw = clean(row[COL.PROJECT_END]);
+  const lDateRaw = clean(row[COL.NEW_END_DATE]);
 
-  const costCentre =
-    clean(row[COL.COST_CENTRE]);
+  const kDate = parseDateValue(kDateRaw);
+  const kYear = extractYear(kDate, kDateRaw);
 
+  // Keutamaan Column L; jika Column L tiada maklumat baca Column K untuk paparan tarikh akhir
+  const hasL = isMeaningfulDateValue(lDateRaw);
+  const effectiveEnd = hasL ? lDateRaw : kDateRaw;
+  const endDate = parseDateValue(effectiveEnd);
+  const year = extractYear(endDate, effectiveEnd);
 
-  const grantType =
-    clean(row[COL.GRANT_TYPE])
-    || "Tidak Dinyatakan";
-
-
-  const grantTitle =
-    clean(row[COL.GRANT_TITLE])
-    || "Tiada Tajuk";
-
-
-  const staffName =
-    clean(row[COL.STAFF_NAME])
-    || "Tidak Dinyatakan";
-
-
-  const kDate =
-    clean(row[COL.PROJECT_END]);
-
-
-  const lDate =
-    clean(row[COL.NEW_END_DATE]);
-
-
-  /*
-     Priority:
-     L jika ada
-     jika L kosong → K
-  */
-
-  const effectiveEnd =
-    lDate || kDate;
-
-
-  const endDate =
-    parseDateValue(effectiveEnd);
-
-
-  const quartile =
-    normalizeQuartile(
-      row[COL.QUARTILE]
-    );
-
-
-  const verdict =
-    clean(row[COL.VERDICT])
-    || "Tidak Dinyatakan";
-
-
-  const grantCategory =
-    clean(row[COL.GRANT_CATEGORY])
-    || "Tidak Dinyatakan";
-
+  const hasExtension = hasL;
+  const quartile = normalizeQuartile(row[COL.QUARTILE]);
+  const verdict = clean(row[COL.VERDICT]) || "Tidak Dinyatakan";
+  const grantCategory = clean(row[COL.GRANT_CATEGORY]) || "Tidak Dinyatakan";
+  const gracePeriodRaw = clean(row[COL.GRACE_PERIOD]);
 
   let frStatus = "";
-
   if (currentSource === "Geran Tamat") {
-
-    frStatus =
-      clean(row[COL.FR_STATUS])
-      || "Tidak Dinyatakan";
-
+    frStatus = clean(row[COL.FR_STATUS]) || "Tidak Dinyatakan";
   }
-
 
   return {
-
-    id:
-      `${currentSource}-${sheetRowNumber}`,
-
-    sheetRow:
-      sheetRowNumber,
-
+    id: `${currentSource}-${sheetRowNumber}`,
+    sheetRow: sheetRowNumber,
     costCentre,
-
     grantType,
-
     grantTitle,
-
     staffName,
-
-    projectEndRaw:
-      effectiveEnd,
-
-    projectEnd:
-      endDate,
-
-    projectEndDisplay:
-      formatDate(endDate, effectiveEnd),
-
-    month:
-      endDate
-        ? String(endDate.getMonth() + 1)
-            .padStart(2, "0")
-        : "",
-
-    monthName:
-      endDate
-        ? getMonthName(
-            endDate.getMonth()
-          )
-        : "",
-
-    year:
-      endDate
-        ? String(endDate.getFullYear())
-        : "",
-
+    kDateRaw: kDateRaw || "-",
+    kDate: kDate,
+    kYear: kYear,
+    lDateRaw: lDateRaw || "-",
+    projectEndRaw: effectiveEnd,
+    projectEnd: endDate,
+    projectEndDisplay: formatDate(endDate, effectiveEnd),
+    effectiveSource: hasL ? "Kolum L (New End Date / Ext)" : "Kolum K (Project End)",
+    hasExtension,
+    month: endDate ? String(endDate.getMonth() + 1).padStart(2, "0") : "",
+    monthName: endDate ? getMonthName(endDate.getMonth()) : "",
+    year: year,
     quartile,
-
     verdict,
-
     grantCategory,
-
+    gracePeriodRaw: gracePeriodRaw || "-",
     frStatus
-
   };
-
 }
 
-
-
 /* =========================================================
-   CLEAN VALUE
+   CLEAN & QUARTILE NORMALIZATION
 ========================================================= */
-
 function clean(value) {
+  if (value === null || value === undefined) return "";
+  return String(value).trim();
+}
 
-  if (
-    value === null ||
-    value === undefined
-  ) {
+function checkGracePeriod(graceRaw) {
+  const raw = clean(graceRaw);
+  if (!raw) return false;
+  const upper = raw.toUpperCase();
 
-    return "";
-
+  // Token yang menandakan tiada grace period atau telah tamat
+  const invalidTokens = ["-", "--", "---", "N/A", "NA", "NO", "TIADA", "NONE", "NIL", "NULL", "0", "TIDAK", "BUKAN"];
+  if (invalidTokens.includes(upper)) return false;
+  if (upper.includes("TAMAT") || upper.includes("EXPIRED") || upper.includes("LEPAS") || upper.includes("TIADA") || upper.includes("OVERDUE")) {
+    return false;
   }
 
+  // Jika nilai berupa tarikh akhir grace period
+  const dateVal = parseDateValue(raw);
+  if (dateVal && !isNaN(dateVal.getTime())) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return dateVal >= today;
+  }
 
-  return String(value)
-    .trim();
-
+  return true;
 }
-
-
-
-/* =========================================================
-   QUARTILE NORMALIZATION
-========================================================= */
 
 function normalizeQuartile(value) {
+  const raw = clean(value);
+  if (!raw) return "Grant Not Monitored";
 
-  const raw =
-    clean(value);
+  const text = raw.toUpperCase().replace(/\s+/g, " ").trim();
 
+  if (/\bQ1\b/.test(text) || /^1(?:\.0)?$/.test(text)) return "Q1";
+  if (/\bQ2\b/.test(text) || /^2(?:\.0)?$/.test(text)) return "Q2";
+  if (/\bQ3\b/.test(text) || /^3(?:\.0)?$/.test(text)) return "Q3";
+  if (/\bQ4\b/.test(text) || /^4(?:\.0)?$/.test(text)) return "Q4";
 
-  if (!raw) {
-
-    return "Grant Not Monitored";
-
-  }
-
-
-  const text =
-    raw
-      .toUpperCase()
-      .replace(/\s+/g, " ")
-      .trim();
-
-
-  /*
-     Q1
-  */
-
-  if (
-    /\bQ1\b/.test(text) ||
-    /^1(?:\.0)?$/.test(text)
-  ) {
-
-    return "Q1";
-
-  }
-
-
-  /*
-     Q2
-  */
-
-  if (
-    /\bQ2\b/.test(text) ||
-    /^2(?:\.0)?$/.test(text)
-  ) {
-
-    return "Q2";
-
-  }
-
-
-  /*
-     Q3
-  */
-
-  if (
-    /\bQ3\b/.test(text) ||
-    /^3(?:\.0)?$/.test(text)
-  ) {
-
-    return "Q3";
-
-  }
-
-
-  /*
-     Q4
-  */
-
-  if (
-    /\bQ4\b/.test(text) ||
-    /^4(?:\.0)?$/.test(text)
-  ) {
-
-    return "Q4";
-
-  }
-
-
-  /*
-     Q5 Extension
-
-     P = 5, 6, 7, 8, ...
-  */
-
-  const numericMatch =
-    text.match(
-      /\d+(?:\.\d+)?/
-    );
-
-
+  const numericMatch = text.match(/\d+(?:\.\d+)?/);
   if (numericMatch) {
-
-    const number =
-      Number(numericMatch[0]);
-
-
-    if (number >= 5) {
-
-      return "Q5 (Extension)";
-
-    }
-
+    const number = Number(numericMatch[0]);
+    if (number >= 5) return "Q5 (Extension)";
   }
 
-
-  /*
-     String seperti Q5, Q6, Q7
-  */
-
-  if (
-    /\bQ[5-9]\b/.test(text)
-  ) {
-
-    return "Q5 (Extension)";
-
-  }
-
+  if (/\bQ[5-9]\b/.test(text)) return "Q5 (Extension)";
 
   return "Grant Not Monitored";
-
 }
-
-
 
 /* =========================================================
    DATE PARSER
 ========================================================= */
-
 function parseDateValue(value) {
+  if (!value) return null;
+  if (value instanceof Date) return isNaN(value) ? null : value;
 
-  if (!value) {
-    return null;
-  }
+  const text = clean(value);
 
-
-  if (value instanceof Date) {
-    return isNaN(value)
-      ? null
-      : value;
-  }
-
-
-  const text =
-    clean(value);
-
-
-  /*
-     dd/mm/yyyy
-  */
-
-  let match =
-    text.match(
-      /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/
-    );
-
-
+  // dd/mm/yyyy
+  let match = text.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if (match) {
-
-    const day =
-      Number(match[1]);
-
-    const month =
-      Number(match[2]) - 1;
-
-    const year =
-      Number(match[3]);
-
-
-    const date =
-      new Date(
-        year,
-        month,
-        day
-      );
-
-
-    if (
-      date.getFullYear() === year &&
-      date.getMonth() === month &&
-      date.getDate() === day
-    ) {
-
+    const day = Number(match[1]);
+    const month = Number(match[2]) - 1;
+    const year = Number(match[3]);
+    const date = new Date(year, month, day);
+    if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
       return date;
-
     }
-
   }
 
-
-  /*
-     yyyy-mm-dd
-  */
-
-  match =
-    text.match(
-      /^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/
-    );
-
-
+  // yyyy-mm-dd
+  match = text.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
   if (match) {
-
-    const year =
-      Number(match[1]);
-
-    const month =
-      Number(match[2]) - 1;
-
-    const day =
-      Number(match[3]);
-
-
-    const date =
-      new Date(
-        year,
-        month,
-        day
-      );
-
-
-    if (
-      date.getFullYear() === year &&
-      date.getMonth() === month &&
-      date.getDate() === day
-    ) {
-
+    const year = Number(match[1]);
+    const month = Number(match[2]) - 1;
+    const day = Number(match[3]);
+    const date = new Date(year, month, day);
+    if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
       return date;
-
     }
-
   }
 
-
-  /*
-     Excel / Google numeric date
-  */
-
-  if (
-    /^\d{5}(?:\.\d+)?$/.test(text)
-  ) {
-
-    const serial =
-      Number(text);
-
-
+  // Serial Date Google / Excel
+  if (/^\d{5}(?:\.\d+)?$/.test(text)) {
+    const serial = Number(text);
     if (serial > 20000) {
-
-      const date =
-        new Date(
-          Date.UTC(
-            1899,
-            11,
-            30
-          ) +
-          serial * 86400000
-        );
-
-
-      return new Date(
-        date.getUTCFullYear(),
-        date.getUTCMonth(),
-        date.getUTCDate()
-      );
-
+      const date = new Date(Date.UTC(1899, 11, 30) + serial * 86400000);
+      return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
     }
-
   }
 
-
-  /*
-     Native Date parser
-  */
-
-  const parsed =
-    new Date(text);
-
-
-  if (!isNaN(parsed)) {
-
-    return parsed;
-
-  }
-
-
-  return null;
-
+  const parsed = new Date(text);
+  return isNaN(parsed) ? null : parsed;
 }
-
-
-
-/* =========================================================
-   FORMAT DATE
-========================================================= */
 
 function formatDate(date, fallback = "") {
-
-  if (!date) {
-
-    return fallback || "-";
-
-  }
-
-
-  return String(
-    date.getDate()
-  ).padStart(2, "0")
-  + "/"
-  +
-  String(
-    date.getMonth() + 1
-  ).padStart(2, "0")
-  + "/"
-  +
-  date.getFullYear();
-
+  if (!date) return fallback || "-";
+  return String(date.getDate()).padStart(2, "0") + "/" +
+         String(date.getMonth() + 1).padStart(2, "0") + "/" +
+         date.getFullYear();
 }
-
 
 function getMonthName(monthIndex) {
-
   const months = [
-
-    "Januari",
-    "Februari",
-    "Mac",
-    "April",
-    "Mei",
-    "Jun",
-    "Julai",
-    "Ogos",
-    "September",
-    "Oktober",
-    "November",
-    "Disember"
-
+    "Januari", "Februari", "Mac", "April", "Mei", "Jun",
+    "Julai", "Ogos", "September", "Oktober", "November", "Disember"
   ];
-
-
   return months[monthIndex] || "";
-
 }
-
-
 
 /* =========================================================
    POPULATE FILTERS
 ========================================================= */
-
 function populateFilters() {
-
   populateSelect(
     "filterGrantType",
-    grantsData.map(
-      d => d.grantType
-    ),
+    grantsData.map(d => d.grantType),
     "Semua Grant Type"
   );
 
-
   populateSelect(
     "filterGrantCategory",
-    grantsData.map(
-      d => d.grantCategory
-    ),
-    "Semua Grant Category"
+    grantsData.map(d => d.grantCategory),
+    "Semua Grant Category",
+    value => value,
+    compareGrantCategories
   );
-
 
   populateSelect(
     "filterMonth",
-    grantsData
-      .map(d => d.month)
-      .filter(Boolean)
-      .sort(
-        (a,b) =>
-          Number(a) - Number(b)
-      ),
+    grantsData.map(d => d.month).filter(Boolean).sort((a,b) => Number(a) - Number(b)),
     "Semua Bulan",
-    value =>
-      `${value} - ${getMonthName(Number(value)-1)}`
+    value => `${value} - ${getMonthName(Number(value)-1)}`
   );
-
 
   populateSelect(
     "filterYear",
-    grantsData
-      .map(d => d.year)
-      .filter(Boolean)
-      .sort(),
+    grantsData.map(d => d.year).filter(Boolean).sort(),
     "Semua Tahun"
   );
 
-
   populateSelect(
     "filterVerdict",
-    grantsData.map(
-      d => d.verdict
-    ),
-    "Semua Verdict"
+    grantsData.map(d => d.verdict),
+    "Semua Verdict",
+    value => value,
+    compareVerdicts
   );
 
-
-  if (
-    currentSource === "Geran Tamat"
-  ) {
-
+  if (currentSource === "Geran Tamat") {
     populateSelect(
       "filterFRStatus",
-      grantsData.map(
-        d => d.frStatus
-      ),
+      grantsData.map(d => d.frStatus),
       "Semua FR Status"
     );
-
   }
-
 }
 
+function populateSelect(elementId, values, firstLabel, formatter = value => value, customSorter = null) {
+  const select = document.getElementById(elementId);
+  if (!select) return;
 
-function populateSelect(
-  elementId,
-  values,
-  firstLabel,
-  formatter = value => value
-) {
-
-  const select =
-    document.getElementById(elementId);
-
-
-  if (!select) {
-    return;
+  const unique = [...new Set(values.filter(value => clean(value) !== ""))];
+  if (customSorter) {
+    unique.sort(customSorter);
+  } else {
+    unique.sort((a,b) => String(a).localeCompare(String(b), "ms", { numeric: true }));
   }
 
-
-  const unique =
-    [
-      ...new Set(
-        values
-          .filter(
-            value =>
-              clean(value) !== ""
-          )
-      )
-    ];
-
-
-  unique.sort(
-    (a,b) =>
-      String(a)
-        .localeCompare(
-          String(b),
-          "ms",
-          {
-            numeric: true
-          }
-        )
-  );
-
-
-  select.innerHTML =
-    `<option value="ALL">${firstLabel}</option>`;
-
-
+  select.innerHTML = `<option value="ALL">${firstLabel}</option>`;
   unique.forEach(value => {
-
-    const option =
-      document.createElement("option");
-
-
-    option.value =
-      value;
-
-    option.textContent =
-      formatter(value);
-
-
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = formatter(value);
     select.appendChild(option);
-
   });
-
 }
-
-
 
 /* =========================================================
-   FILTER
+   FILTER & RESET
 ========================================================= */
-
 function applyFilters() {
-
-  const type =
-    document.getElementById(
-      "filterGrantType"
-    ).value;
-
-
-  const category =
-    document.getElementById(
-      "filterGrantCategory"
-    ).value;
-
-
-  const month =
-    document.getElementById(
-      "filterMonth"
-    ).value;
-
-
-  const year =
-    document.getElementById(
-      "filterYear"
-    ).value;
-
-
-  const quartile =
-    document.getElementById(
-      "filterQuartile"
-    ).value;
-
-
-  const verdict =
-    document.getElementById(
-      "filterVerdict"
-    ).value;
-
-
-  const search =
-    clean(
-      document.getElementById(
-        "filterSearch"
-      ).value
-    ).toLowerCase();
-
+  const type = document.getElementById("filterGrantType").value;
+  const category = document.getElementById("filterGrantCategory").value;
+  const month = document.getElementById("filterMonth").value;
+  const year = document.getElementById("filterYear").value;
+  const quartile = (currentSource === "Geran Tamat") ? "ALL" : document.getElementById("filterQuartile").value;
+  const verdict = document.getElementById("filterVerdict").value;
+  const search = clean(document.getElementById("filterSearch").value).toLowerCase();
 
   let frStatus = "ALL";
-
-
-  if (
-    currentSource === "Geran Tamat"
-  ) {
-
-    frStatus =
-      document.getElementById(
-        "filterFRStatus"
-      ).value;
-
+  if (currentSource === "Geran Tamat") {
+    frStatus = document.getElementById("filterFRStatus").value;
   }
 
+  filteredData = grantsData.filter(item => {
+    if (type !== "ALL" && item.grantType !== type) return false;
+    if (category !== "ALL" && item.grantCategory !== category) return false;
+    if (month !== "ALL" && item.month !== month) return false;
+    if (year !== "ALL" && item.year !== year) return false;
+    if (currentSource !== "Geran Tamat" && quartile !== "ALL" && item.quartile !== quartile) return false;
+    if (verdict !== "ALL" && item.verdict !== verdict) return false;
+    if (currentSource === "Geran Tamat" && frStatus !== "ALL" && item.frStatus !== frStatus) return false;
 
-  filteredData =
-    grantsData.filter(item => {
+    if (search) {
+      const searchable = [
+        item.costCentre, item.grantTitle, item.grantType,
+        item.grantCategory, item.staffName, item.quartile,
+        item.verdict, item.frStatus
+      ].join(" ").toLowerCase();
 
+      if (!searchable.includes(search)) return false;
+    }
 
-      if (
-        type !== "ALL" &&
-        item.grantType !== type
-      ) {
-
-        return false;
-
-      }
-
-
-      if (
-        category !== "ALL" &&
-        item.grantCategory !== category
-      ) {
-
-        return false;
-
-      }
-
-
-      if (
-        month !== "ALL" &&
-        item.month !== month
-      ) {
-
-        return false;
-
-      }
-
-
-      if (
-        year !== "ALL" &&
-        item.year !== year
-      ) {
-
-        return false;
-
-      }
-
-
-      if (
-        quartile !== "ALL" &&
-        item.quartile !== quartile
-      ) {
-
-        return false;
-
-      }
-
-
-      if (
-        verdict !== "ALL" &&
-        item.verdict !== verdict
-      ) {
-
-        return false;
-
-      }
-
-
-      if (
-        currentSource === "Geran Tamat" &&
-        frStatus !== "ALL" &&
-        item.frStatus !== frStatus
-      ) {
-
-        return false;
-
-      }
-
-
-      if (search) {
-
-        const searchable = [
-
-          item.costCentre,
-
-          item.grantTitle,
-
-          item.grantType,
-
-          item.grantCategory,
-
-          item.staffName,
-
-          item.quartile,
-
-          item.verdict,
-
-          item.frStatus
-
-        ]
-        .join(" ")
-        .toLowerCase();
-
-
-        if (
-          !searchable.includes(search)
-        ) {
-
-          return false;
-
-        }
-
-      }
-
-
-      return true;
-
-    });
-
+    return true;
+  });
 
   currentPage = 1;
-
-
+  currentWarningPage = 1;
   renderAll();
-
 }
 
-
-
-/* =========================================================
-   RESET FILTER
-========================================================= */
-
-function resetFilters(
-  render = true
-) {
-
+function resetFilters(render = true) {
   const ids = [
-
-    "filterGrantType",
-    "filterGrantCategory",
-    "filterMonth",
-    "filterYear",
-    "filterQuartile",
-    "filterVerdict",
-    "filterFRStatus",
-    "filterSearch"
-
+    "filterGrantType", "filterGrantCategory", "filterMonth",
+    "filterYear", "filterQuartile", "filterVerdict",
+    "filterFRStatus", "filterSearch"
   ];
-
 
   ids.forEach(id => {
-
-    const element =
-      document.getElementById(id);
-
-
-    if (!element) {
-      return;
-    }
-
-
-    if (
-      element.tagName === "SELECT"
-    ) {
-
-      element.value = "ALL";
-
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === "SELECT") {
+      el.value = "ALL";
     } else {
-
-      element.value = "";
-
+      el.value = "";
     }
-
   });
-
 
   currentPage = 1;
+  if (render) applyFilters();
+}
 
+/* =========================================================
+   RENDER
+========================================================= */
+function renderAll() {
+  renderKPIs();
+  renderQuartileSummary();
+  renderVerdictSummary();
+  renderStrategicSummary();
+  renderWarningTable();
+  renderVerdictTable();
+  renderMasterlist();
+  updateCharts();
+}
 
-  if (render) {
+function checkFRSubmission(frStatus) {
+  const raw = clean(frStatus);
+  const upper = raw.toUpperCase();
 
-    applyFilters();
-
+  // Status Terminated tidak diambil kira dalam kiraan FR
+  if (upper.includes("TERMINATED")) {
+    return "EXCLUDED";
   }
 
+  // Belum submit FR: Hanya membaca Column AN bagi status 'Not completed' atau 'Draft'
+  if (upper.includes("NOT COMPLETED") || upper.includes("DRAFT")) {
+    return "PENDING";
+  }
+
+  // Telah submit FR: Membaca sebarang status pada Column AN selain Not completed, Draft, dan Terminated
+  return "SUBMITTED";
 }
-
-
-
-/* =========================================================
-   RENDER EVERYTHING
-========================================================= */
-
-function renderAll() {
-
-  renderKPIs();
-
-  renderQuartileSummary();
-
-  renderVerdictSummary();
-
-  renderStrategicSummary();
-
-  renderWarningTable();
-
-  renderVerdictTable();
-
-  renderMasterlist();
-
-  updateCharts();
-
-}
-
-
-
-/* =========================================================
-   KPI
-========================================================= */
 
 function renderKPIs() {
+  const total = filteredData.length;
+  document.getElementById("kpiTotal").innerText = total.toLocaleString();
 
-  const total =
-    filteredData.length;
+  if (currentSource === "Geran Aktif") {
+    const monitored = filteredData.filter(d => d.quartile !== "Grant Not Monitored").length;
+    const notMonitored = filteredData.filter(d => d.quartile === "Grant Not Monitored").length;
 
+    document.getElementById("kpiMonitored").innerText = monitored.toLocaleString();
+    document.getElementById("kpiNotMonitored").innerText = notMonitored.toLocaleString();
+  } else {
+    const isK2026 = (d) => d.kYear === "2026" || String(d.kDateRaw || "").includes("2026");
 
-  const monitored =
-    filteredData.filter(
-      d =>
-        d.quartile !==
-        "Grant Not Monitored"
+    const tamat2026 = filteredData.filter(d => isK2026(d)).length;
+    const tamat2026NoExt = filteredData.filter(d => isK2026(d) && !d.hasExtension).length;
+
+    const frSubmitted = filteredData.filter(d => checkFRSubmission(d.frStatus) === "SUBMITTED").length;
+    const frPending = filteredData.filter(d => checkFRSubmission(d.frStatus) === "PENDING").length;
+
+    // Geran masih dalam grace period: Kolum AJ sah DAN FR status berstatus Not completed / Draft (PENDING)
+    const gracePeriodCount = filteredData.filter(d => 
+      checkFRSubmission(d.frStatus) === "PENDING" && checkGracePeriod(d.gracePeriodRaw)
     ).length;
 
-
-  const notMonitored =
-    filteredData.filter(
-      d =>
-        d.quartile ===
-        "Grant Not Monitored"
-    ).length;
-
-
-  const q1q2 =
-    filteredData.filter(
-      d =>
-        d.quartile === "Q1" ||
-        d.quartile === "Q2"
-    ).length;
-
-
-  document.getElementById(
-    "kpiTotal"
-  ).innerText =
-    total.toLocaleString();
-
-
-  document.getElementById(
-    "kpiMonitored"
-  ).innerText =
-    monitored.toLocaleString();
-
-
-  document.getElementById(
-    "kpiNotMonitored"
-  ).innerText =
-    notMonitored.toLocaleString();
-
-
-  document.getElementById(
-    "kpiQ1Q2"
-  ).innerText =
-    q1q2.toLocaleString();
-
+    document.getElementById("kpiTamat2026").innerText = tamat2026.toLocaleString();
+    document.getElementById("kpiTamat2026NoExt").innerText = tamat2026NoExt.toLocaleString();
+    document.getElementById("kpiFRSubmitted").innerText = frSubmitted.toLocaleString();
+    document.getElementById("kpiFRPending").innerText = frPending.toLocaleString();
+    document.getElementById("kpiGracePeriod").innerText = gracePeriodCount.toLocaleString();
+  }
 }
-
-
-
-/* =========================================================
-   QUARTILE SUMMARY
-========================================================= */
 
 function renderQuartileSummary() {
-
-  const tbody =
-    document.getElementById(
-      "quartileSummaryBody"
-    );
-
-
-  const categories = [
-
-    "Q1",
-    "Q2",
-    "Q3",
-    "Q4",
-    "Q5 (Extension)",
-    "Grant Not Monitored"
-
-  ];
-
-
-  const total =
-    filteredData.length;
-
-
-  tbody.innerHTML =
-    categories.map(
-      category => {
-
-        const count =
-          filteredData.filter(
-            d =>
-              d.quartile === category
-          ).length;
-
-
-        const percent =
-          total > 0
-            ? (
-                count / total * 100
-              ).toFixed(1)
-            : "0.0";
-
-
-        return `
-
-          <tr>
-
-            <td>
-              <span class="badge ${quartileBadgeClass(category)}">
-                ${escapeHtml(category)}
-              </span>
-            </td>
-
-            <td class="font-bold">
-              ${count.toLocaleString()}
-            </td>
-
-            <td>
-              ${percent}%
-            </td>
-
-          </tr>
-
-        `;
-
-      }
-    ).join("");
-
-}
-
-
-
-/* =========================================================
-   VERDICT SUMMARY
-========================================================= */
-
-function renderVerdictSummary() {
-
-  const tbody =
-    document.getElementById(
-      "verdictSummaryBody"
-    );
-
-
-  const total =
-    filteredData.length;
-
-
-  const counts = {};
-
-
-  filteredData.forEach(item => {
-
-    const key =
-      item.verdict ||
-      "Tidak Dinyatakan";
-
-
-    counts[key] =
-      (counts[key] || 0) + 1;
-
-  });
-
-
-  const entries =
-    Object.entries(counts)
-      .sort(
-        (a,b) =>
-          b[1] - a[1]
-      );
-
-
-  if (!entries.length) {
-
-    tbody.innerHTML =
-      `
-        <tr>
-          <td
-            colspan="3"
-            class="text-center text-gray-400 py-6"
-          >
-            Tiada data.
-          </td>
-        </tr>
-      `;
-
-    return;
-
-  }
-
-
-  tbody.innerHTML =
-    entries.map(
-      ([verdict,count]) => {
-
-        const percent =
-          total > 0
-            ? (
-                count / total * 100
-              ).toFixed(1)
-            : "0.0";
-
-
-        return `
-
-          <tr>
-
-            <td>
-              <span class="badge ${verdictBadgeClass(verdict)}">
-                ${escapeHtml(verdict)}
-              </span>
-            </td>
-
-            <td class="font-bold">
-              ${count.toLocaleString()}
-            </td>
-
-            <td>
-              ${percent}%
-            </td>
-
-          </tr>
-
-        `;
-
-      }
-    ).join("");
-
-}
-
-
-
-/* =========================================================
-   STRATEGIC SUMMARY
-========================================================= */
-
-function renderStrategicSummary() {
-
-  const total =
-    filteredData.length;
-
-
-  const monitored =
-    filteredData.filter(
-      d =>
-        d.quartile !==
-        "Grant Not Monitored"
-    ).length;
-
-
-  const q1q2 =
-    filteredData.filter(
-      d =>
-        d.quartile === "Q1" ||
-        d.quartile === "Q2"
-    ).length;
-
-
-  const monitoredPercent =
-    total > 0
-      ? (
-          monitored / total * 100
-        ).toFixed(1)
-      : "0.0";
-
-
-  const q1q2Percent =
-    total > 0
-      ? (
-          q1q2 / total * 100
-        ).toFixed(1)
-      : "0.0";
-
-
-  document.getElementById(
-    "summaryMonitoredText"
-  ).innerHTML =
-
-    `<strong>${monitored.toLocaleString()}</strong>
-     daripada <strong>${total.toLocaleString()}</strong>
-     geran (${monitoredPercent}%)
-     berada dalam quartile yang dipantau.`;
-
-
-
-  document.getElementById(
-    "summaryQ1Q2Text"
-  ).innerHTML =
-
-    `<strong>${q1q2.toLocaleString()}</strong>
-     geran (${q1q2Percent}%)
-     berada dalam Q1 dan Q2.`;
-
-
-
-  if (
-    currentSource === "Geran Tamat"
-  ) {
-
-    const frCounts = {};
-
-
-    filteredData.forEach(item => {
-
-      const key =
-        item.frStatus ||
-        "Tidak Dinyatakan";
-
-
-      frCounts[key] =
-        (frCounts[key] || 0) + 1;
-
-    });
-
-
-    const frText =
-      Object.entries(frCounts)
-        .sort(
-          (a,b) =>
-            b[1] - a[1]
-        )
-        .map(
-          ([key,count]) =>
-            `<strong>${escapeHtml(key)}</strong>: ${count}`
-        )
-        .join(" • ");
-
-
-    document.getElementById(
-      "summaryFRText"
-    ).innerHTML =
-      frText || "Tiada data FR Status.";
-
-  }
-
-}
-
-
-
-/* =========================================================
-   WARNING TABLE
-========================================================= */
-
-function renderWarningTable() {
-
-  const tbody =
-    document.getElementById(
-      "warningBody"
-    );
-
-
-  const isTamat =
-    currentSource === "Geran Tamat";
-
-
-  let warningList;
-
-
-  if (isTamat) {
-
-    warningList =
-      filteredData.filter(
-        item => {
-
-          const fr =
-            item.frStatus
-              .toLowerCase();
-
-
-          return (
-            item.quartile ===
-              "Grant Not Monitored"
-            ||
-            fr.includes("not completed")
-            ||
-            fr.includes("belum")
-            ||
-            fr.includes("pending")
-            ||
-            fr.includes("extension")
-          );
-
-        }
-      );
-
-  } else {
-
-    warningList =
-      filteredData.filter(
-        item =>
-          item.quartile ===
-          "Grant Not Monitored"
-          ||
-          [
-            "NCM",
-            "NEED CLOSER MONITORING",
-            "BEHIND SCHEDULE"
-          ].some(
-            key =>
-              item.verdict
-                .toUpperCase()
-                .includes(key)
-          )
-      );
-
-  }
-
-
-  warningList =
-    warningList.slice(0,10);
-
-
-  document.getElementById(
-    "warningCasesBadge"
-  ).innerText =
-    `${warningList.length} Kes`;
-
-
-
-  document.getElementById(
-    "warningDescription"
-  ).innerText =
-    isTamat
-
-      ? "Geran tamat yang memerlukan perhatian berdasarkan quartile, verdict atau FR Status."
-
-      : "Geran aktif yang memerlukan perhatian berdasarkan quartile atau verdict.";
-
-
-
-  if (!warningList.length) {
-
-    const colspan =
-      isTamat ? 9 : 8;
-
-
-    tbody.innerHTML = `
-
-      <tr>
-
-        <td
-          colspan="${colspan}"
-          class="py-8 text-center text-gray-400 italic"
-        >
-
-          Tiada geran yang memerlukan perhatian khusus.
-
-        </td>
-
-      </tr>
-
-    `;
-
-    return;
-
-  }
-
-
-  tbody.innerHTML =
-    warningList.map(
-      (item,index) => `
-
-        <tr>
-
-          <td>
-            ${index + 1}
-          </td>
-
-          <td>
-            <span class="font-semibold">
-              ${escapeHtml(item.costCentre || "-")}
-            </span>
-          </td>
-
-          <td>
-
-            <div class="font-semibold text-gray-900">
-              ${escapeHtml(item.grantTitle)}
-            </div>
-
-            <div class="text-[11px] text-gray-500 mt-1">
-              ${escapeHtml(item.grantCategory)}
-            </div>
-
-          </td>
-
-          <td>
-            ${escapeHtml(item.staffName)}
-          </td>
-
-          <td class="font-semibold">
-            ${escapeHtml(item.projectEndDisplay)}
-          </td>
-
-          <td>
-            <span class="badge ${quartileBadgeClass(item.quartile)}">
-              ${escapeHtml(item.quartile)}
-            </span>
-          </td>
-
-          <td>
-            <span class="badge ${verdictBadgeClass(item.verdict)}">
-              ${escapeHtml(item.verdict)}
-            </span>
-          </td>
-
-          ${
-            isTamat
-              ? `
-                <td>
-
-                  <span class="badge ${frBadgeClass(item.frStatus)}">
-
-                    ${escapeHtml(
-                      item.frStatus || "-"
-                    )}
-
-                  </span>
-
-                </td>
-              `
-              : ""
-          }
-
-          <td>
-
-            <button
-              class="btn btn-light"
-              onclick="viewGrant('${escapeAttr(item.id)}')"
-            >
-
-              Butiran
-
-            </button>
-
-          </td>
-
-        </tr>
-
-      `
-    ).join("");
-
-}
-
-
-
-/* =========================================================
-   VERDICT TABLE
-========================================================= */
-
-function renderVerdictTable() {
-
-  const tbody =
-    document.getElementById(
-      "verdictTableBody"
-    );
-
-
-  const groups = {};
-
-
-  filteredData.forEach(item => {
-
-    const key =
-      `${item.grantType}|||${item.grantCategory}`;
-
-
-    if (!groups[key]) {
-
-      groups[key] = {
-
-        grantType:
-          item.grantType,
-
-        grantCategory:
-          item.grantCategory,
-
-        records: []
-
-      };
-
-    }
-
-
-    groups[key].records.push(item);
-
-  });
-
-
-  const rows =
-    Object.values(groups)
-      .sort(
-        (a,b) =>
-          a.grantType
-            .localeCompare(
-              b.grantType
-            )
-      );
-
-
-  if (!rows.length) {
-
-    tbody.innerHTML = `
-
-      <tr>
-
-        <td
-          colspan="${currentSource === "Geran Tamat" ? 8 : 7}"
-          class="py-8 text-center text-gray-400"
-        >
-
-          Tiada data.
-
-        </td>
-
-      </tr>
-
-    `;
-
-    return;
-
-  }
-
-
-  tbody.innerHTML =
-    rows.map(
-      group => {
-
-        const records =
-          group.records;
-
-
-        const total =
-          records.length;
-
-
-        const monitored =
-          records.filter(
-            d =>
-              d.quartile !==
-              "Grant Not Monitored"
-          ).length;
-
-
-        const q1q2 =
-          records.filter(
-            d =>
-              d.quartile === "Q1" ||
-              d.quartile === "Q2"
-          ).length;
-
-
-        const verdictCounts = {};
-
-
-        records.forEach(item => {
-
-          verdictCounts[item.verdict] =
-            (verdictCounts[item.verdict] || 0)
-            + 1;
-
-        });
-
-
-        const mainVerdict =
-          Object.entries(
-            verdictCounts
-          )
-          .sort(
-            (a,b) =>
-              b[1] - a[1]
-          )[0]?.[0]
-          || "-";
-
-
-        const frCounts = {};
-
-
-        records.forEach(item => {
-
-          frCounts[item.frStatus] =
-            (frCounts[item.frStatus] || 0)
-            + 1;
-
-        });
-
-
-        const mainFR =
-          Object.entries(
-            frCounts
-          )
-          .sort(
-            (a,b) =>
-              b[1] - a[1]
-          )[0]?.[0]
-          || "-";
-
-
-        let action =
-          "Teruskan pemantauan";
-
-
-        if (
-          monitored === 0
-        ) {
-
-          action =
-            "Semak status quartile";
-
-        }
-
-
-        if (
-          mainVerdict
-            .toUpperCase()
-            .includes("NCM")
-          ||
-          mainVerdict
-            .toUpperCase()
-            .includes("BEHIND")
-        ) {
-
-          action =
-            "Perlu perhatian";
-
-        }
-
-
-        if (
-          currentSource === "Geran Tamat" &&
-          (
-            mainFR
-              .toLowerCase()
-              .includes("not completed")
-            ||
-            mainFR
-              .toLowerCase()
-              .includes("belum")
-          )
-        ) {
-
-          action =
-            "Susulan FR";
-
-        }
-
-
-        return `
-
-          <tr>
-
-            <td class="font-semibold">
-              ${escapeHtml(group.grantType)}
-            </td>
-
-            <td>
-              ${escapeHtml(group.grantCategory)}
-            </td>
-
-            <td class="text-center font-bold">
-              ${total}
-            </td>
-
-            <td class="text-center">
-              ${monitored}
-            </td>
-
-            <td class="text-center">
-              ${q1q2}
-            </td>
-
-            <td>
-
-              <span class="badge ${verdictBadgeClass(mainVerdict)}">
-                ${escapeHtml(mainVerdict)}
-              </span>
-
-            </td>
-
-            ${
-              currentSource === "Geran Tamat"
-                ? `
-                  <td>
-
-                    <span class="badge ${frBadgeClass(mainFR)}">
-                      ${escapeHtml(mainFR)}
-                    </span>
-
-                  </td>
-                `
-                : ""
-            }
-
-            <td>
-
-              <span
-                class="text-xs font-semibold
-                ${
-                  action === "Perlu perhatian"
-                    ? "text-red-600"
-                    :
-                  action === "Susulan FR"
-                    ? "text-purple-600"
-                    :
-                    "text-gray-600"
-                }"
-              >
-
-                ${action}
-
-              </span>
-
-            </td>
-
-          </tr>
-
-        `;
-
-      }
-    ).join("");
-
-}
-
-
-
-/* =========================================================
-   MASTERLIST
-========================================================= */
-
-function renderMasterlist() {
-
-  const tbody =
-    document.getElementById(
-      "masterlistBody"
-    );
-
-
-  const empty =
-    document.getElementById(
-      "emptyMasterlist"
-    );
-
-
-  const total =
-    filteredData.length;
-
-
-  document.getElementById(
-    "masterlistCount"
-  ).innerText =
-    total.toLocaleString();
-
+  if (currentSource === "Geran Tamat") return;
+
+  const tbody = document.getElementById("quartileSummaryBody");
+  const tfoot = document.getElementById("quartileSummaryFoot");
+  if (!tbody) return;
+
+  // Hanya tapis geran yang berada dalam Monitored Quartile (Q1 hingga Q5 Extension)
+  const monitoredData = filteredData.filter(d => d.quartile !== "Grant Not Monitored");
+  const total = monitoredData.length;
 
   if (!total) {
-
-    tbody.innerHTML = "";
-
-    empty.classList.remove("hidden");
-
-    updatePagination();
-
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center text-gray-400 py-6 italic">Tiada rekod geran yang dipantau ditemui.</td></tr>`;
+    if (tfoot) tfoot.innerHTML = "";
     return;
-
   }
 
+  // Pecahkan bilangan Quartile mengikut Grant Category
+  const categoryMap = {};
+  monitoredData.forEach(item => {
+    const cat = clean(item.grantCategory) || "Tidak Dinyatakan";
+    if (!categoryMap[cat]) {
+      categoryMap[cat] = {
+        q1: 0,
+        q2: 0,
+        q3: 0,
+        q4: 0,
+        q5: 0,
+        total: 0
+      };
+    }
 
-  empty.classList.add("hidden");
+    categoryMap[cat].total++;
+  if (item.quartile === "Q1") categoryMap[cat].q1++;
+  else if (item.quartile === "Q2") categoryMap[cat].q2++;
+  else if (item.quartile === "Q3") categoryMap[cat].q3++;
+  else if (item.quartile === "Q4") categoryMap[cat].q4++;
+  else if (item.quartile === "Q5 (Extension)") categoryMap[cat].q5++;
+});
 
+const categories = Object.keys(categoryMap).sort(compareGrantCategories);
 
-  const start =
-    (currentPage - 1)
-    * ITEMS_PER_PAGE;
+let grandQ1 = 0, grandQ2 = 0, grandQ3 = 0, grandQ4 = 0, grandQ5 = 0;
 
+  const cellVal = (val, colorClass) => {
+    if (val === 0) return `<span class="text-gray-300 font-medium">0</span>`;
+    return `<span class="inline-flex items-center justify-center min-w-[26px] px-1.5 py-0.5 rounded text-xs font-bold ${colorClass}">${val.toLocaleString()}</span>`;
+  };
 
-  const pageData =
-    filteredData.slice(
-      start,
-      start + ITEMS_PER_PAGE
-    );
+  tbody.innerHTML = categories.map(cat => {
+    const data = categoryMap[cat];
+    grandQ1 += data.q1;
+    grandQ2 += data.q2;
+    grandQ3 += data.q3;
+    grandQ4 += data.q4;
+    grandQ5 += data.q5;
 
+    return `
+      <tr>
+        <td class="font-semibold text-gray-900">${escapeHtml(cat)}</td>
+        <td class="text-center">${cellVal(data.q1, "bg-blue-50 text-blue-700")}</td>
+        <td class="text-center">${cellVal(data.q2, "bg-emerald-50 text-emerald-700")}</td>
+        <td class="text-center">${cellVal(data.q3, "bg-amber-50 text-amber-700")}</td>
+        <td class="text-center">${cellVal(data.q4, "bg-red-50 text-red-700")}</td>
+        <td class="text-center">${cellVal(data.q5, "bg-purple-50 text-purple-700")}</td>
+        <td class="text-center font-extrabold text-gray-900">${data.total.toLocaleString()}</td>
+      </tr>
+    `;
+  }).join("");
 
-  tbody.innerHTML =
-    pageData.map(
-      (item,index) => `
-
-        <tr>
-
-          <td>
-            ${start + index + 1}
-          </td>
-
-          <td class="font-semibold">
-            ${escapeHtml(item.costCentre || "-")}
-          </td>
-
-          <td>
-
-            <div
-              class="font-semibold text-gray-900 max-w-md"
-            >
-              ${escapeHtml(item.grantTitle)}
-            </div>
-
-          </td>
-
-          <td>
-
-            <span class="badge badge-blue">
-              ${escapeHtml(item.grantType)}
-            </span>
-
-          </td>
-
-          <td>
-            ${escapeHtml(item.grantCategory)}
-          </td>
-
-          <td>
-            ${escapeHtml(item.staffName)}
-          </td>
-
-          <td class="font-semibold whitespace-nowrap">
-            ${escapeHtml(item.projectEndDisplay)}
-          </td>
-
-          <td>
-
-            <span
-              class="badge ${quartileBadgeClass(item.quartile)}"
-            >
-              ${escapeHtml(item.quartile)}
-            </span>
-
-          </td>
-
-          <td>
-
-            <span
-              class="badge ${verdictBadgeClass(item.verdict)}"
-            >
-              ${escapeHtml(item.verdict)}
-            </span>
-
-          </td>
-
-          ${
-            currentSource === "Geran Tamat"
-              ? `
-                <td>
-
-                  <span
-                    class="badge ${frBadgeClass(item.frStatus)}"
-                  >
-                    ${escapeHtml(item.frStatus || "-")}
-                  </span>
-
-                </td>
-              `
-              : ""
-          }
-
-          <td>
-
-            <button
-              class="btn btn-light"
-              onclick="viewGrant('${escapeAttr(item.id)}')"
-            >
-
-              <i class="fa-solid fa-eye mr-1"></i>
-
-              Butiran
-
-            </button>
-
-          </td>
-
-        </tr>
-
-      `
-    ).join("");
-
-
-  updatePagination();
-
+  if (tfoot) {
+    tfoot.innerHTML = `
+      <tr class="bg-gray-50 border-t-2 border-gray-300 font-bold">
+        <td class="text-gray-900 uppercase text-xs">Jumlah Keseluruhan</td>
+        <td class="text-center text-blue-800">${grandQ1.toLocaleString()}</td>
+        <td class="text-center text-emerald-800">${grandQ2.toLocaleString()}</td>
+        <td class="text-center text-amber-800">${grandQ3.toLocaleString()}</td>
+        <td class="text-center text-red-800">${grandQ4.toLocaleString()}</td>
+        <td class="text-center text-purple-800">${grandQ5.toLocaleString()}</td>
+        <td class="text-center font-extrabold text-gray-900">${total.toLocaleString()}</td>
+      </tr>
+    `;
+  }
 }
 
+function renderVerdictSummary() {
+  const thead = document.getElementById("verdictSummaryHead");
+  const tbody = document.getElementById("verdictSummaryBody");
+  const tfoot = document.getElementById("verdictSummaryFoot");
+  if (!tbody) return;
 
+  const isTamat = currentSource === "Geran Tamat";
+  // Untuk Geran Aktif: hanya tapis geran monitored quartile (Q1-Q5). Untuk Geran Tamat: gunakan semua data yang ditapis.
+  const targetData = isTamat ? filteredData : filteredData.filter(d => d.quartile !== "Grant Not Monitored");
+  const total = targetData.length;
+
+  if (!total) {
+    if (thead) thead.innerHTML = `<tr><th>Grant Category</th><th class="text-center">Jumlah</th></tr>`;
+    tbody.innerHTML = `<tr><td colspan="2" class="text-center text-gray-400 py-6 italic">Tiada rekod geran ditemui.</td></tr>`;
+    if (tfoot) tfoot.innerHTML = "";
+    return;
+  }
+
+  // 1. Dapatkan senarai verdict unik mengikut kekerapan
+  const verdictCounts = {};
+  targetData.forEach(item => {
+    const v = clean(item.verdict) || "Tidak Dinyatakan";
+    verdictCounts[v] = (verdictCounts[v] || 0) + 1;
+  });
+
+  const verdicts = Object.keys(verdictCounts).sort(compareVerdicts);
+
+  // 2. Kumpulkan data pecahan mengikut Grant Category
+  const categoryMap = {};
+  targetData.forEach(item => {
+    const cat = clean(item.grantCategory) || "Tidak Dinyatakan";
+    const v = clean(item.verdict) || "Tidak Dinyatakan";
+
+    if (!categoryMap[cat]) {
+      categoryMap[cat] = {
+        total: 0,
+        verdicts: {}
+      };
+      verdicts.forEach(vKey => {
+        categoryMap[cat].verdicts[vKey] = 0;
+      });
+    }
+
+    categoryMap[cat].total++;
+    categoryMap[cat].verdicts[v] = (categoryMap[cat].verdicts[v] || 0) + 1;
+  });
+
+  const categories = Object.keys(categoryMap).sort(compareGrantCategories);
+
+  // Helper warna nombor mengikut badge verdict
+  const cellVal = (val, verdictKey) => {
+    if (!val || val === 0) return `<span class="text-gray-300 font-medium">0</span>`;
+    const bClass = verdictBadgeClass(verdictKey);
+    let colorClass = "bg-gray-100 text-gray-700";
+    if (bClass === "badge-green") colorClass = "bg-emerald-50 text-emerald-700";
+    else if (bClass === "badge-red") colorClass = "bg-red-50 text-red-700";
+    else if (bClass === "badge-yellow") colorClass = "bg-amber-50 text-amber-700";
+    else if (bClass === "badge-blue") colorClass = "bg-blue-50 text-blue-700";
+    else if (bClass === "badge-purple") colorClass = "bg-purple-50 text-purple-700";
+
+    return `<span class="inline-flex items-center justify-center min-w-[26px] px-1.5 py-0.5 rounded text-xs font-bold ${colorClass}">${val.toLocaleString()}</span>`;
+  };
+
+  // 3. Bina kepala jadual (thead) secara dinamik
+  if (thead) {
+    thead.innerHTML = `
+      <tr>
+        <th>Grant Category</th>
+        ${verdicts.map(v => `<th class="text-center"><span class="badge ${verdictBadgeClass(v)}">${escapeHtml(v)}</span></th>`).join("")}
+        <th class="text-center">Jumlah</th>
+      </tr>
+    `;
+  }
+
+  // 4. Kira jumlah keseluruhan bagi setiap verdict
+  const grandTotals = {};
+  verdicts.forEach(v => {
+    grandTotals[v] = 0;
+  });
+
+  // 5. Bina baris data (tbody)
+  tbody.innerHTML = categories.map(cat => {
+    const data = categoryMap[cat];
+    verdicts.forEach(v => {
+      grandTotals[v] += (data.verdicts[v] || 0);
+    });
+
+    return `
+      <tr>
+        <td class="font-semibold text-gray-900">${escapeHtml(cat)}</td>
+        ${verdicts.map(v => `<td class="text-center">${cellVal(data.verdicts[v] || 0, v)}</td>`).join("")}
+        <td class="text-center font-extrabold text-gray-900">${data.total.toLocaleString()}</td>
+      </tr>
+    `;
+  }).join("");
+
+  // 6. Bina baris jumlah (tfoot)
+  if (tfoot) {
+    tfoot.innerHTML = `
+      <tr class="bg-gray-50 border-t-2 border-gray-300 font-bold">
+        <td class="text-gray-900 uppercase text-xs">Jumlah Keseluruhan</td>
+        ${verdicts.map(v => `<td class="text-center text-gray-900 font-bold">${grandTotals[v].toLocaleString()}</td>`).join("")}
+        <td class="text-center font-extrabold text-gray-900">${total.toLocaleString()}</td>
+      </tr>
+    `;
+  }
+}
+
+function renderStrategicSummary() {
+  const total = filteredData.length;
+  const isTamat = currentSource === "Geran Tamat";
+
+  if (!isTamat) {
+    const monitored = filteredData.filter(d => d.quartile !== "Grant Not Monitored").length;
+    const monitoredPercent = total > 0 ? (monitored / total * 100).toFixed(1) : "0.0";
+    document.getElementById("summaryMonitoredText").innerHTML =
+      `<strong>${monitored.toLocaleString()}</strong> daripada <strong>${total.toLocaleString()}</strong> geran (${monitoredPercent}%) berada dalam quartile yang dipantau.`;
+  } else {
+    const isK2026 = (d) => d.kYear === "2026" || String(d.kDateRaw || "").includes("2026");
+    const tamat2026 = filteredData.filter(d => isK2026(d)).length;
+    const tamat2026NoExt = filteredData.filter(d => isK2026(d) && !d.hasExtension).length;
+    const tPercent = total > 0 ? (tamat2026 / total * 100).toFixed(1) : "0.0";
+
+    document.getElementById("summaryTamat2026Text").innerHTML =
+      `<strong>${tamat2026.toLocaleString()}</strong> geran (${tPercent}%) tamat dalam tahun 2026 mengikut <strong>Kolum K (Project End)</strong> (<strong>${tamat2026NoExt.toLocaleString()}</strong> daripadanya tanpa extension pada Kolum L).`;
+
+    const frCounts = {};
+    filteredData.forEach(item => {
+      const key = item.frStatus || "Tidak Dinyatakan";
+      frCounts[key] = (frCounts[key] || 0) + 1;
+    });
+
+    const frText = Object.entries(frCounts)
+      .sort((a,b) => b[1] - a[1])
+      .map(([key,count]) => `<strong>${escapeHtml(key)}</strong>: ${count}`)
+      .join(" • ");
+
+    document.getElementById("summaryFRText").innerHTML = frText || "Tiada data FR Status.";
+  }
+}
+
+function getWarningList() {
+  const isTamat = currentSource === "Geran Tamat";
+  return filteredData.filter(item => {
+    const v = String(item.verdict || "").toUpperCase().trim();
+    if (!v || v === "-" || v === "TIDAK DINYATAKAN") return false;
+
+    // Kecualikan geran yang berstatus FR Terminated sekiranya Geran Tamat
+    if (isTamat) {
+      const fr = String(item.frStatus || "").toUpperCase().trim();
+      if (fr.includes("TERMINATED")) return false;
+    }
+
+    // Hanya pamerkan geran yang berstatus Bermasalah (Kategori 3: Bermasalah, NCM, Need Closer Monitoring, Kritikal, dll.)
+    return getVerdictOrderIndex(v) === 3;
+  });
+}
+
+function renderWarningTable() {
+  const tbody = document.getElementById("warningBody");
+  const paginationWrap = document.getElementById("warningPaginationWrap");
+  const isTamat = currentSource === "Geran Tamat";
+
+  const warningList = getWarningList();
+  const total = warningList.length;
+
+  document.getElementById("warningCasesBadge").innerText = `${total} Kes`;
+  document.getElementById("warningDescription").innerText = isTamat
+    ? "Senarai geran tamat berstatus verdict Bermasalah (kecuali FR berstatus Terminated)."
+    : "Senarai geran berstatus verdict Bermasalah (NCM / Need Closer Monitoring) yang memerlukan pemantauan rapi.";
+
+  if (!total) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8" class="py-8 text-center text-gray-400 italic">
+          Tiada geran berstatus Bermasalah ditemui.
+        </td>
+      </tr>
+    `;
+    if (paginationWrap) paginationWrap.classList.add("hidden");
+    return;
+  }
+
+  if (paginationWrap) paginationWrap.classList.remove("hidden");
+
+  const start = (currentWarningPage - 1) * WARNING_ITEMS_PER_PAGE;
+  const pageData = warningList.slice(start, start + WARNING_ITEMS_PER_PAGE);
+
+  tbody.innerHTML = pageData.map((item, index) => `
+    <tr>
+      <td>${start + index + 1}</td>
+      <td><span class="font-semibold">${escapeHtml(item.costCentre || "-")}</span></td>
+      <td>
+        <div class="font-semibold text-gray-900">${escapeHtml(item.grantTitle)}</div>
+        <div class="text-[11px] text-gray-500 mt-1">${escapeHtml(item.grantCategory)}</div>
+      </td>
+      <td>${escapeHtml(item.staffName)}</td>
+      <td class="font-semibold">${escapeHtml(item.projectEndDisplay)}</td>
+      ${!isTamat ? `<td><span class="badge ${quartileBadgeClass(item.quartile)}">${escapeHtml(item.quartile)}</span></td>` : ""}
+      <td><span class="badge ${verdictBadgeClass(item.verdict)}">${escapeHtml(item.verdict)}</span></td>
+      ${isTamat ? `<td><span class="badge ${frBadgeClass(item.frStatus)}">${escapeHtml(item.frStatus || "-")}</span></td>` : ""}
+      <td>
+        <button class="btn btn-light" onclick="viewGrant('${escapeAttr(item.id)}')">
+          Butiran
+        </button>
+      </td>
+    </tr>
+  `).join("");
+
+  updateWarningPagination(total);
+}
+
+function updateWarningPagination(total) {
+  const totalPages = Math.max(1, Math.ceil(total / WARNING_ITEMS_PER_PAGE));
+  if (currentWarningPage > totalPages) currentWarningPage = totalPages;
+
+  const info = document.getElementById("warningPaginationInfo");
+  if (info) info.innerText = `Halaman ${currentWarningPage} daripada ${totalPages}`;
+
+  const prev = document.getElementById("prevWarningPageBtn");
+  const next = document.getElementById("nextWarningPageBtn");
+
+  if (prev) {
+    prev.disabled = currentWarningPage <= 1;
+    prev.style.opacity = prev.disabled ? ".45" : "1";
+  }
+  if (next) {
+    next.disabled = currentWarningPage >= totalPages;
+    next.style.opacity = next.disabled ? ".45" : "1";
+  }
+}
+
+function prevWarningPage() {
+  if (currentWarningPage > 1) {
+    currentWarningPage--;
+    renderWarningTable();
+  }
+}
+
+function nextWarningPage() {
+  const warningList = getWarningList();
+  const totalPages = Math.max(1, Math.ceil(warningList.length / WARNING_ITEMS_PER_PAGE));
+  if (currentWarningPage < totalPages) {
+    currentWarningPage++;
+    renderWarningTable();
+  }
+}
+
+function renderVerdictTable() {
+  const tbody = document.getElementById("verdictTableBody");
+  const isTamat = currentSource === "Geran Tamat";
+  const groups = {};
+
+  filteredData.forEach(item => {
+    const key = `${item.grantType}|||${item.grantCategory}`;
+    if (!groups[key]) {
+      groups[key] = {
+        grantType: item.grantType,
+        grantCategory: item.grantCategory,
+        records: []
+      };
+    }
+    groups[key].records.push(item);
+  });
+
+  const rows = Object.values(groups).sort((a,b) => {
+    const catDiff = compareGrantCategories(a.grantCategory, b.grantCategory);
+    if (catDiff !== 0) return catDiff;
+    return a.grantType.localeCompare(b.grantType);
+  });
+
+  if (!rows.length) {
+    const colspan = isTamat ? 6 : 6;
+    tbody.innerHTML = `<tr><td colspan="${colspan}" class="py-8 text-center text-gray-400">Tiada data.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(group => {
+    const records = group.records;
+    const total = records.length;
+    const monitored = records.filter(d => d.quartile !== "Grant Not Monitored").length;
+
+    const verdictCounts = {};
+    records.forEach(item => {
+      verdictCounts[item.verdict] = (verdictCounts[item.verdict] || 0) + 1;
+    });
+
+    const mainVerdict = Object.entries(verdictCounts).sort((a,b) => b[1] - a[1])[0]?.[0] || "-";
+
+    const frCounts = {};
+    records.forEach(item => {
+      frCounts[item.frStatus] = (frCounts[item.frStatus] || 0) + 1;
+    });
+    const mainFR = Object.entries(frCounts).sort((a,b) => b[1] - a[1])[0]?.[0] || "-";
+
+    let action = "Teruskan pemantauan";
+    if (!isTamat && monitored === 0) action = "Semak status quartile";
+    if (mainVerdict.toUpperCase().includes("NCM") || mainVerdict.toUpperCase().includes("BEHIND") || mainVerdict.toUpperCase().includes("BERMASALAH") || mainVerdict.toUpperCase().includes("KURANG MEMUASKAN")) {
+      action = "Perlu perhatian";
+    }
+    if (isTamat && (mainFR.toLowerCase().includes("not completed") || mainFR.toLowerCase().includes("belum"))) {
+      action = "Susulan FR";
+    }
+
+    return `
+      <tr>
+        <td class="font-semibold">${escapeHtml(group.grantType)}</td>
+        <td>${escapeHtml(group.grantCategory)}</td>
+        <td class="text-center font-bold">${total}</td>
+        ${!isTamat ? `<td class="text-center">${monitored}</td>` : ""}
+        <td><span class="badge ${verdictBadgeClass(mainVerdict)}">${escapeHtml(mainVerdict)}</span></td>
+        ${isTamat ? `<td><span class="badge ${frBadgeClass(mainFR)}">${escapeHtml(mainFR)}</span></td>` : ""}
+        <td>
+          <span class="text-xs font-semibold ${
+            action === "Perlu perhatian" ? "text-red-600" :
+            action === "Susulan FR" ? "text-purple-600" :
+            "text-gray-600"
+          }">
+            ${action}
+          </span>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function renderMasterlist() {
+  const tbody = document.getElementById("masterlistBody");
+  const empty = document.getElementById("emptyMasterlist");
+  const total = filteredData.length;
+  const isTamat = currentSource === "Geran Tamat";
+
+  document.getElementById("masterlistCount").innerText = total.toLocaleString();
+
+  if (!total) {
+    tbody.innerHTML = "";
+    empty.classList.remove("hidden");
+    updatePagination();
+    return;
+  }
+
+  empty.classList.add("hidden");
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const pageData = filteredData.slice(start, start + ITEMS_PER_PAGE);
+
+  tbody.innerHTML = pageData.map((item, index) => `
+    <tr>
+      <td>${start + index + 1}</td>
+      <td class="font-semibold">${escapeHtml(item.costCentre || "-")}</td>
+      <td><div class="font-semibold text-gray-900 max-w-md">${escapeHtml(item.grantTitle)}</div></td>
+      <td><span class="badge badge-blue">${escapeHtml(item.grantType)}</span></td>
+      <td>${escapeHtml(item.grantCategory)}</td>
+      <td>${escapeHtml(item.staffName)}</td>
+      <td class="font-semibold whitespace-nowrap">${escapeHtml(item.projectEndDisplay)}</td>
+      ${!isTamat ? `<td><span class="badge ${quartileBadgeClass(item.quartile)}">${escapeHtml(item.quartile)}</span></td>` : ""}
+      <td><span class="badge ${verdictBadgeClass(item.verdict)}">${escapeHtml(item.verdict)}</span></td>
+      ${isTamat ? `<td><span class="badge ${frBadgeClass(item.frStatus)}">${escapeHtml(item.frStatus || "-")}</span></td>` : ""}
+      <td>
+        <button class="btn btn-light" onclick="viewGrant('${escapeAttr(item.id)}')">
+          <i class="fa-solid fa-eye mr-1"></i> Butiran
+        </button>
+      </td>
+    </tr>
+  `).join("");
+
+  updatePagination();
+}
 
 /* =========================================================
    PAGINATION
 ========================================================= */
-
 function updatePagination() {
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / ITEMS_PER_PAGE));
+  if (currentPage > totalPages) currentPage = totalPages;
 
-  const totalPages =
-    Math.max(
-      1,
-      Math.ceil(
-        filteredData.length
-        / ITEMS_PER_PAGE
-      )
-    );
+  document.getElementById("paginationInfo").innerText = `Halaman ${currentPage} daripada ${totalPages}`;
 
+  const prev = document.getElementById("prevPageBtn");
+  const next = document.getElementById("nextPageBtn");
 
-  if (
-    currentPage > totalPages
-  ) {
+  prev.disabled = currentPage <= 1;
+  next.disabled = currentPage >= totalPages;
 
-    currentPage =
-      totalPages;
-
-  }
-
-
-  document.getElementById(
-    "paginationInfo"
-  ).innerText =
-    `Halaman ${currentPage} daripada ${totalPages}`;
-
-
-  const prev =
-    document.getElementById(
-      "prevPageBtn"
-    );
-
-
-  const next =
-    document.getElementById(
-      "nextPageBtn"
-    );
-
-
-  prev.disabled =
-    currentPage <= 1;
-
-
-  next.disabled =
-    currentPage >= totalPages;
-
-
-  prev.style.opacity =
-    prev.disabled ? ".45" : "1";
-
-
-  next.style.opacity =
-    next.disabled ? ".45" : "1";
-
+  prev.style.opacity = prev.disabled ? ".45" : "1";
+  next.style.opacity = next.disabled ? ".45" : "1";
 }
-
 
 function prevPage() {
-
   if (currentPage > 1) {
-
     currentPage--;
-
     renderMasterlist();
-
   }
-
 }
-
 
 function nextPage() {
-
-  const totalPages =
-    Math.max(
-      1,
-      Math.ceil(
-        filteredData.length
-        / ITEMS_PER_PAGE
-      )
-    );
-
-
-  if (
-    currentPage < totalPages
-  ) {
-
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / ITEMS_PER_PAGE));
+  if (currentPage < totalPages) {
     currentPage++;
-
     renderMasterlist();
-
   }
-
 }
-
-
 
 /* =========================================================
    CHARTS
 ========================================================= */
-
-function initEmptyCharts() {
-
-  /*
-     Charts akan dibuat apabila data selesai dimuatkan.
-  */
-
-}
-
-
 function destroyCharts() {
-
-  Object.keys(charts)
-    .forEach(key => {
-
-      if (charts[key]) {
-
-        charts[key].destroy();
-
-        charts[key] = null;
-
-      }
-
-    });
-
+  Object.keys(charts).forEach(key => {
+    if (charts[key]) {
+      charts[key].destroy();
+      charts[key] = null;
+    }
+  });
 }
-
 
 function updateCharts() {
-
   destroyCharts();
 
+  const isTamat = currentSource === "Geran Tamat";
 
-  /* ================= QUARTILE ================= */
-
-  const quartileLabels = [
-
-    "Q1",
-    "Q2",
-    "Q3",
-    "Q4",
-    "Q5 (Extension)",
-    "Grant Not Monitored"
-
-  ];
-
-
-  const quartileValues =
-    quartileLabels.map(
-      label =>
-        filteredData.filter(
-          d =>
-            d.quartile === label
-        ).length
-    );
-
-
-  charts.quartile =
-    createBarChart(
-      "chartQuartile",
-      quartileLabels,
-      quartileValues
-    );
-
-
-
-  /* ================= GRANT TYPE ================= */
-
-  const typeCounts =
-    countBy(
-      filteredData,
-      d => d.grantType
-    );
-
-
-  charts.grantType =
-    createDoughnutChart(
-      "chartGrantType",
-      Object.keys(typeCounts),
-      Object.values(typeCounts)
-    );
-
-
-
-  /* ================= CATEGORY ================= */
-
-  const categoryCounts =
-    countBy(
-      filteredData,
-      d => d.grantCategory
-    );
-
-
-  charts.grantCategory =
-    createBarChart(
-      "chartGrantCategory",
-      Object.keys(categoryCounts),
-      Object.values(categoryCounts)
-    );
-
-
-
-  /* ================= VERDICT ================= */
-
-  const verdictCounts =
-    countBy(
-      filteredData,
-      d => d.verdict
-    );
-
-
-  charts.verdict =
-    createDoughnutChart(
-      "chartVerdict",
-      Object.keys(verdictCounts),
-      Object.values(verdictCounts)
-    );
-
-
-
-  /* ================= FR STATUS ================= */
-
-  if (
-    currentSource === "Geran Tamat"
-  ) {
-
-    const frCounts =
-      countBy(
-        filteredData,
-        d =>
-          d.frStatus ||
-          "Tidak Dinyatakan"
-      );
-
-
-    charts.frStatus =
-      createBarChart(
-        "chartFRStatus",
-        Object.keys(frCounts),
-        Object.values(frCounts)
-      );
-
+  // Quartile (Hanya untuk Geran Aktif)
+  if (!isTamat) {
+    const quartileLabels = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)", "Grant Not Monitored"];
+    const quartileValues = quartileLabels.map(label => filteredData.filter(d => d.quartile === label).length);
+    charts.quartile = createBarChart("chartQuartile", quartileLabels, quartileValues);
   }
 
+  // Grant Type
+  const typeCounts = countBy(filteredData, d => d.grantType);
+  charts.grantType = createDoughnutChart("chartGrantType", Object.keys(typeCounts), Object.values(typeCounts));
+
+  const categoryCounts = countBy(filteredData, d => d.grantCategory);
+  const sortedCatLabels = Object.keys(categoryCounts).sort(compareGrantCategories);
+  const sortedCatValues = sortedCatLabels.map(k => categoryCounts[k]);
+  charts.grantCategory = createBarChart("chartGrantCategory", sortedCatLabels, sortedCatValues);
+
+  const verdictCounts = countBy(filteredData, d => d.verdict);
+  const sortedVerdictLabels = Object.keys(verdictCounts).sort(compareVerdicts);
+  const sortedVerdictValues = sortedVerdictLabels.map(k => verdictCounts[k]);
+  charts.verdict = createDoughnutChart("chartVerdict", sortedVerdictLabels, sortedVerdictValues);
+
+  // FR Status
+  if (isTamat) {
+    const frCounts = countBy(filteredData, d => d.frStatus || "Tidak Dinyatakan");
+    charts.frStatus = createBarChart("chartFRStatus", Object.keys(frCounts), Object.values(frCounts));
+  }
 }
 
-
-
-/* =========================================================
-   COUNT BY
-========================================================= */
-
-function countBy(
-  data,
-  callback
-) {
-
+function countBy(data, callback) {
   const counts = {};
-
-
   data.forEach(item => {
-
-    const key =
-      callback(item)
-      || "Tidak Dinyatakan";
-
-
-    counts[key] =
-      (counts[key] || 0)
-      + 1;
-
+    const key = callback(item) || "Tidak Dinyatakan";
+    counts[key] = (counts[key] || 0) + 1;
   });
-
-
   return counts;
-
 }
 
+function createBarChart(canvasId, labels, values) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return null;
 
-
-/* =========================================================
-   BAR CHART
-========================================================= */
-
-function createBarChart(
-  canvasId,
-  labels,
-  values
-) {
-
-  const canvas =
-    document.getElementById(
-      canvasId
-    );
-
-
-  if (!canvas) {
-    return null;
-  }
-
-
-  return new Chart(
-    canvas,
-    {
-
-      type: "bar",
-
-      data: {
-
-        labels,
-
-        datasets: [
-
-          {
-
-            label: "Jumlah Geran",
-
-            data: values,
-
-            borderWidth: 1,
-
-            borderRadius: 6
-
-          }
-
-        ]
-
-      },
-
-      options: {
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        plugins: {
-
-          legend: {
-            display: false
-          }
-
-        },
-
-        scales: {
-
-          y: {
-
-            beginAtZero: true,
-
-            ticks: {
-
-              precision: 0
-
-            }
-
-          }
-
+  return new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Jumlah Geran",
+        data: values,
+        backgroundColor: [
+          "#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#6b7280"
+        ],
+        borderWidth: 1,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
         }
-
       }
-
     }
-  );
-
+  });
 }
 
+function createDoughnutChart(canvasId, labels, values) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return null;
 
-
-/* =========================================================
-   DOUGHNUT
-========================================================= */
-
-function createDoughnutChart(
-  canvasId,
-  labels,
-  values
-) {
-
-  const canvas =
-    document.getElementById(
-      canvasId
-    );
-
-
-  if (!canvas) {
-    return null;
-  }
-
-
-  return new Chart(
-    canvas,
-    {
-
-      type: "doughnut",
-
-      data: {
-
-        labels,
-
-        datasets: [
-
-          {
-
-            data: values,
-
-            borderWidth: 1
-
-          }
-
-        ]
-
-      },
-
-      options: {
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        plugins: {
-
-          legend: {
-
-            position: "bottom"
-
-          }
-
-        }
-
-      }
-
+  return new Chart(canvas, {
+    type: "doughnut",
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: [
+          "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#6b7280", "#14b8a6"
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: "bottom" } }
     }
-  );
-
+  });
 }
-
-
 
 /* =========================================================
    TAB SWITCH
 ========================================================= */
-
 function switchTab(tab) {
-
   const tabs = {
-
-    summary:
-      "summaryTab",
-
-    visual:
-      "visualTab",
-
-    verdict:
-      "verdictTab",
-
-    master:
-      "masterTab"
-
+    summary: "summaryTab",
+    visual: "visualTab",
+    verdict: "verdictTab",
+    master: "masterTab"
   };
 
+  Object.entries(tabs).forEach(([key, id]) => {
+    const section = document.getElementById(id);
+    const button = document.getElementById("tab" + key.charAt(0).toUpperCase() + key.slice(1));
 
-  Object.entries(tabs)
-    .forEach(
-      ([key,id]) => {
+    if (key === tab) {
+      section.classList.remove("hidden");
+      button.classList.add("active");
+    } else {
+      section.classList.add("hidden");
+      button.classList.remove("active");
+    }
+  });
 
-        const section =
-          document.getElementById(id);
-
-
-        const button =
-          document.getElementById(
-            "tab" +
-            key.charAt(0).toUpperCase() +
-            key.slice(1)
-          );
-
-
-        if (
-          key === tab
-        ) {
-
-          section.classList.remove(
-            "hidden"
-          );
-
-          button.classList.add(
-            "active"
-          );
-
-        } else {
-
-          section.classList.add(
-            "hidden"
-          );
-
-          button.classList.remove(
-            "active"
-          );
-
-        }
-
-      }
-    );
-
-
-  if (
-    tab === "visual"
-  ) {
-
-    setTimeout(
-      updateCharts,
-      100
-    );
-
+  if (tab === "visual") {
+    setTimeout(updateCharts, 100);
   }
-
 }
-
-
 
 /* =========================================================
    VIEW GRANT
 ========================================================= */
-
 function viewGrant(id) {
+  const item = grantsData.find(d => d.id === id);
+  if (!item) return;
 
-  const item =
-    grantsData.find(
-      d =>
-        d.id === id
-    );
+  const isTamat = currentSource === "Geran Tamat";
 
-
-  if (!item) {
-    return;
-  }
-
-
-  const isTamat =
-    currentSource === "Geran Tamat";
-
-
-  document.getElementById(
-    "detailBody"
-  ).innerHTML = `
-
+  document.getElementById("detailBody").innerHTML = `
     <div class="mb-5">
-
-      <div class="text-xs text-gray-500 mb-1">
-        Grant Title
-      </div>
-
-      <div class="text-lg font-extrabold text-gray-900">
-        ${escapeHtml(item.grantTitle)}
-      </div>
-
+      <div class="text-xs text-gray-500 mb-1">Grant Title</div>
+      <div class="text-lg font-extrabold text-gray-900">${escapeHtml(item.grantTitle)}</div>
     </div>
-
 
     <div class="detail-grid">
-
-
-      ${detailItem(
-        "Sumber",
-        currentSource
-      )}
-
-
-      ${detailItem(
-        "Cost Centre No",
-        item.costCentre || "-"
-      )}
-
-
-      ${detailItem(
-        "Grant Type",
-        item.grantType
-      )}
-
-
-      ${detailItem(
-        "Grant Category",
-        item.grantCategory
-      )}
-
-
-      ${detailItem(
-        "Staff Name",
-        item.staffName
-      )}
-
-
-      ${detailItem(
-        "Project End",
-        item.projectEndDisplay
-      )}
-
-
-      ${detailItem(
-        "Quartile",
-        item.quartile
-      )}
-
-
-      ${detailItem(
-        "Verdict",
-        item.verdict
-      )}
-
-
-      ${
-        isTamat
-          ? detailItem(
-              "FR Status",
-              item.frStatus || "-"
-            )
-          : ""
-      }
-
-
+      ${detailItem("Sumber", currentSource)}
+      ${detailItem("Cost Centre No", item.costCentre || "-")}
+      ${detailItem("Grant Type", item.grantType)}
+      ${detailItem("Grant Category", item.grantCategory)}
+      ${detailItem("Staff Name", item.staffName)}
+      ${detailItem("Project End Asal (Kolum K)", item.kDateRaw)}
+      ${detailItem("New End Date / Ext. (Kolum L)", item.lDateRaw)}
+      ${detailItem("Tarikh Tamat Digunakan", `${item.projectEndDisplay} (${item.effectiveSource})`)}
+      ${!isTamat ? detailItem("Quartile", item.quartile) : ""}
+      ${detailItem("Verdict", item.verdict)}
+      ${isTamat ? detailItem("Grace Period (Kolum AJ)", item.gracePeriodRaw || "-") : ""}
+      ${isTamat ? detailItem("FR Status", item.frStatus || "-") : ""}
     </div>
-
   `;
 
-
-  openModal(
-    "detailModal"
-  );
-
+  openModal("detailModal");
 }
 
-
-function detailItem(
-  label,
-  value
-) {
-
+function detailItem(label, value) {
   return `
-
     <div class="detail-item">
-
-      <div class="detail-label">
-        ${escapeHtml(label)}
-      </div>
-
-      <div class="detail-value">
-        ${escapeHtml(value)}
-      </div>
-
+      <div class="detail-label">${escapeHtml(label)}</div>
+      <div class="detail-value">${escapeHtml(value)}</div>
     </div>
-
   `;
-
 }
-
-
 
 /* =========================================================
    BADGE HELPERS
 ========================================================= */
-
-function quartileBadgeClass(
-  quartile
-) {
-
+function quartileBadgeClass(quartile) {
   switch (quartile) {
-
-    case "Q1":
-      return "badge-blue";
-
-    case "Q2":
-      return "badge-green";
-
-    case "Q3":
-      return "badge-yellow";
-
-    case "Q4":
-      return "badge-red";
-
-    case "Q5 (Extension)":
-      return "badge-purple";
-
-    default:
-      return "badge-gray";
-
+    case "Q1": return "badge-blue";
+    case "Q2": return "badge-green";
+    case "Q3": return "badge-yellow";
+    case "Q4": return "badge-red";
+    case "Q5 (Extension)": return "badge-purple";
+    default: return "badge-gray";
   }
-
 }
 
+function verdictBadgeClass(verdict) {
+  const text = String(verdict || "").toUpperCase();
 
-function verdictBadgeClass(
-  verdict
-) {
-
-  const text =
-    String(verdict || "")
-      .toUpperCase();
-
-
-  if (
-    text.includes("CEMERLANG")
-    ||
-    text.includes("EXCELLENT")
-    ||
-    text.includes("BAIK")
-    ||
-    text.includes("GOOD")
-    ||
-    text.includes("PROGRESSING WELL")
-  ) {
-
-    return "badge-green";
-
-  }
-
-
-  if (
-    text.includes("NCM")
-    ||
-    text.includes("KRITIKAL")
-    ||
-    text.includes("CRITICAL")
-    ||
-    text.includes("BEHIND")
-  ) {
-
-    return "badge-red";
-
-  }
-
-
-  if (
-    text.includes("WARNING")
-    ||
-    text.includes("PERLU")
-    ||
-    text.includes("MEMUASKAN")
-  ) {
-
+  // Semak 'Kurang Memuaskan' terlebih dahulu sebelum perkataan 'Memuaskan'
+  if (text.includes("KURANG MEMUASKAN") || text.includes("LESS SATISFACTORY") || /\bBS\b/.test(text) || text.includes("BEHIND SCHEDULE") || text.includes("BEHIND")) {
     return "badge-yellow";
-
   }
-
-
-  return "badge-gray";
-
-}
-
-
-function frBadgeClass(
-  status
-) {
-
-  const text =
-    String(status || "")
-      .toUpperCase();
-
-
-  if (
-    text.includes("COMPLETED")
-    ||
-    text.includes("SELESAI")
-    ||
-    text.includes("COMPLETE")
-  ) {
-
+  if (text.includes("CEMERLANG") || text.includes("EXCELLENT") || /\bPW\b/.test(text) || text.includes("PROGRESSING WELL") || text.includes("BAIK") || text.includes("GOOD")) {
     return "badge-green";
-
   }
-
-
-  if (
-    text.includes("NOT COMPLETED")
-    ||
-    text.includes("BELUM")
-    ||
-    text.includes("PENDING")
-  ) {
-
+  if (text.includes("MEMUASKAN") || text.includes("SATISFACTORY") || /\bOS\b/.test(text) || text.includes("ON SCHEDULE")) {
+    return "badge-blue";
+  }
+  if (text.includes("BERMASALAH") || text.includes("MASALAH") || /\bNCM\b/.test(text) || text.includes("NEED CLOSER MONITORING") || text.includes("KRITIKAL") || text.includes("CRITICAL") || text.includes("GAGAL")) {
     return "badge-red";
-
   }
-
-
-  if (
-    text.includes("EXTENSION")
-    ||
-    text.includes("SAMBUNG")
-  ) {
-
+  if (text.includes("WARNING") || text.includes("PERLU")) {
     return "badge-yellow";
-
   }
-
-
   return "badge-gray";
-
 }
 
-
+function frBadgeClass(status) {
+  const res = checkFRSubmission(status);
+  if (res === "PENDING") {
+    return "badge-red";
+  }
+  if (res === "SUBMITTED") {
+    return "badge-green";
+  }
+  return "badge-gray";
+}
 
 /* =========================================================
    MODAL
 ========================================================= */
-
 function openModal(id) {
-
-  document
-    .getElementById(id)
-    .classList.add("show");
-
+  document.getElementById(id).classList.add("show");
 }
-
 
 function closeModal(id) {
-
-  document
-    .getElementById(id)
-    .classList.remove("show");
-
+  document.getElementById(id).classList.remove("show");
 }
 
-
-function closeModalOnOverlay(
-  event,
-  id
-) {
-
-  if (
-    event.target.id === id
-  ) {
-
-    closeModal(id);
-
-  }
-
+function closeModalOnOverlay(event, id) {
+  if (event.target.id === id) closeModal(id);
 }
-
-
 
 /* =========================================================
-   CONFIG
+   CONFIG & RESET
 ========================================================= */
-
 function openConfigModal() {
-
-  document.getElementById(
-    "configAktifUrl"
-  ).value =
-    sourceUrls["Geran Aktif"];
-
-
-  document.getElementById(
-    "configTamatUrl"
-  ).value =
-    sourceUrls["Geran Tamat"];
-
-
-  openModal(
-    "configModal"
-  );
-
+  document.getElementById("configAktifUrl").value = sourceUrls["Geran Aktif"];
+  document.getElementById("configTamatUrl").value = sourceUrls["Geran Tamat"];
+  openModal("configModal");
 }
-
 
 function saveConfig() {
-
-  const aktif =
-    clean(
-      document.getElementById(
-        "configAktifUrl"
-      ).value
-    );
-
-
-  const tamat =
-    clean(
-      document.getElementById(
-        "configTamatUrl"
-      ).value
-    );
-
+  const aktif = clean(document.getElementById("configAktifUrl").value);
+  const tamat = clean(document.getElementById("configTamatUrl").value);
 
   if (!aktif || !tamat) {
-
-    alert(
-      "Sila masukkan kedua-dua URL Google Sheet."
-    );
-
+    alert("Sila masukkan kedua-dua URL Google Sheet.");
     return;
-
   }
-
 
   sourceUrls = {
-
-    "Geran Aktif":
-      aktif,
-
-    "Geran Tamat":
-      tamat
-
+    "Geran Aktif": aktif,
+    "Geran Tamat": tamat
   };
 
+  localStorage.setItem("geranAktifUrl", aktif);
+  localStorage.setItem("geranTamatUrl", tamat);
 
-  localStorage.setItem(
-    "geranAktifUrl",
-    aktif
-  );
-
-
-  localStorage.setItem(
-    "geranTamatUrl",
-    tamat
-  );
-
-
-  closeModal(
-    "configModal"
-  );
-
-
+  closeModal("configModal");
   fetchCurrentSource();
-
 }
 
-
+function resetToDefaultUrls() {
+  if (confirm("Adakah anda pasti untuk mengembalikan URL Google Sheet kepada tetapan asal?")) {
+    localStorage.removeItem("geranAktifUrl");
+    localStorage.removeItem("geranTamatUrl");
+    sourceUrls = { ...DEFAULT_URLS };
+    closeModal("configModal");
+    fetchCurrentSource();
+  }
+}
 
 /* =========================================================
-   REFRESH
+   REFRESH & EXPORT
 ========================================================= */
-
 function reloadData() {
+  const icon = document.getElementById("refreshIcon");
+  icon.classList.add("fa-spin");
 
-  const icon =
-    document.getElementById(
-      "refreshIcon"
-    );
-
-
-  icon.classList.add(
-    "fa-spin"
-  );
-
-
-  fetchCurrentSource()
-    .finally(
-      () => {
-
-        setTimeout(
-          () => {
-
-            icon.classList.remove(
-              "fa-spin"
-            );
-
-          },
-          400
-        );
-
-      }
-    );
-
+  fetchCurrentSource().finally(() => {
+    setTimeout(() => {
+      icon.classList.remove("fa-spin");
+    }, 400);
+  });
 }
-
-
-
-/* =========================================================
-   EXPORT CSV
-========================================================= */
 
 function exportCSV() {
-
   if (!filteredData.length) {
-
-    alert(
-      "Tiada data untuk dieksport."
-    );
-
+    alert("Tiada data untuk dieksport.");
     return;
-
   }
 
+  const isTamat = currentSource === "Geran Tamat";
+  const rows = filteredData.map((item, index) => {
+    const row = {
+      "No": index + 1,
+      "Sumber": currentSource,
+      "Cost Centre No": item.costCentre,
+      "Grant Title": item.grantTitle,
+      "Grant Type": item.grantType,
+      "Grant Category": item.grantCategory,
+      "Staff Name": item.staffName,
+      "Project End": item.projectEndDisplay,
+      "Quartile": item.quartile,
+      "Verdict": item.verdict
+    };
+    if (isTamat) {
+      row["Grace Period"] = item.gracePeriodRaw;
+      row["FR Status"] = item.frStatus;
+    }
+    return row;
+  });
 
-  const isTamat =
-    currentSource === "Geran Tamat";
-
-
-  const rows =
-    filteredData.map(
-      (item,index) => {
-
-        const row = {
-
-          "No":
-            index + 1,
-
-          "Sumber":
-            currentSource,
-
-          "Cost Centre No":
-            item.costCentre,
-
-          "Grant Title":
-            item.grantTitle,
-
-          "Grant Type":
-            item.grantType,
-
-          "Grant Category":
-            item.grantCategory,
-
-          "Staff Name":
-            item.staffName,
-
-          "Project End":
-            item.projectEndDisplay,
-
-          "Quartile":
-            item.quartile,
-
-          "Verdict":
-            item.verdict
-
-        };
-
-
-        if (isTamat) {
-
-          row["FR Status"] =
-            item.frStatus;
-
-        }
-
-
-        return row;
-
-      }
-    );
-
-
-  const csv =
-    Papa.unparse(rows);
-
-
-  const blob =
-    new Blob(
-      [csv],
-      {
-        type:
-          "text/csv;charset=utf-8;"
-      }
-    );
-
-
-  const url =
-    URL.createObjectURL(
-      blob
-    );
-
-
-  const link =
-    document.createElement(
-      "a"
-    );
-
+  const csv = Papa.unparse(rows);
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
 
   link.href = url;
-
-
-  link.download =
-    `${currentSource.replace(/\s+/g,"_")}_Dashboard.csv`;
-
-
-  document.body.appendChild(
-    link
-  );
-
-
+  link.download = `${currentSource.replace(/\s+/g,"_")}_Dashboard.csv`;
+  document.body.appendChild(link);
   link.click();
-
-
-  document.body.removeChild(
-    link
-  );
-
-
-  URL.revokeObjectURL(
-    url
-  );
-
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
-
-
 
 /* =========================================================
    MOBILE SIDEBAR
 ========================================================= */
-
 function toggleMobileSidebar() {
-
-  document
-    .getElementById("sidebar")
-    .classList.toggle(
-      "mobile-open"
-    );
-
+  document.getElementById("sidebar").classList.toggle("mobile-open");
 }
-
 
 function closeMobileSidebar() {
-
-  document
-    .getElementById("sidebar")
-    .classList.remove(
-      "mobile-open"
-    );
-
+  document.getElementById("sidebar").classList.remove("mobile-open");
 }
-
-
 
 /* =========================================================
-   ERROR
+   ERROR DISPLAY
 ========================================================= */
+function showError(message) {
+  document.getElementById("loadingPanel").classList.add("hidden");
+  document.getElementById("dashboardContent").classList.add("hidden");
+  document.getElementById("errorPanel").classList.remove("hidden");
 
-function showError(
-  message
-) {
-
-  document
-    .getElementById(
-      "loadingPanel"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-
-  document
-    .getElementById(
-      "dashboardContent"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-
-  document
-    .getElementById(
-      "errorPanel"
-    )
-    .classList.remove(
-      "hidden"
-    );
-
-
-  document
-    .getElementById(
-      "errorMessage"
-    )
-    .innerText =
-    message;
-
-
-  document
-    .getElementById(
-      "recordStatus"
-    )
-    .innerText =
-    "Ralat memuatkan data";
-
+  document.getElementById("errorMessage").innerText = message;
+  document.getElementById("recordStatus").innerText = "Ralat memuatkan data";
 }
-
-
 
 /* =========================================================
-   ESCAPE HTML
+   UTILITIES
 ========================================================= */
-
-function escapeHtml(
-  value
-) {
-
-  return String(
-    value ?? ""
-  )
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-  .replace(
-    /</g,
-    "&lt;"
-  )
-  .replace(
-    />/g,
-    "&gt;"
-  )
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-  .replace(
-    /'/g,
-    "&#039;"
-  );
-
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
-
-function escapeAttr(
-  value
-) {
-
+function escapeAttr(value) {
   return escapeHtml(value);
-
 }
-
-
-/* =========================================================
-   END
-========================================================= */
 
 </script>
-
 </body>
 </html>
