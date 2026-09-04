@@ -508,7 +508,7 @@
         </div>
 
         <div>
-          <label class="filter-label">Verdict (Kolum AG)</label>
+          <label class="filter-label">Verdict</label>
           <select id="filterVerdict" class="filter-select" onchange="applyFilters()">
             <option value="ALL">Semua Verdict</option>
           </select>
@@ -645,7 +645,7 @@
                 Ringkasan Verdict Mengikut Grant Category
               </h3>
               <p id="verdictSummarySubtitle" class="text-xs text-gray-500 mt-0.5">
-                Taburan geran mengikut Kolum AG (Verdict).
+                Taburan geran dipantau (Q1 - Q5) mengikut susunan: PW, OS, BS, NCM.
               </p>
             </div>
             <span id="verdictMonitoredBadge" class="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full">
@@ -687,7 +687,7 @@
               </div>
 
               <div id="summaryTamat2026Box" class="hidden p-4 bg-blue-50 rounded-xl border border-blue-100">
-                <div class="text-xs font-bold text-blue-800 uppercase">Status Tamat Tahun 2026 (Kolum K)</div>
+                <div class="text-xs font-bold text-blue-800 uppercase">Status Tamat Tahun 2026</div>
                 <div id="summaryTamat2026Text" class="text-sm text-blue-900 mt-2 leading-relaxed">-</div>
               </div>
 
@@ -834,12 +834,12 @@
           <div class="card p-4 border-l-4 border-l-red-500">
             <div class="text-[11px] font-bold text-gray-500 uppercase">Milestone</div>
             <div id="kpiUnachievedMilestone" class="text-2xl font-extrabold text-red-600 mt-1">0</div>
-            <div class="text-[11px] text-gray-400">&lt; 100% (Semua Quartile)</div>
+            <div id="kpiSubMilestone" class="text-[11px] text-gray-400">&lt; 100% (Semua Quartile)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-amber-500">
             <div class="text-[11px] font-bold text-gray-500 uppercase">Expenditure</div>
             <div id="kpiUnachievedExpenditure" class="text-2xl font-extrabold text-amber-600 mt-1">0</div>
-            <div class="text-[11px] text-gray-400">&lt; 100% (Semua Quartile)</div>
+            <div id="kpiSubExpenditure" class="text-[11px] text-gray-400">&lt; 100% (Semua Quartile)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-blue-500">
             <div class="text-[11px] font-bold text-gray-500 uppercase">HCD</div>
@@ -1286,9 +1286,15 @@ function updateSourceUI() {
     verdictTabSourceBadge.innerText = isTamat ? "FR Status Selain Not Completed, Draft & Terminated" : "Monitored Quartile (Q1 – Q5)";
   }
 
+  // Dinamik Subteks Kad KPI Rekod Statistik New Verdict
+  const kpiSubMilestone = document.getElementById("kpiSubMilestone");
+  const kpiSubExpenditure = document.getElementById("kpiSubExpenditure");
   const kpiSubHCD = document.getElementById("kpiSubHCD");
   const kpiSubPub = document.getElementById("kpiSubPub");
   const kpiSubIPR = document.getElementById("kpiSubIPR");
+
+  if (kpiSubMilestone) kpiSubMilestone.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Quartile)";
+  if (kpiSubExpenditure) kpiSubExpenditure.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Quartile)";
   if (kpiSubHCD) kpiSubHCD.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q2 – Q5)";
   if (kpiSubPub) kpiSubPub.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
   if (kpiSubIPR) kpiSubIPR.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
@@ -1338,7 +1344,7 @@ function updateSourceUI() {
   if (verdictSummarySubtitle) {
     verdictSummarySubtitle.innerText = isTamat
       ? "Taburan semua geran tamat mengikut susunan: Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah."
-      : "Taburan geran mengikut Kolum AG (Verdict).";
+      : "Taburan geran dipantau (Q1 - Q5) mengikut susunan: PW, OS, BS, NCM.";
   }
 
   const verdictNoticeText = document.getElementById("verdictNoticeText");
@@ -1699,10 +1705,10 @@ function compareGrantCategories(a, b) {
 
 function getVerdictOrderIndex(verdict) {
   const t = String(verdict || "").toUpperCase().trim();
-  if (t.includes("KURANG MEMUASKAN") || /\bBS\b/.test(t) || t.includes("BEHIND")) return 2;
-  if (t.includes("CEMERLANG") || /\bPW\b/.test(t) || t.includes("PROGRESSING WELL") || t.includes("EXCELLENT")) return 0;
-  if (t.includes("MEMUASKAN") || /\bOS\b/.test(t) || t.includes("ON SCHEDULE") || t.includes("SATISFACTORY")) return 1;
-  if (t.includes("BERMASALAH") || /\bNCM\b/.test(t) || t.includes("NEED CLOSER MONITORING") || t.includes("NEED CLOSE MONITORING") || t.includes("KRITIKAL") || t.includes("GAGAL")) return 3;
+  if (t.includes("KURANG MEMUASKAN") || t === "BS" || t.includes("BEHIND")) return 2;
+  if (t.includes("CEMERLANG") || t === "PW" || t.includes("PROGRESSING WELL") || t.includes("EXCELLENT")) return 0;
+  if (t.includes("MEMUASKAN") || t === "OS" || t.includes("ON SCHEDULE") || t.includes("SATISFACTORY")) return 1;
+  if (t.includes("BERMASALAH") || t.includes("NCM") || t.includes("NEED CLOSER MONITORING") || t.includes("KRITIKAL") || t.includes("GAGAL")) return 3;
   return 4;
 }
 
