@@ -12,7 +12,7 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- PapaParse with fallback -->
+  <!-- PapaParse with secondary CDN fallback -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script>
     if (typeof Papa === 'undefined') {
@@ -191,13 +191,12 @@
       color: #ffffff;
     }
 
-    /* ================= CHARTS ================= */
+    /* ================= CHARTS & TABLES ================= */
     .chart-container {
       position: relative;
       height: 320px;
     }
 
-    /* ================= TABLES ================= */
     .table-wrapper {
       overflow-x: auto;
     }
@@ -428,6 +427,7 @@
   </header>
 
   <main class="content">
+    <!-- Navigation Tabs -->
     <div class="card p-2 mb-5">
       <div class="flex flex-wrap gap-2">
         <button id="tabSummary" class="tab-btn active" onclick="switchTab('summary')">
@@ -549,7 +549,7 @@
       <section id="summaryTab">
         <!-- KPI Cards Grid -->
         <div id="kpiContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-5">
-          <!-- Shared KPI: Jumlah Geran -->
+          <!-- Shared KPI 1: Jumlah Geran -->
           <div class="card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Jumlah Geran</div>
             <div id="kpiTotal" class="kpi-number text-gray-900">0</div>
@@ -570,18 +570,18 @@
             <div class="text-[11px] text-gray-400">Quartile kosong / tidak dipantau</div>
           </div>
 
-          <!-- Geran Tamat: Tamat Tahun 2026 (Kolum K Sahaja) -->
+          <!-- Geran Tamat: Tamat Tahun 2026 (Column K) -->
           <div id="kpiTamat2026Card" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat Tahun 2026</div>
             <div id="kpiTamat2026" class="kpi-number text-blue-800">0</div>
-            <div class="text-[11px] text-gray-400">Berdasarkan Kolum K sahaja</div>
+            <div class="text-[11px] text-gray-400">Berdasarkan Column K</div>
           </div>
 
           <!-- Geran Tamat: Tamat 2026 Tanpa Ext -->
           <div id="kpiTamat2026NoExtCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat 2026 (Tanpa Ext)</div>
             <div id="kpiTamat2026NoExt" class="kpi-number text-emerald-700">0</div>
-            <div class="text-[11px] text-gray-400">Kolum K 2026 (tiada Ext di L)</div>
+            <div class="text-[11px] text-gray-400">Column K (tiada Ext di L)</div>
           </div>
 
           <!-- Geran Tamat: Submit Final Report -->
@@ -598,15 +598,15 @@
             <div class="text-[11px] text-gray-400">Not completed & Draft sahaja</div>
           </div>
 
-          <!-- Geran Tamat: Masih Grace Period (Kolum AJ) -->
+          <!-- Geran Tamat: Masih Grace Period (Column AJ) -->
           <div id="kpiGracePeriodCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Masih Grace Period</div>
             <div id="kpiGracePeriod" class="kpi-number text-purple-700">0</div>
-            <div class="text-[11px] text-gray-400">Kolum AJ (Bagi Belum Submit FR)</div>
+            <div class="text-[11px] text-gray-400">Column AJ (Bagi Belum Submit FR)</div>
           </div>
         </div>
 
-        <!-- Quartile Summary Card (Geran Aktif) -->
+        <!-- Quartile Summary Matrix (Geran Aktif Sahaja) -->
         <div id="quartileSummaryCard" class="card mb-5">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <div>
@@ -637,7 +637,7 @@
           </div>
         </div>
 
-        <!-- Verdict Summary Card -->
+        <!-- Verdict Summary Matrix -->
         <div class="card mb-5">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <div>
@@ -671,7 +671,7 @@
           </div>
         </div>
 
-        <!-- Strategic Summary Box -->
+        <!-- Strategic Summary Analysis -->
         <div class="card mb-5">
           <div class="p-5 border-b border-gray-200">
             <h3 class="font-bold text-gray-900 text-sm md:text-base">
@@ -700,6 +700,7 @@
           </div>
         </div>
 
+        <!-- Warning Cases Table (Bermasalah Sahaja) -->
         <div class="card">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -824,51 +825,52 @@
         <div id="verdictMonitoredNotice" class="card p-3.5 bg-blue-50/70 border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-blue-900">
           <div class="flex items-center gap-2 font-medium">
             <i class="fa-solid fa-circle-info text-blue-600"></i>
-            <span>Analisis statistik New Verdict bagi <strong>Geran Aktif</strong> memaparkan rekod berdasarkan <strong>Total Grant by Monitored Quartile (Q1 – Q5)</strong> sahaja.</span>
+            <span>Analisis statistik New Verdict bagi <strong>Geran Aktif</strong> memaparkan rekod berdasarkan <strong>Total Grant by Monitored Quartile (Q1 – Q5)</strong> sahaja bagi pencapaian kurang daripada 100% (&lt; 100%).</span>
           </div>
           <span id="verdictMonitoredTotalBadge" class="self-start sm:self-auto font-bold bg-blue-600 text-white px-2.5 py-0.5 rounded-full text-[11px] whitespace-nowrap">0 Geran Dipantau</span>
         </div>
 
-        <!-- KPI Kad Ketidaktercapaian Item -->
+        <!-- KPI Kad Ketidaktercapaian Item (< 100%) -->
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <div class="card p-4 border-l-4 border-l-red-500">
             <div class="text-[11px] font-bold text-gray-500 uppercase">Milestone (Kolum S)</div>
             <div id="kpiUnachievedMilestone" class="text-2xl font-extrabold text-red-600 mt-1">0</div>
-            <div class="text-[11px] text-gray-400">Tidak Capai</div>
+            <div class="text-[11px] text-gray-400">&lt; 100% (Semua Q)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-amber-500">
             <div class="text-[11px] font-bold text-gray-500 uppercase">Expenditure (Kolum V)</div>
             <div id="kpiUnachievedExpenditure" class="text-2xl font-extrabold text-amber-600 mt-1">0</div>
-            <div class="text-[11px] text-gray-400">Tidak Capai</div>
+            <div class="text-[11px] text-gray-400">&lt; 100% (Semua Q)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-blue-500">
             <div class="text-[11px] font-bold text-gray-500 uppercase">HCD (Kolum Y)</div>
             <div id="kpiUnachievedHCD" class="text-2xl font-extrabold text-blue-600 mt-1">0</div>
-            <div class="text-[11px] text-gray-400">Tidak Capai</div>
+            <div class="text-[11px] text-gray-400">&lt; 100% (Q2 – Q5)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-purple-500">
             <div class="text-[11px] font-bold text-gray-500 uppercase">Publication (Kolum AB)</div>
             <div id="kpiUnachievedPublication" class="text-2xl font-extrabold text-purple-600 mt-1">0</div>
-            <div class="text-[11px] text-gray-400">Tidak Capai</div>
+            <div class="text-[11px] text-gray-400">&lt; 100% (Q4 &amp; Q5)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-pink-500">
             <div class="text-[11px] font-bold text-gray-500 uppercase">IPR (Kolum AE)</div>
             <div id="kpiUnachievedIPR" class="text-2xl font-extrabold text-pink-600 mt-1">0</div>
-            <div class="text-[11px] text-gray-400">Tidak Capai</div>
+            <div class="text-[11px] text-gray-400">&lt; 100% (Q4 &amp; Q5)</div>
           </div>
         </div>
 
+        <!-- Matriks Ketidaktercapaian (Togol Quartile / Category) -->
         <div class="card">
           <div class="p-5 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div>
               <div class="flex items-center gap-2">
                 <h3 class="font-bold text-gray-900 text-sm md:text-base">
                   <i class="fa-solid fa-clipboard-check mr-2 text-blue-600"></i>
-                  Rekod Statistik New Verdict & Analisis Item Tidak Capai
+                  Rekod Statistik New Verdict &amp; Analisis Item Tidak Capai (&lt; 100%)
                 </h3>
               </div>
               <p id="verdictMatrixSubtitle" class="text-xs text-gray-500 mt-0.5">
-                Pecahan analisis mengikut <strong>Monitored Quartile (Q1 – Q5)</strong> bagi Milestone (S), Expenditure (V), HCD (Y), Publication (AB), dan IPR (AE).
+                Pecahan analisis mengikut <strong>Monitored Quartile (Q1 – Q5)</strong> (&lt; 100%). Syarat: <strong>Q1</strong> (Milestone &amp; Expenditure), <strong>Q2 &amp; Q3</strong> (+ HCD), <strong>Q4 &amp; Q5</strong> (Semua 5 item).
               </p>
             </div>
             
@@ -898,7 +900,7 @@
                   <th class="text-center text-blue-700">HCD (Y)</th>
                   <th class="text-center text-purple-700">Publication (AB)</th>
                   <th class="text-center text-pink-700">IPR (AE)</th>
-                  <th class="text-center font-extrabold bg-gray-100">Geran Terjejas</th>
+                  <th class="text-center font-extrabold bg-gray-100">Geran Terjejas (&lt; 100%)</th>
                   <th class="text-center">% Terjejas</th>
                 </tr>
               </thead>
@@ -908,7 +910,7 @@
           </div>
         </div>
 
-        <!-- Senarai Geran Mempunyai Item Tidak Capai -->
+        <!-- Senarai Geran Mempunyai Item Tidak Capai (< 100%) -->
         <div class="card">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -916,9 +918,9 @@
                 <i class="fa-solid fa-list-check"></i>
               </div>
               <div>
-                <h3 class="font-bold text-gray-900 text-sm md:text-base">Senarai Geran Mempunyai Item Tidak Capai</h3>
+                <h3 class="font-bold text-gray-900 text-sm md:text-base">Senarai Geran Mempunyai Item Tidak Capai (&lt; 100%)</h3>
                 <p class="text-xs text-gray-500 mt-0.5">
-                  Geran yang mempunyai sekurang-kurangnya satu ketidaktercapaian pada Milestone, Expenditure, HCD, Publication, atau IPR.
+                  Geran yang mempunyai sekurang-kurangnya satu ketidaktercapaian pada Milestone, Expenditure, HCD, Publication, atau IPR mengikut syarat kelayakan quartile.
                 </p>
               </div>
             </div>
@@ -931,7 +933,7 @@
                 <tr>
                   <th style="width: 50px;">No.</th>
                   <th>Cost Centre No</th>
-                  <th>Grant Title & Category</th>
+                  <th>Grant Title &amp; Category</th>
                   <th>Staff Name</th>
                   <th class="text-center">Quartile</th>
                   <th class="text-center">Milestone (S)</th>
@@ -1073,7 +1075,7 @@
         <div>C → Cost Centre No | D → Grant Type | E → Grant Title | F → Staff Name</div>
         <div>J → Project Start | K → Project End | L → New End Date / Ext | P → Quartile</div>
         <div>S → Milestone | V → Expenditure | Y → HCD | AB → Publication | AE → IPR</div>
-        <div>AG → Verdict | AJ → Grace Period | AK → Grant Category | AN → FR Status</div>
+        <div>AG → Verdict | AJ → Grace Period | AK → Grant Category | AN → FR Status | AQ → New Verdict</div>
       </div>
     </div>
     <div class="p-5 border-t border-gray-200 flex justify-end gap-2">
@@ -1108,7 +1110,8 @@ const COL = {
   VERDICT: 32,        // AG
   GRACE_PERIOD: 35,   // AJ
   GRANT_CATEGORY: 36, // AK
-  FR_STATUS: 39       // AN
+  FR_STATUS: 39,      // AN
+  NEW_VERDICT: 42     // AQ
 };
 
 let currentSource = "Geran Aktif";
@@ -1140,7 +1143,11 @@ let charts = {
 
 // Urutan Kategori Geran Khusus
 const CATEGORY_ORDER = ["MOHE", "MOSTI", "RUG", "JTNCPI", "GERAN LUAR", "ICC", "CCIN", "CRAEG"];
-const MONITORED_QUARTILES = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
+
+function clean(value) {
+  if (value === null || value === undefined) return "";
+  return String(value).trim();
+}
 
 function parseCSVText(text) {
   const lines = [];
@@ -1291,9 +1298,6 @@ function updateSourceUI() {
   const warningFRHeader = document.getElementById("warningFRHeader");
   if (warningFRHeader) warningFRHeader.classList.toggle("hidden", !isTamat);
 
-  const verdictMonitoredBadge = document.getElementById("verdictMonitoredBadge");
-  if (verdictMonitoredBadge) verdictMonitoredBadge.classList.toggle("hidden", isTamat);
-
   const masterQuartileHeader = document.getElementById("masterQuartileHeader");
   if (masterQuartileHeader) masterQuartileHeader.classList.toggle("hidden", isTamat);
 
@@ -1306,8 +1310,8 @@ function updateSourceUI() {
   const verdictSummarySubtitle = document.getElementById("verdictSummarySubtitle");
   if (verdictSummarySubtitle) {
     verdictSummarySubtitle.innerText = isTamat
-      ? "Taburan semua geran tamat mengikut susunan: Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah."
-      : "Taburan geran dipantau (Q1 - Q5) mengikut susunan: Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah.";
+      ? "Taburan geran tamat mengikut susunan: Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah."
+      : "Taburan geran mengikut susunan: Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah.";
   }
 }
 
@@ -1327,6 +1331,7 @@ async function fetchCurrentSource() {
     const url = sourceUrls[currentSource];
     if (!url) throw new Error("URL Google Sheet tidak ditetapkan.");
 
+    // Fetch CSV text via HTTP
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Ralat pelayan: ${res.status} ${res.statusText}`);
     const csvString = await res.text();
@@ -1336,12 +1341,11 @@ async function fetchCurrentSource() {
       const parsed = Papa.parse(csvString, { skipEmptyLines: true });
       rows = parsed.data || [];
     } else {
+      // Fallback to built-in parser
       rows = parseCSVText(csvString);
     }
 
-    if (!rows || rows.length < 2) {
-      throw new Error("Google Sheet tidak mengandungi data yang mencukupi.");
-    }
+    if (rows.length < 2) throw new Error("Google Sheet tidak mengandungi data yang mencukupi.");
 
     grantsData = rows.slice(1)
       .map((row, index) => parseGrantRow(row, index + 2))
@@ -1358,16 +1362,71 @@ async function fetchCurrentSource() {
   }
 }
 
-function clean(value) {
-  if (value === null || value === undefined) return "";
-  return String(value).trim();
+function isItemApplicable(itemKey, quartile) {
+  const q = String(quartile || "").toUpperCase().trim();
+  if (itemKey === "milestone" || itemKey === "expenditure") {
+    return true;
+  }
+  if (itemKey === "hcd") {
+    return q !== "Q1";
+  }
+  if (itemKey === "publication" || itemKey === "ipr") {
+    return q !== "Q1" && q !== "Q2" && q !== "Q3";
+  }
+  return true;
 }
 
-function isItemNotAchieved(rawVal) {
+function normalizeVerdictKey(v) {
+  const t = String(v || "").toUpperCase().trim();
+  if (t === "BS" || t.includes("BEHIND") || t.includes("KURANG MEMUASKAN")) return "BS";
+  if (t === "PW" || t.includes("PROGRESSING") || t.includes("CEMERLANG")) return "PW";
+  if (t === "OS" || t.includes("ON SCHEDULE") || t.includes("MEMUASKAN")) return "OS";
+  if (t === "NCM" || t.includes("CLOSER") || t.includes("BERMASALAH")) return "NCM";
+  return t;
+}
+
+function isItemNotAchieved(rawVal, itemKey = "", quartile = "", verdict = "") {
   if (!rawVal) return false;
   const val = String(rawVal).trim().toUpperCase();
-  if (val === "" || val === "-" || val === "N/A" || val === "TIADA" || val === "NONE") return false;
+  if (
+    val === "" ||
+    val === "-" ||
+    val === "--" ||
+    val === "N/A" ||
+    val === "NA" ||
+    val === "TB" ||
+    val === "T/B" ||
+    val === "TIADA" ||
+    val === "NONE" ||
+    val === "NIL" ||
+    val === "#N/A"
+  ) {
+    return false;
+  }
 
+  // 1. Pengecualian Status Tidak Berkenaan / Belum Matang / Tiada Sasaran
+  if (
+    val.includes("BERKENAAN") ||
+    val.includes("APPLICABLE") ||
+    val.includes("MATANG") ||
+    val.includes("BELUM SAMPAI") ||
+    val.includes("BELUM TIBA") ||
+    val.includes("BELUM MULA") ||
+    val.includes("BELUM BERMULA") ||
+    val.includes("TIADA SASARAN") ||
+    val.includes("TIADA TARGET") ||
+    val.includes("TIADA MILESTONE") ||
+    val.includes("NO TARGET") ||
+    val.includes("NO MILESTONE") ||
+    val.includes("NOT DUE") ||
+    val.includes("NOT RELEVANT") ||
+    val.includes("NOT SCHEDULED") ||
+    val.includes("NOT YET")
+  ) {
+    return false;
+  }
+
+  // 2. Status Teks Positif / Selesai / On Track / Capai
   if (
     val === "CAPAI" ||
     val === "ACHIEVED" ||
@@ -1379,31 +1438,65 @@ function isItemNotAchieved(rawVal) {
     val === "PW" ||
     val === "OS" ||
     val === "PROGRESSING WELL" ||
-    val === "ON SCHEDULE"
+    val === "ON SCHEDULE" ||
+    val === "ON TRACK" ||
+    val.includes("ON TRACK") ||
+    val.includes("MENGIKUT JADUAL") ||
+    val.includes("SEDANG BERJALAN") ||
+    val === "100%"
   ) {
     return false;
   }
 
+  // 3. Pengecualian Khas Milestone Q1 bagi projek dalam jadual
+  if (itemKey === "milestone" && quartile === "Q1") {
+    const vKey = normalizeVerdictKey(verdict);
+    if ((vKey === "PW" || vKey === "OS") && (/^0(?:\.0+)?%?$/.test(val) || val === "0" || val === "0/0")) {
+      return false;
+    }
+  }
+
+  // 4. Pengesanan Peratusan Eksplisit (< 100%)
+  const percentMatch = val.match(/([0-9]+(?:\.[0-9]+)?)\s*%/);
+  if (percentMatch) {
+    const p = parseFloat(percentMatch[1]);
+    return p < 100;
+  }
+
+  // 5. Pengesanan Format Pecahan Sasaran (cth: "0/1", "1/2")
+  const fractionMatch = val.match(/^(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)$/);
+  if (fractionMatch) {
+    const num = parseFloat(fractionMatch[1]);
+    const den = parseFloat(fractionMatch[2]);
+    if (den > 0) {
+      return (num / den) < 1.0;
+    }
+    return false;
+  }
+
+  // 6. Pengesanan Nilai Angka Tulen
+  if (/^-?\d+(?:\.\d+)?$/.test(val)) {
+    const n = parseFloat(val);
+    if (n < 1) return true;
+    if (n >= 100) return false;
+    if (n === 1) return false;
+    if (n > 1 && n < 100) return true;
+  }
+
+  // 7. Kata Kunci Ketidaktercapaian Sebenar
   if (
-    val.includes("TIDAK") ||
-    val.includes("BELUM") ||
-    val.includes("NOT") ||
+    val.includes("TIDAK CAPAI") ||
+    val.includes("BELUM CAPAI") ||
+    val.includes("BELUM SELESAI") ||
     val.includes("GAGAL") ||
     val.includes("FAIL") ||
     val.includes("BEHIND") ||
     val === "BS" ||
     val === "NCM" ||
     val.includes("BERMASALAH") ||
-    val.includes("KURANG") ||
-    val === "NO" ||
-    val === "TC" ||
-    val === "0" ||
-    val === "0%"
+    val.includes("KURANG MEMUASKAN") ||
+    val === "TC"
   ) {
-    return true;
-  }
-
-  if (/^0(?:\.0+)?%?$/.test(val) || /^0\s*\/\s*[1-9]/.test(val)) {
     return true;
   }
 
@@ -1411,18 +1504,16 @@ function isItemNotAchieved(rawVal) {
 }
 
 function parseGrantRow(row, sheetRowNumber) {
-  const getCellText = (idx) => clean(row[idx]);
+  const costCentre = clean(row[COL.COST_CENTRE]);
+  const grantType = clean(row[COL.GRANT_TYPE]) || "Tidak Dinyatakan";
+  const grantTitle = clean(row[COL.GRANT_TITLE]) || "Tiada Tajuk";
+  const staffName = clean(row[COL.STAFF_NAME]) || "Tidak Dinyatakan";
 
-  const costCentre = getCellText(COL.COST_CENTRE);
-  const grantType = getCellText(COL.GRANT_TYPE) || "Tidak Dinyatakan";
-  const grantTitle = getCellText(COL.GRANT_TITLE) || "Tiada Tajuk";
-  const staffName = getCellText(COL.STAFF_NAME) || "Tidak Dinyatakan";
-
-  // Tarikh Projek
-  const jRaw = getCellText(COL.PROJECT_START);
-  const kRaw = getCellText(COL.PROJECT_END);
-  const lRaw = getCellText(COL.NEW_END_DATE);
-  const ajRaw = getCellText(COL.GRACE_PERIOD);
+  // Dates
+  const jRaw = clean(row[COL.PROJECT_START]);
+  const kRaw = clean(row[COL.PROJECT_END]);
+  const lRaw = clean(row[COL.NEW_END_DATE]);
+  const ajRaw = clean(row[COL.GRACE_PERIOD]);
 
   const startDate = parseDateValue(jRaw);
   const kDate = parseDateValue(kRaw);
@@ -1432,28 +1523,41 @@ function parseGrantRow(row, sheetRowNumber) {
   const effectiveEndRaw = hasExtension ? lRaw : kRaw;
   const effectiveEndDate = hasExtension ? lDate : kDate;
 
-  const quartile = normalizeQuartile(getCellText(COL.QUARTILE));
-  const verdict = getCellText(COL.VERDICT) || "Tidak Dinyatakan";
-  const grantCategory = getCellText(COL.GRANT_CATEGORY) || "Tidak Dinyatakan";
+  const quartile = normalizeQuartile(row[COL.QUARTILE]);
+  const isMonitored = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"].includes(quartile);
+
+  const verdict = clean(row[COL.VERDICT]) || "Tidak Dinyatakan";
+  const newVerdictRaw = clean(row[COL.NEW_VERDICT]);
+  const newVerdict = newVerdictRaw || verdict;
+  
+  // Bagi geran quartile dipantau, gunakan nilai rasmi Kolum AQ (New Verdict)
+  const activeVerdict = (currentSource === "Geran Aktif" && isMonitored && newVerdictRaw) ? newVerdictRaw : verdict;
+  const grantCategory = clean(row[COL.GRANT_CATEGORY]) || "Tidak Dinyatakan";
 
   // Item Pencapaian: S, V, Y, AB, AE
-  const milestone = getCellText(COL.MILESTONE);
-  const expenditure = getCellText(COL.EXPENDITURE);
-  const hcd = getCellText(COL.HCD);
-  const publication = getCellText(COL.PUBLICATION);
-  const ipr = getCellText(COL.IPR);
+  const milestone = clean(row[COL.MILESTONE]);
+  const expenditure = clean(row[COL.EXPENDITURE]);
+  const hcd = clean(row[COL.HCD]);
+  const publication = clean(row[COL.PUBLICATION]);
+  const ipr = clean(row[COL.IPR]);
 
-  const milestoneNotAchieved = isItemNotAchieved(milestone);
-  const expenditureNotAchieved = isItemNotAchieved(expenditure);
-  const hcdNotAchieved = isItemNotAchieved(hcd);
-  const publicationNotAchieved = isItemNotAchieved(publication);
-  const iprNotAchieved = isItemNotAchieved(ipr);
+  const milestoneApplicable = isItemApplicable("milestone", quartile);
+  const expenditureApplicable = isItemApplicable("expenditure", quartile);
+  const hcdApplicable = isItemApplicable("hcd", quartile);
+  const publicationApplicable = isItemApplicable("publication", quartile);
+  const iprApplicable = isItemApplicable("ipr", quartile);
+
+  const milestoneNotAchieved = milestoneApplicable && isItemNotAchieved(milestone, "milestone", quartile, activeVerdict);
+  const expenditureNotAchieved = expenditureApplicable && isItemNotAchieved(expenditure, "expenditure", quartile, activeVerdict);
+  const hcdNotAchieved = hcdApplicable && isItemNotAchieved(hcd, "hcd", quartile, activeVerdict);
+  const publicationNotAchieved = publicationApplicable && isItemNotAchieved(publication, "publication", quartile, activeVerdict);
+  const iprNotAchieved = iprApplicable && isItemNotAchieved(ipr, "ipr", quartile, activeVerdict);
 
   const hasUnachievedItem = milestoneNotAchieved || expenditureNotAchieved || hcdNotAchieved || publicationNotAchieved || iprNotAchieved;
 
   let frStatus = "";
   if (currentSource === "Geran Tamat") {
-    frStatus = getCellText(COL.FR_STATUS) || "Tidak Dinyatakan";
+    frStatus = clean(row[COL.FR_STATUS]) || "Tidak Dinyatakan";
   }
 
   const kYear = kDate ? String(kDate.getFullYear()) : "";
@@ -1478,7 +1582,10 @@ function parseGrantRow(row, sheetRowNumber) {
     month: effectiveEndDate ? String(effectiveEndDate.getMonth() + 1).padStart(2, "0") : "",
     year: effectiveEndDate ? String(effectiveEndDate.getFullYear()) : "",
     quartile,
+    isMonitored,
     verdict,
+    newVerdict,
+    activeVerdict,
     grantCategory,
     frStatus,
     gracePeriodRaw: ajRaw,
@@ -1487,6 +1594,11 @@ function parseGrantRow(row, sheetRowNumber) {
     hcd,
     publication,
     ipr,
+    milestoneApplicable,
+    expenditureApplicable,
+    hcdApplicable,
+    publicationApplicable,
+    iprApplicable,
     milestoneNotAchieved,
     expenditureNotAchieved,
     hcdNotAchieved,
@@ -1523,6 +1635,7 @@ function parseDateValue(value) {
   if (value instanceof Date) return isNaN(value) ? null : value;
   const text = clean(value);
 
+  // dd/mm/yyyy or dd-mm-yyyy
   let match = text.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if (match) {
     const day = Number(match[1]);
@@ -1534,6 +1647,7 @@ function parseDateValue(value) {
     }
   }
 
+  // yyyy-mm-dd or yyyy/mm/dd
   match = text.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
   if (match) {
     const year = Number(match[1]);
@@ -1545,6 +1659,7 @@ function parseDateValue(value) {
     }
   }
 
+  // Excel serial number
   if (/^\d{5}(?:\.\d+)?$/.test(text)) {
     const serial = Number(text);
     if (serial > 20000) {
@@ -1594,27 +1709,6 @@ function compareVerdicts(a, b) {
   return String(a).localeCompare(String(b), "ms", { numeric: true });
 }
 
-function populateSelect(elementId, values, firstLabel, formatter = v => v) {
-  const select = document.getElementById(elementId);
-  if (!select) return;
-  const currentVal = select.value;
-  const unique = [...new Set(values.map(clean).filter(Boolean))];
-
-  select.innerHTML = `<option value="ALL">${firstLabel}</option>`;
-  unique.forEach(value => {
-    const opt = document.createElement("option");
-    opt.value = value;
-    opt.textContent = formatter(value);
-    select.appendChild(opt);
-  });
-
-  if (unique.includes(currentVal)) {
-    select.value = currentVal;
-  } else {
-    select.value = "ALL";
-  }
-}
-
 function populateFilters() {
   populateSelect("filterGrantType", grantsData.map(d => d.grantType), "Semua Grant Type");
 
@@ -1633,7 +1727,9 @@ function populateFilters() {
   populateSelect("filterMonth", grantsData.map(d => d.month).filter(Boolean).sort((a,b) => Number(a) - Number(b)), "Semua Bulan", v => `${v} - ${getMonthName(Number(v)-1)}`);
   populateSelect("filterYear", grantsData.map(d => d.year).filter(Boolean).sort(), "Semua Tahun");
 
+  // Filter Verdict dibaca secara khusus daripada Kolum AG
   const verdicts = [...new Set(grantsData.map(d => d.verdict).filter(v => clean(v) !== ""))].sort(compareVerdicts);
+
   const verdictSelect = document.getElementById("filterVerdict");
   if (verdictSelect) {
     verdictSelect.innerHTML = `<option value="ALL">Semua Verdict</option>`;
@@ -1648,6 +1744,19 @@ function populateFilters() {
   if (currentSource === "Geran Tamat") {
     populateSelect("filterFRStatus", grantsData.map(d => d.frStatus), "Semua FR Status");
   }
+}
+
+function populateSelect(elementId, values, firstLabel, formatter = v => v) {
+  const select = document.getElementById(elementId);
+  if (!select) return;
+  const unique = [...new Set(values.filter(v => clean(v) !== ""))].sort((a,b) => String(a).localeCompare(String(b), "ms", { numeric: true }));
+  select.innerHTML = `<option value="ALL">${firstLabel}</option>`;
+  unique.forEach(value => {
+    const opt = document.createElement("option");
+    opt.value = value;
+    opt.textContent = formatter(value);
+    select.appendChild(opt);
+  });
 }
 
 function applyFilters() {
@@ -1670,13 +1779,20 @@ function applyFilters() {
     if (month !== "ALL" && item.month !== month) return false;
     if (year !== "ALL" && item.year !== year) return false;
     if (quartile !== "ALL" && item.quartile !== quartile) return false;
-    if (verdict !== "ALL" && item.verdict !== verdict) return false;
+    
+    // Tapisan Verdict dibuat berpandukan nilai pada Kolum AG
+    if (verdict !== "ALL") {
+      const isMatch = (item.verdict === verdict) || 
+                      (normalizeVerdictKey(item.verdict) === normalizeVerdictKey(verdict));
+      if (!isMatch) return false;
+    }
+
     if (currentSource === "Geran Tamat" && frStatus !== "ALL" && item.frStatus !== frStatus) return false;
 
     if (search) {
       const searchable = [
         item.costCentre, item.grantTitle, item.grantType, item.grantCategory,
-        item.staffName, item.quartile, item.verdict, item.frStatus
+        item.staffName, item.quartile, item.verdict, item.newVerdict, item.frStatus
       ].join(" ").toLowerCase();
       if (!searchable.includes(search)) return false;
     }
@@ -1759,7 +1875,7 @@ function getWarningList() {
       const fr = clean(item.frStatus).toUpperCase();
       if (fr.includes("TERMINATED")) return false;
     }
-    return getVerdictOrderIndex(item.verdict) === 3;
+    return getVerdictOrderIndex(item.verdict) === 3; // Bermasalah
   });
 }
 
@@ -1768,7 +1884,8 @@ function renderKPIs() {
   document.getElementById("kpiTotal").innerText = total.toLocaleString();
 
   if (currentSource === "Geran Aktif") {
-    const monitored = filteredData.filter(d => MONITORED_QUARTILES.includes(d.quartile)).length;
+    const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
+    const monitored = filteredData.filter(d => monitoredList.includes(d.quartile)).length;
     const notMonitored = total - monitored;
 
     const kpiMonitored = document.getElementById("kpiMonitored");
@@ -1875,9 +1992,10 @@ function renderVerdictMatrix() {
   if (!tbody || !tfoot) return;
 
   const isTamat = currentSource === "Geran Tamat";
+  const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
   const targetData = isTamat
     ? filteredData
-    : filteredData.filter(d => MONITORED_QUARTILES.includes(d.quartile));
+    : filteredData.filter(d => monitoredList.includes(d.quartile));
 
   const categories = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
   if (!categories.length) {
@@ -1933,7 +2051,8 @@ function renderVerdictMatrix() {
 
 function renderStrategicSummary() {
   if (currentSource === "Geran Aktif") {
-    const mon = filteredData.filter(d => MONITORED_QUARTILES.includes(d.quartile)).length;
+    const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
+    const mon = filteredData.filter(d => monitoredList.includes(d.quartile)).length;
     const notMon = filteredData.length - mon;
     const el = document.getElementById("summaryMonitoredText");
     if (el) {
@@ -2287,9 +2406,11 @@ function renderOrUpdateDoughnutChart(chartKey, canvasId, labels, data, colors) {
 
 function updateCharts() {
   const isTamat = currentSource === "Geran Tamat";
+  const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
+
   const visualData = isTamat
     ? filteredData
-    : filteredData.filter(d => MONITORED_QUARTILES.includes(d.quartile));
+    : filteredData.filter(d => monitoredList.includes(d.quartile));
 
   const totalBadge = document.getElementById("visualMonitoredTotalBadge");
   if (totalBadge) totalBadge.innerText = `${visualData.length.toLocaleString()} Geran`;
@@ -2346,7 +2467,8 @@ function updateCharts() {
 function getVerdictTabData() {
   const isTamat = currentSource === "Geran Tamat";
   if (isTamat) return filteredData;
-  return filteredData.filter(d => MONITORED_QUARTILES.includes(d.quartile));
+  const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
+  return filteredData.filter(d => monitoredList.includes(d.quartile));
 }
 
 function setVerdictMatrixView(view) {
@@ -2365,7 +2487,7 @@ function setVerdictMatrixView(view) {
     }
     if (colHeader) colHeader.innerText = "Quartile";
     if (subtitle) {
-      subtitle.innerHTML = "Pecahan analisis mengikut <strong>Monitored Quartile (Q1 – Q5)</strong> bagi Milestone (S), Expenditure (V), HCD (Y), Publication (AB), dan IPR (AE).";
+      subtitle.innerHTML = "Pecahan analisis mengikut <strong>Monitored Quartile (Q1 – Q5)</strong> (&lt; 100%). Syarat: <strong>Q1</strong> (Milestone &amp; Expenditure), <strong>Q2 &amp; Q3</strong> (+ HCD), <strong>Q4 &amp; Q5</strong> (Semua 5 item).";
     }
   } else {
     if (cBtn) {
@@ -2376,7 +2498,7 @@ function setVerdictMatrixView(view) {
     }
     if (colHeader) colHeader.innerText = "Grant Category";
     if (subtitle) {
-      subtitle.innerHTML = "Pecahan analisis mengikut <strong>Grant Category</strong> bagi Milestone (S), Expenditure (V), HCD (Y), Publication (AB), dan IPR (AE).";
+      subtitle.innerHTML = "Pecahan analisis mengikut <strong>Grant Category</strong> (&lt; 100%) dengan mengambil kira syarat kelayakan item mengikut quartile setiap geran.";
     }
   }
 
@@ -2393,6 +2515,7 @@ function renderVerdictCategoryMatrix() {
   const totalBadge = document.getElementById("verdictMonitoredTotalBadge");
   if (totalBadge) totalBadge.innerText = `${targetData.length.toLocaleString()} Geran Dipantau`;
 
+  // Hitung jumlah keseluruhan bagi 5 kad metrik (< 100%)
   let totalMilestone = 0;
   let totalExpenditure = 0;
   let totalHCD = 0;
@@ -2419,12 +2542,16 @@ function renderVerdictCategoryMatrix() {
   if (kpiP) kpiP.innerText = totalPublication.toLocaleString();
   if (kpiI) kpiI.innerText = totalIPR.toLocaleString();
 
-  const isQuartileView = verdictMatrixView === "quartile" && currentSource === "Geran Aktif";
-  const rowGroups = isQuartileView
-    ? MONITORED_QUARTILES
-    : [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
+  let groups = [];
+  if (verdictMatrixView === "quartile") {
+    groups = currentSource === "Geran Aktif"
+      ? ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"]
+      : [...new Set(targetData.map(d => d.quartile))];
+  } else {
+    groups = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
+  }
 
-  if (!rowGroups.length) {
+  if (!groups.length) {
     tbody.innerHTML = `<tr><td colspan="9" class="py-8 text-center text-gray-400 italic">Tiada rekod data geran ditemui.</td></tr>`;
     tfoot.innerHTML = "";
     return;
@@ -2438,9 +2565,11 @@ function renderVerdictCategoryMatrix() {
   let grandTotalI = 0;
   let grandTotalAffected = 0;
 
-  tbody.innerHTML = rowGroups.map(groupKey => {
-    const groupRecords = targetData.filter(d => isQuartileView ? d.quartile === groupKey : d.grantCategory === groupKey);
-    const groupTotal = groupRecords.length;
+  tbody.innerHTML = groups.map(grp => {
+    const groupRecords = targetData.filter(d => {
+      return verdictMatrixView === "quartile" ? d.quartile === grp : d.grantCategory === grp;
+    });
+    const grpTotal = groupRecords.length;
 
     let cM = 0, cE = 0, cH = 0, cP = 0, cI = 0, cAffected = 0;
 
@@ -2453,7 +2582,7 @@ function renderVerdictCategoryMatrix() {
       if (d.hasUnachievedItem) cAffected++;
     });
 
-    grandTotalGrants += groupTotal;
+    grandTotalGrants += grpTotal;
     grandTotalM += cM;
     grandTotalE += cE;
     grandTotalH += cH;
@@ -2461,21 +2590,35 @@ function renderVerdictCategoryMatrix() {
     grandTotalI += cI;
     grandTotalAffected += cAffected;
 
-    const percentAffected = groupTotal > 0 ? ((cAffected / groupTotal) * 100).toFixed(1) : "0.0";
+    const percentAffected = grpTotal > 0 ? ((cAffected / grpTotal) * 100).toFixed(1) : "0.0";
 
-    const labelCell = isQuartileView
-      ? `<span class="badge ${quartileBadgeClass(groupKey)} text-xs px-2.5 py-1">${escapeHtml(groupKey)}</span>`
-      : `<span class="font-bold text-gray-900">${escapeHtml(groupKey)}</span>`;
+    const labelHtml = verdictMatrixView === "quartile"
+      ? `<span class="badge ${quartileBadgeClass(grp)}">${escapeHtml(grp)}</span>`
+      : `<span class="font-bold text-gray-900">${escapeHtml(grp)}</span>`;
+
+    // Paparan N/A jika item tidak berkenaan bagi Quartile berkenaan
+    const isQ = verdictMatrixView === "quartile";
+    const hcdCell = (isQ && grp === "Q1")
+      ? `<span class="text-xs text-gray-400 font-medium" title="Dikecualikan bagi Q1">N/A</span>`
+      : `<span class="font-semibold ${cH > 0 ? 'text-blue-600 bg-blue-50/50' : 'text-gray-400'}">${cH}</span>`;
+
+    const pubCell = (isQ && (grp === "Q1" || grp === "Q2" || grp === "Q3"))
+      ? `<span class="text-xs text-gray-400 font-medium" title="Dikecualikan bagi ${grp}">N/A</span>`
+      : `<span class="font-semibold ${cP > 0 ? 'text-purple-600 bg-purple-50/50' : 'text-gray-400'}">${cP}</span>`;
+
+    const iprCell = (isQ && (grp === "Q1" || grp === "Q2" || grp === "Q3"))
+      ? `<span class="text-xs text-gray-400 font-medium" title="Dikecualikan bagi ${grp}">N/A</span>`
+      : `<span class="font-semibold ${cI > 0 ? 'text-pink-600 bg-pink-50/50' : 'text-gray-400'}">${cI}</span>`;
 
     return `
       <tr>
-        <td>${labelCell}</td>
-        <td class="text-center font-bold text-gray-900">${groupTotal.toLocaleString()}</td>
+        <td>${labelHtml}</td>
+        <td class="text-center font-bold text-gray-900">${grpTotal.toLocaleString()}</td>
         <td class="text-center font-semibold ${cM > 0 ? 'text-red-600 bg-red-50/50' : 'text-gray-400'}">${cM}</td>
         <td class="text-center font-semibold ${cE > 0 ? 'text-amber-600 bg-amber-50/50' : 'text-gray-400'}">${cE}</td>
-        <td class="text-center font-semibold ${cH > 0 ? 'text-blue-600 bg-blue-50/50' : 'text-gray-400'}">${cH}</td>
-        <td class="text-center font-semibold ${cP > 0 ? 'text-purple-600 bg-purple-50/50' : 'text-gray-400'}">${cP}</td>
-        <td class="text-center font-semibold ${cI > 0 ? 'text-pink-600 bg-pink-50/50' : 'text-gray-400'}">${cI}</td>
+        <td class="text-center">${hcdCell}</td>
+        <td class="text-center">${pubCell}</td>
+        <td class="text-center">${iprCell}</td>
         <td class="text-center font-extrabold ${cAffected > 0 ? 'text-red-700 bg-gray-50' : 'text-gray-500'}">${cAffected}</td>
         <td class="text-center text-xs font-semibold ${Number(percentAffected) > 0 ? 'text-red-600' : 'text-gray-400'}">${percentAffected}%</td>
       </tr>
@@ -2489,7 +2632,7 @@ function renderVerdictCategoryMatrix() {
       <td class="text-gray-900 font-extrabold">JUMLAH KESELURUHAN</td>
       <td class="text-center text-gray-900 font-extrabold">${grandTotalGrants.toLocaleString()}</td>
       <td class="text-center text-red-700 font-extrabold">${grandTotalM}</td>
-      <td class="text-center text-red-700 font-extrabold">${grandTotalE}</td>
+      <td class="text-center text-amber-700 font-extrabold">${grandTotalE}</td>
       <td class="text-center text-blue-700 font-extrabold">${grandTotalH}</td>
       <td class="text-center text-purple-700 font-extrabold">${grandTotalP}</td>
       <td class="text-center text-pink-700 font-extrabold">${grandTotalI}</td>
@@ -2534,7 +2677,7 @@ function renderUnachievedGrantsTable() {
     tbody.innerHTML = `
       <tr>
         <td colspan="12" class="py-8 text-center text-gray-400 italic">
-          Tiada geran yang mempunyai item tidak capai dalam filter semasa.
+          Tiada geran yang mempunyai item tidak capai (&lt; 100%) dalam filter semasa.
         </td>
       </tr>
     `;
@@ -2544,11 +2687,14 @@ function renderUnachievedGrantsTable() {
   const start = (unachievedCurrentPage - 1) * UNACHIEVED_ITEMS_PER_PAGE;
   const pageItems = list.slice(start, start + UNACHIEVED_ITEMS_PER_PAGE);
 
-  const formatItemBadge = (isNotAchieved, rawVal) => {
-    if (isNotAchieved) {
-      return `<span class="badge badge-red" title="${escapeAttr(rawVal)}"><i class="fa-solid fa-xmark mr-1"></i> Tidak Capai</span>`;
+  const formatItemBadge = (isNotAchieved, rawVal, isApplicable, quartileLabel) => {
+    if (!isApplicable) {
+      return `<span class="badge badge-gray text-gray-400 font-semibold" title="Dikecualikan bagi ${escapeAttr(quartileLabel)}">N/A</span>`;
     }
-    return `<span class="badge badge-green" title="${escapeAttr(rawVal || 'Capai')}"><i class="fa-solid fa-check mr-1"></i> Capai</span>`;
+    if (isNotAchieved) {
+      return `<span class="badge badge-red font-semibold" title="${escapeAttr(rawVal)}"><i class="fa-solid fa-xmark mr-1"></i> Tidak Capai</span>`;
+    }
+    return `<span class="badge badge-green font-semibold" title="${escapeAttr(rawVal || 'Capai')}"><i class="fa-solid fa-check mr-1"></i> Capai</span>`;
   };
 
   tbody.innerHTML = pageItems.map((item, index) => `
@@ -2563,12 +2709,12 @@ function renderUnachievedGrantsTable() {
       </td>
       <td>${escapeHtml(item.staffName)}</td>
       <td class="text-center"><span class="badge ${quartileBadgeClass(item.quartile)}">${escapeHtml(item.quartile)}</span></td>
-      <td class="text-center">${formatItemBadge(item.milestoneNotAchieved, item.milestone)}</td>
-      <td class="text-center">${formatItemBadge(item.expenditureNotAchieved, item.expenditure)}</td>
-      <td class="text-center">${formatItemBadge(item.hcdNotAchieved, item.hcd)}</td>
-      <td class="text-center">${formatItemBadge(item.publicationNotAchieved, item.publication)}</td>
-      <td class="text-center">${formatItemBadge(item.iprNotAchieved, item.ipr)}</td>
-      <td><span class="badge ${verdictBadgeClass(item.verdict)}">${escapeHtml(item.verdict)}</span></td>
+      <td class="text-center">${formatItemBadge(item.milestoneNotAchieved, item.milestone, item.milestoneApplicable, item.quartile)}</td>
+      <td class="text-center">${formatItemBadge(item.expenditureNotAchieved, item.expenditure, item.expenditureApplicable, item.quartile)}</td>
+      <td class="text-center">${formatItemBadge(item.hcdNotAchieved, item.hcd, item.hcdApplicable, item.quartile)}</td>
+      <td class="text-center">${formatItemBadge(item.publicationNotAchieved, item.publication, item.publicationApplicable, item.quartile)}</td>
+      <td class="text-center">${formatItemBadge(item.iprNotAchieved, item.ipr, item.iprApplicable, item.quartile)}</td>
+      <td><span class="badge ${verdictBadgeClass(item.newVerdict || item.verdict)}">${escapeHtml(item.newVerdict || item.verdict)}</span></td>
       <td>
         <button class="btn btn-light text-xs py-1 px-2.5" onclick="viewGrant('${escapeAttr(item.id)}')">
           <i class="fa-solid fa-eye mr-1"></i> Butiran
@@ -2599,10 +2745,14 @@ function viewGrant(id) {
 
   const isTamat = currentSource === "Geran Tamat";
 
-  const renderKPIStatus = (isNotAchieved, rawVal) => {
-    const text = clean(rawVal) || (isNotAchieved ? "Tidak Capai" : "Capai");
+  const renderKPIStatus = (isNotAchieved, rawVal, isApplicable, quartile) => {
+    if (!isApplicable) {
+      return `<span class="badge badge-gray mt-1 text-gray-400 font-semibold" title="Dikecualikan bagi ${escapeAttr(quartile)}">N/A (Dikecualikan)</span>`;
+    }
+    const text = isNotAchieved ? "Tidak Capai" : "Capai";
     const badge = isNotAchieved ? "badge-red" : "badge-green";
-    return `<span class="badge ${badge} mt-1">${escapeHtml(text)}</span>`;
+    const icon = isNotAchieved ? '<i class="fa-solid fa-xmark mr-1"></i>' : '<i class="fa-solid fa-check mr-1"></i>';
+    return `<span class="badge ${badge} mt-1" title="${escapeAttr(rawVal)}">${icon} ${text}</span>`;
   };
 
   document.getElementById("detailBody").innerHTML = `
@@ -2621,33 +2771,34 @@ function viewGrant(id) {
       ${detailItem("2. Project End (Kolum K)", item.projectEndKDisplay)}
       ${detailItem("3. New End Date (Kolum L)", item.newEndDateDisplay)}
       ${!isTamat ? detailItem("Quartile", item.quartile) : ""}
-      ${detailItem("Verdict", item.verdict)}
+      ${detailItem("Verdict Asal (Kolum AG)", item.verdict)}
+      ${detailItem("New Verdict (Kolum AQ)", item.newVerdict || "-")}
       ${isTamat ? detailItem("FR Status (Kolum AN)", item.frStatus || "-") : ""}
       ${isTamat ? detailItem("Grace Period (Kolum AJ)", item.gracePeriodRaw || "-") : ""}
     </div>
 
     <div class="border-t border-gray-200 pt-4">
-      <div class="text-xs font-bold text-gray-600 uppercase mb-3">Status Pencapaian Item KPI:</div>
+      <div class="text-xs font-bold text-gray-600 uppercase mb-3">Status Pencapaian Item KPI (&lt; 100%):</div>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
           <div class="text-[10px] font-bold text-gray-500 uppercase">Milestone (S)</div>
-          ${renderKPIStatus(item.milestoneNotAchieved, item.milestone)}
+          ${renderKPIStatus(item.milestoneNotAchieved, item.milestone, item.milestoneApplicable, item.quartile)}
         </div>
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
           <div class="text-[10px] font-bold text-gray-500 uppercase">Expenditure (V)</div>
-          ${renderKPIStatus(item.expenditureNotAchieved, item.expenditure)}
+          ${renderKPIStatus(item.expenditureNotAchieved, item.expenditure, item.expenditureApplicable, item.quartile)}
         </div>
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
           <div class="text-[10px] font-bold text-gray-500 uppercase">HCD (Y)</div>
-          ${renderKPIStatus(item.hcdNotAchieved, item.hcd)}
+          ${renderKPIStatus(item.hcdNotAchieved, item.hcd, item.hcdApplicable, item.quartile)}
         </div>
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
           <div class="text-[10px] font-bold text-gray-500 uppercase">Publication (AB)</div>
-          ${renderKPIStatus(item.publicationNotAchieved, item.publication)}
+          ${renderKPIStatus(item.publicationNotAchieved, item.publication, item.publicationApplicable, item.quartile)}
         </div>
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
           <div class="text-[10px] font-bold text-gray-500 uppercase">IPR (AE)</div>
-          ${renderKPIStatus(item.iprNotAchieved, item.ipr)}
+          ${renderKPIStatus(item.iprNotAchieved, item.ipr, item.iprApplicable, item.quartile)}
         </div>
       </div>
     </div>
@@ -2750,7 +2901,8 @@ function exportCSV() {
       "Project Start (J)": item.projectStartDisplay,
       "Project End (K)": item.projectEndKDisplay,
       "New End Date (L)": item.newEndDateDisplay,
-      "Verdict": item.verdict
+      "Verdict": item.verdict,
+      "New Verdict (AQ)": item.newVerdict || item.verdict
     };
     if (!isTamat) row["Quartile"] = item.quartile;
     if (isTamat) {
