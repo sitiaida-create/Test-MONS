@@ -508,7 +508,7 @@
         </div>
 
         <div>
-          <label class="filter-label">Verdict</label>
+          <label class="filter-label">Verdict (Kolum AG)</label>
           <select id="filterVerdict" class="filter-select" onchange="applyFilters()">
             <option value="ALL">Semua Verdict</option>
           </select>
@@ -825,7 +825,7 @@
         <div id="verdictMonitoredNotice" class="card p-3.5 bg-blue-50/70 border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-blue-900">
           <div class="flex items-center gap-2 font-medium">
             <i class="fa-solid fa-circle-info text-blue-600"></i>
-            <span>Analisis statistik New Verdict bagi <strong>Geran Aktif</strong> memaparkan rekod berdasarkan <strong>Total Grant by Monitored Quartile (Q1 – Q5)</strong> sahaja bagi pencapaian kurang daripada 100% (&lt; 100%).</span>
+            <span id="verdictNoticeText">Analisis statistik New Verdict bagi <strong>Geran Aktif</strong> memaparkan rekod berdasarkan <strong>Total Grant by Monitored Quartile (Q1 – Q5)</strong> sahaja bagi pencapaian kurang daripada 100% (&lt; 100%).</span>
           </div>
           <span id="verdictMonitoredTotalBadge" class="self-start sm:self-auto font-bold bg-blue-600 text-white px-2.5 py-0.5 rounded-full text-[11px] whitespace-nowrap">0 Geran Dipantau</span>
         </div>
@@ -833,29 +833,29 @@
         <!-- KPI Kad Ketidaktercapaian Item (< 100%) -->
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <div class="card p-4 border-l-4 border-l-red-500">
-            <div class="text-[11px] font-bold text-gray-500 uppercase">Milestone</div>
+            <div class="text-[11px] font-bold text-gray-500 uppercase">Milestone (Kolum S)</div>
             <div id="kpiUnachievedMilestone" class="text-2xl font-extrabold text-red-600 mt-1">0</div>
-           
+            <div id="kpiUnachievedMilestoneSub" class="text-[11px] text-gray-400">&lt; 100% (Semua Q)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-amber-500">
-            <div class="text-[11px] font-bold text-gray-500 uppercase">Expenditure</div>
+            <div class="text-[11px] font-bold text-gray-500 uppercase">Expenditure (Kolum V)</div>
             <div id="kpiUnachievedExpenditure" class="text-2xl font-extrabold text-amber-600 mt-1">0</div>
-            
+            <div id="kpiUnachievedExpenditureSub" class="text-[11px] text-gray-400">&lt; 100% (Semua Q)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-blue-500">
-            <div class="text-[11px] font-bold text-gray-500 uppercase">HCD</div>
+            <div class="text-[11px] font-bold text-gray-500 uppercase">HCD (Kolum Y)</div>
             <div id="kpiUnachievedHCD" class="text-2xl font-extrabold text-blue-600 mt-1">0</div>
-            
+            <div id="kpiUnachievedHCDSub" class="text-[11px] text-gray-400">&lt; 100% (Q2 – Q5)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-purple-500">
-            <div class="text-[11px] font-bold text-gray-500 uppercase">Publication</div>
+            <div class="text-[11px] font-bold text-gray-500 uppercase">Publication (Kolum AB)</div>
             <div id="kpiUnachievedPublication" class="text-2xl font-extrabold text-purple-600 mt-1">0</div>
-          
+            <div id="kpiUnachievedPublicationSub" class="text-[11px] text-gray-400">&lt; 100% (Q4 &amp; Q5)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-pink-500">
-            <div class="text-[11px] font-bold text-gray-500 uppercase">IPR</div>
+            <div class="text-[11px] font-bold text-gray-500 uppercase">IPR (Kolum AE)</div>
             <div id="kpiUnachievedIPR" class="text-2xl font-extrabold text-pink-600 mt-1">0</div>
-            
+            <div id="kpiUnachievedIPRSub" class="text-[11px] text-gray-400">&lt; 100% (Q4 &amp; Q5)</div>
           </div>
         </div>
 
@@ -875,7 +875,7 @@
             </div>
             
             <div class="flex items-center gap-2 self-start md:self-auto">
-              <div class="inline-flex bg-gray-100 p-1 rounded-lg border border-gray-200">
+              <div id="verdictToggleWrap" class="inline-flex bg-gray-100 p-1 rounded-lg border border-gray-200">
                 <button id="verdictViewQuartileBtn" class="px-3 py-1 text-xs font-bold rounded-md transition-all bg-white text-gray-900 shadow-sm" onclick="setVerdictMatrixView('quartile')">
                   Mengikut Quartile
                 </button>
@@ -919,7 +919,7 @@
               </div>
               <div>
                 <h3 class="font-bold text-gray-900 text-sm md:text-base">Senarai Geran Mempunyai Item Tidak Capai (&lt; 100%)</h3>
-                <p class="text-xs text-gray-500 mt-0.5">
+                <p id="unachievedListSubtitle" class="text-xs text-gray-500 mt-0.5">
                   Geran yang mempunyai sekurang-kurangnya satu ketidaktercapaian pada Milestone, Expenditure, HCD, Publication, atau IPR mengikut syarat kelayakan quartile.
                 </p>
               </div>
@@ -935,7 +935,8 @@
                   <th>Cost Centre No</th>
                   <th>Grant Title &amp; Category</th>
                   <th>Staff Name</th>
-                  <th class="text-center">Quartile</th>
+                  <th id="unachievedQuartileHeader" class="text-center">Quartile</th>
+                  <th id="unachievedFRHeader" class="hidden text-center">FR Status</th>
                   <th class="text-center">Milestone (S)</th>
                   <th class="text-center">Expenditure (V)</th>
                   <th class="text-center">HCD (Y)</th>
@@ -1075,7 +1076,7 @@
         <div>C → Cost Centre No | D → Grant Type | E → Grant Title | F → Staff Name</div>
         <div>J → Project Start | K → Project End | L → New End Date / Ext | P → Quartile</div>
         <div>S → Milestone | V → Expenditure | Y → HCD | AB → Publication | AE → IPR</div>
-        <div>AG → Verdict | AJ → Grace Period | AK → Grant Category | AN → FR Status | AQ → New Verdict</div>
+        <div>AG → Verdict | AJ → Grace Period | AK → Grant Category | AN → FR Status</div>
       </div>
     </div>
     <div class="p-5 border-t border-gray-200 flex justify-end gap-2">
@@ -1110,8 +1111,7 @@ const COL = {
   VERDICT: 32,        // AG
   GRACE_PERIOD: 35,   // AJ
   GRANT_CATEGORY: 36, // AK
-  FR_STATUS: 39,      // AN
-  NEW_VERDICT: 42     // AQ
+  FR_STATUS: 39       // AN
 };
 
 let currentSource = "Geran Aktif";
@@ -1221,6 +1221,7 @@ async function selectSource(source) {
   currentPage = 1;
   warningCurrentPage = 1;
   unachievedCurrentPage = 1;
+  verdictMatrixView = currentSource === "Geran Tamat" ? "category" : "quartile";
   resetFilters(false);
   updateSourceButtons();
   updateSourceUI();
@@ -1285,12 +1286,48 @@ function updateSourceUI() {
   if (visualMonitoredNotice) visualMonitoredNotice.classList.toggle("hidden", isTamat);
 
   const verdictMonitoredNotice = document.getElementById("verdictMonitoredNotice");
-  if (verdictMonitoredNotice) verdictMonitoredNotice.classList.toggle("hidden", isTamat);
+  if (verdictMonitoredNotice) verdictMonitoredNotice.classList.remove("hidden");
+
+  const verdictNoticeText = document.getElementById("verdictNoticeText");
+  if (verdictNoticeText) {
+    verdictNoticeText.innerHTML = isTamat
+      ? `Analisis statistik New Verdict bagi <strong>Geran Tamat</strong> hanya memaparkan rekod bagi geran dengan FR Status <strong>selain Not Completed, Draft dan Terminated</strong> (&lt; 100%).`
+      : `Analisis statistik New Verdict bagi <strong>Geran Aktif</strong> memaparkan rekod berdasarkan <strong>Total Grant by Monitored Quartile (Q1 – Q5)</strong> sahaja bagi pencapaian kurang daripada 100% (&lt; 100%).`;
+  }
 
   const verdictTabSourceBadge = document.getElementById("verdictTabSourceBadge");
   if (verdictTabSourceBadge) {
-    verdictTabSourceBadge.innerText = isTamat ? "Berdasarkan Filter Semasa" : "Monitored Quartile (Q1 – Q5) Sahaja";
+    verdictTabSourceBadge.innerText = isTamat ? "FR Status Selain Not Completed, Draft & Terminated" : "Monitored Quartile (Q1 – Q5) Sahaja";
   }
+
+  // Togol View & Lajur untuk New Verdict Tab
+  const verdictToggleWrap = document.getElementById("verdictToggleWrap");
+  if (verdictToggleWrap) verdictToggleWrap.classList.toggle("hidden", isTamat);
+
+  const unachievedQuartileHeader = document.getElementById("unachievedQuartileHeader");
+  if (unachievedQuartileHeader) unachievedQuartileHeader.classList.toggle("hidden", isTamat);
+
+  const unachievedFRHeader = document.getElementById("unachievedFRHeader");
+  if (unachievedFRHeader) unachievedFRHeader.classList.toggle("hidden", !isTamat);
+
+  const unachievedListSubtitle = document.getElementById("unachievedListSubtitle");
+  if (unachievedListSubtitle) {
+    unachievedListSubtitle.innerText = isTamat
+      ? "Geran tamat dengan FR Status selain Not Completed, Draft dan Terminated yang mempunyai sekurang-kurangnya satu ketidaktercapaian (< 100%)."
+      : "Geran yang mempunyai sekurang-kurangnya satu ketidaktercapaian pada Milestone, Expenditure, HCD, Publication, atau IPR mengikut syarat kelayakan quartile.";
+  }
+
+  const kpiMSub = document.getElementById("kpiUnachievedMilestoneSub");
+  const kpiESub = document.getElementById("kpiUnachievedExpenditureSub");
+  const kpiHSub = document.getElementById("kpiUnachievedHCDSub");
+  const kpiPSub = document.getElementById("kpiUnachievedPublicationSub");
+  const kpiISub = document.getElementById("kpiUnachievedIPRSub");
+
+  if (kpiMSub) kpiMSub.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Q)";
+  if (kpiESub) kpiESub.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Q)";
+  if (kpiHSub) kpiHSub.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q2 – Q5)";
+  if (kpiPSub) kpiPSub.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
+  if (kpiISub) kpiISub.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
 
   const warningQuartileHeader = document.getElementById("warningQuartileHeader");
   if (warningQuartileHeader) warningQuartileHeader.classList.toggle("hidden", isTamat);
@@ -1331,7 +1368,6 @@ async function fetchCurrentSource() {
     const url = sourceUrls[currentSource];
     if (!url) throw new Error("URL Google Sheet tidak ditetapkan.");
 
-    // Fetch CSV text via HTTP
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Ralat pelayan: ${res.status} ${res.statusText}`);
     const csvString = await res.text();
@@ -1341,7 +1377,6 @@ async function fetchCurrentSource() {
       const parsed = Papa.parse(csvString, { skipEmptyLines: true });
       rows = parsed.data || [];
     } else {
-      // Fallback to built-in parser
       rows = parseCSVText(csvString);
     }
 
@@ -1362,7 +1397,11 @@ async function fetchCurrentSource() {
   }
 }
 
-function isItemApplicable(itemKey, quartile) {
+function isItemApplicable(itemKey, quartile, source = currentSource) {
+  // Bagi Geran Tamat, kesemua 5 item dinilai sepenuhnya
+  if (source === "Geran Tamat") {
+    return true;
+  }
   const q = String(quartile || "").toUpperCase().trim();
   if (itemKey === "milestone" || itemKey === "expenditure") {
     return true;
@@ -1392,6 +1431,11 @@ function isItemNotAchieved(rawVal, itemKey = "", quartile = "", verdict = "") {
     val === "" ||
     val === "-" ||
     val === "--" ||
+    val === "-1" ||
+    val === "-1%" ||
+    val === "-1.0" ||
+    val === "-1.0%" ||
+    val === "-1.00" ||
     val === "N/A" ||
     val === "NA" ||
     val === "TB" ||
@@ -1404,7 +1448,12 @@ function isItemNotAchieved(rawVal, itemKey = "", quartile = "", verdict = "") {
     return false;
   }
 
-  // 1. Pengecualian Status Tidak Berkenaan / Belum Matang / Tiada Sasaran
+  // 1. Pengecualian eksplisit bacaan -1 (cth: -1, -1%, -1.0)
+  if (/^-\s*1(?:\.0+)?%?$/.test(val) || val === "-1" || val.startsWith("-1")) {
+    return false;
+  }
+
+  // 2. Pengecualian Status Tidak Berkenaan / Belum Matang / Tiada Sasaran
   if (
     val.includes("BERKENAAN") ||
     val.includes("APPLICABLE") ||
@@ -1426,7 +1475,7 @@ function isItemNotAchieved(rawVal, itemKey = "", quartile = "", verdict = "") {
     return false;
   }
 
-  // 2. Status Teks Positif / Selesai / On Track / Capai
+  // 3. Status Teks Positif / Selesai / On Track / Capai
   if (
     val === "CAPAI" ||
     val === "ACHIEVED" ||
@@ -1448,7 +1497,7 @@ function isItemNotAchieved(rawVal, itemKey = "", quartile = "", verdict = "") {
     return false;
   }
 
-  // 3. Pengecualian Khas Milestone Q1 bagi projek dalam jadual
+  // 4. Pengecualian Khas Milestone Q1 bagi projek dalam jadual (tepat 43 kes Milestone BS pada Q1)
   if (itemKey === "milestone" && quartile === "Q1") {
     const vKey = normalizeVerdictKey(verdict);
     if ((vKey === "PW" || vKey === "OS") && (/^0(?:\.0+)?%?$/.test(val) || val === "0" || val === "0/0")) {
@@ -1456,14 +1505,14 @@ function isItemNotAchieved(rawVal, itemKey = "", quartile = "", verdict = "") {
     }
   }
 
-  // 4. Pengesanan Peratusan Eksplisit (< 100%)
+  // 5. Pengesanan Peratusan Eksplisit (< 100%)
   const percentMatch = val.match(/([0-9]+(?:\.[0-9]+)?)\s*%/);
   if (percentMatch) {
     const p = parseFloat(percentMatch[1]);
     return p < 100;
   }
 
-  // 5. Pengesanan Format Pecahan Sasaran (cth: "0/1", "1/2")
+  // 6. Pengesanan Format Pecahan Sasaran (cth: "0/1", "1/2")
   const fractionMatch = val.match(/^(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)$/);
   if (fractionMatch) {
     const num = parseFloat(fractionMatch[1]);
@@ -1474,16 +1523,17 @@ function isItemNotAchieved(rawVal, itemKey = "", quartile = "", verdict = "") {
     return false;
   }
 
-  // 6. Pengesanan Nilai Angka Tulen
+  // 7. Pengesanan Nilai Angka Tulen
   if (/^-?\d+(?:\.\d+)?$/.test(val)) {
     const n = parseFloat(val);
+    if (n < 0) return false; // Pengecualian sebarang nilai angka negatif (cth: -1)
     if (n < 1) return true;
     if (n >= 100) return false;
     if (n === 1) return false;
     if (n > 1 && n < 100) return true;
   }
 
-  // 7. Kata Kunci Ketidaktercapaian Sebenar
+  // 8. Kata Kunci Ketidaktercapaian Sebenar
   if (
     val.includes("TIDAK CAPAI") ||
     val.includes("BELUM CAPAI") ||
@@ -1526,12 +1576,8 @@ function parseGrantRow(row, sheetRowNumber) {
   const quartile = normalizeQuartile(row[COL.QUARTILE]);
   const isMonitored = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"].includes(quartile);
 
+  // Verdict rasmi dari Kolum AG (Kolum 32)
   const verdict = clean(row[COL.VERDICT]) || "Tidak Dinyatakan";
-  const newVerdictRaw = clean(row[COL.NEW_VERDICT]);
-  const newVerdict = newVerdictRaw || verdict;
-  
-  // Bagi geran quartile dipantau, gunakan nilai rasmi Kolum AQ (New Verdict)
-  const activeVerdict = (currentSource === "Geran Aktif" && isMonitored && newVerdictRaw) ? newVerdictRaw : verdict;
   const grantCategory = clean(row[COL.GRANT_CATEGORY]) || "Tidak Dinyatakan";
 
   // Item Pencapaian: S, V, Y, AB, AE
@@ -1541,17 +1587,17 @@ function parseGrantRow(row, sheetRowNumber) {
   const publication = clean(row[COL.PUBLICATION]);
   const ipr = clean(row[COL.IPR]);
 
-  const milestoneApplicable = isItemApplicable("milestone", quartile);
-  const expenditureApplicable = isItemApplicable("expenditure", quartile);
-  const hcdApplicable = isItemApplicable("hcd", quartile);
-  const publicationApplicable = isItemApplicable("publication", quartile);
-  const iprApplicable = isItemApplicable("ipr", quartile);
+  const milestoneApplicable = isItemApplicable("milestone", quartile, currentSource);
+  const expenditureApplicable = isItemApplicable("expenditure", quartile, currentSource);
+  const hcdApplicable = isItemApplicable("hcd", quartile, currentSource);
+  const publicationApplicable = isItemApplicable("publication", quartile, currentSource);
+  const iprApplicable = isItemApplicable("ipr", quartile, currentSource);
 
-  const milestoneNotAchieved = milestoneApplicable && isItemNotAchieved(milestone, "milestone", quartile, activeVerdict);
-  const expenditureNotAchieved = expenditureApplicable && isItemNotAchieved(expenditure, "expenditure", quartile, activeVerdict);
-  const hcdNotAchieved = hcdApplicable && isItemNotAchieved(hcd, "hcd", quartile, activeVerdict);
-  const publicationNotAchieved = publicationApplicable && isItemNotAchieved(publication, "publication", quartile, activeVerdict);
-  const iprNotAchieved = iprApplicable && isItemNotAchieved(ipr, "ipr", quartile, activeVerdict);
+  const milestoneNotAchieved = milestoneApplicable && isItemNotAchieved(milestone, "milestone", quartile, verdict);
+  const expenditureNotAchieved = expenditureApplicable && isItemNotAchieved(expenditure, "expenditure", quartile, verdict);
+  const hcdNotAchieved = hcdApplicable && isItemNotAchieved(hcd, "hcd", quartile, verdict);
+  const publicationNotAchieved = publicationApplicable && isItemNotAchieved(publication, "publication", quartile, verdict);
+  const iprNotAchieved = iprApplicable && isItemNotAchieved(ipr, "ipr", quartile, verdict);
 
   const hasUnachievedItem = milestoneNotAchieved || expenditureNotAchieved || hcdNotAchieved || publicationNotAchieved || iprNotAchieved;
 
@@ -1584,8 +1630,6 @@ function parseGrantRow(row, sheetRowNumber) {
     quartile,
     isMonitored,
     verdict,
-    newVerdict,
-    activeVerdict,
     grantCategory,
     frStatus,
     gracePeriodRaw: ajRaw,
@@ -1727,7 +1771,7 @@ function populateFilters() {
   populateSelect("filterMonth", grantsData.map(d => d.month).filter(Boolean).sort((a,b) => Number(a) - Number(b)), "Semua Bulan", v => `${v} - ${getMonthName(Number(v)-1)}`);
   populateSelect("filterYear", grantsData.map(d => d.year).filter(Boolean).sort(), "Semua Tahun");
 
-  // Filter Verdict dibaca secara khusus daripada Kolum AG
+  // Filter Verdict dibaca secara eksklusif daripada Kolum AG
   const verdicts = [...new Set(grantsData.map(d => d.verdict).filter(v => clean(v) !== ""))].sort(compareVerdicts);
 
   const verdictSelect = document.getElementById("filterVerdict");
@@ -1780,7 +1824,7 @@ function applyFilters() {
     if (year !== "ALL" && item.year !== year) return false;
     if (quartile !== "ALL" && item.quartile !== quartile) return false;
     
-    // Tapisan Verdict dibuat berpandukan nilai pada Kolum AG
+    // Tapisan Verdict berpandukan nilai pada Kolum AG
     if (verdict !== "ALL") {
       const isMatch = (item.verdict === verdict) || 
                       (normalizeVerdictKey(item.verdict) === normalizeVerdictKey(verdict));
@@ -1792,7 +1836,7 @@ function applyFilters() {
     if (search) {
       const searchable = [
         item.costCentre, item.grantTitle, item.grantType, item.grantCategory,
-        item.staffName, item.quartile, item.verdict, item.newVerdict, item.frStatus
+        item.staffName, item.quartile, item.verdict, item.frStatus
       ].join(" ").toLowerCase();
       if (!searchable.includes(search)) return false;
     }
@@ -2466,7 +2510,13 @@ function updateCharts() {
 
 function getVerdictTabData() {
   const isTamat = currentSource === "Geran Tamat";
-  if (isTamat) return filteredData;
+  if (isTamat) {
+    return filteredData.filter(d => {
+      const s = clean(d.frStatus).toUpperCase();
+      if (!s) return false;
+      return !s.includes("NOT COMPLETED") && !s.includes("DRAFT") && !s.includes("TERMINATED");
+    });
+  }
   const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
   return filteredData.filter(d => monitoredList.includes(d.quartile));
 }
@@ -2510,10 +2560,11 @@ function renderVerdictCategoryMatrix() {
   const tfoot = document.getElementById("verdictCategoryMatrixFoot");
   if (!tbody || !tfoot) return;
 
+  const isTamat = currentSource === "Geran Tamat";
   const targetData = getVerdictTabData();
 
   const totalBadge = document.getElementById("verdictMonitoredTotalBadge");
-  if (totalBadge) totalBadge.innerText = `${targetData.length.toLocaleString()} Geran Dipantau`;
+  if (totalBadge) totalBadge.innerText = `${targetData.length.toLocaleString()} Geran ${isTamat ? 'Layak' : 'Dipantau'}`;
 
   // Hitung jumlah keseluruhan bagi 5 kad metrik (< 100%)
   let totalMilestone = 0;
@@ -2542,13 +2593,26 @@ function renderVerdictCategoryMatrix() {
   if (kpiP) kpiP.innerText = totalPublication.toLocaleString();
   if (kpiI) kpiI.innerText = totalIPR.toLocaleString();
 
+  const colHeader = document.getElementById("verdictMatrixFirstColHeader");
+  const subtitle = document.getElementById("verdictMatrixSubtitle");
+
   let groups = [];
-  if (verdictMatrixView === "quartile") {
-    groups = currentSource === "Geran Aktif"
-      ? ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"]
-      : [...new Set(targetData.map(d => d.quartile))];
+  const activeView = isTamat ? "category" : verdictMatrixView;
+
+  if (activeView === "quartile") {
+    groups = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
+    if (colHeader) colHeader.innerText = "Quartile";
+    if (subtitle) {
+      subtitle.innerHTML = "Pecahan analisis mengikut <strong>Monitored Quartile (Q1 – Q5)</strong> (&lt; 100%). Syarat: <strong>Q1</strong> (Milestone &amp; Expenditure), <strong>Q2 &amp; Q3</strong> (+ HCD), <strong>Q4 &amp; Q5</strong> (Semua 5 item).";
+    }
   } else {
     groups = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
+    if (colHeader) colHeader.innerText = "Grant Category";
+    if (subtitle) {
+      subtitle.innerHTML = isTamat
+        ? "Pecahan analisis geran tamat (FR Status selain Not Completed, Draft &amp; Terminated) mengikut <strong>Grant Category</strong> (&lt; 100%) bagi Milestone (S), Expenditure (V), HCD (Y), Publication (AB), dan IPR (AE)."
+        : "Pecahan analisis mengikut <strong>Grant Category</strong> (&lt; 100%) dengan mengambil kira syarat kelayakan item mengikut quartile setiap geran.";
+    }
   }
 
   if (!groups.length) {
@@ -2567,7 +2631,7 @@ function renderVerdictCategoryMatrix() {
 
   tbody.innerHTML = groups.map(grp => {
     const groupRecords = targetData.filter(d => {
-      return verdictMatrixView === "quartile" ? d.quartile === grp : d.grantCategory === grp;
+      return activeView === "quartile" ? d.quartile === grp : d.grantCategory === grp;
     });
     const grpTotal = groupRecords.length;
 
@@ -2592,12 +2656,11 @@ function renderVerdictCategoryMatrix() {
 
     const percentAffected = grpTotal > 0 ? ((cAffected / grpTotal) * 100).toFixed(1) : "0.0";
 
-    const labelHtml = verdictMatrixView === "quartile"
+    const labelHtml = activeView === "quartile"
       ? `<span class="badge ${quartileBadgeClass(grp)}">${escapeHtml(grp)}</span>`
       : `<span class="font-bold text-gray-900">${escapeHtml(grp)}</span>`;
 
-    // Paparan N/A jika item tidak berkenaan bagi Quartile berkenaan
-    const isQ = verdictMatrixView === "quartile";
+    const isQ = activeView === "quartile";
     const hcdCell = (isQ && grp === "Q1")
       ? `<span class="text-xs text-gray-400 font-medium" title="Dikecualikan bagi Q1">N/A</span>`
       : `<span class="font-semibold ${cH > 0 ? 'text-blue-600 bg-blue-50/50' : 'text-gray-400'}">${cH}</span>`;
@@ -2650,6 +2713,7 @@ function renderUnachievedGrantsTable() {
   const tbody = document.getElementById("unachievedGrantsBody");
   if (!tbody) return;
 
+  const isTamat = currentSource === "Geran Tamat";
   const list = getUnachievedGrantsList();
   const totalCases = list.length;
 
@@ -2688,8 +2752,10 @@ function renderUnachievedGrantsTable() {
   const pageItems = list.slice(start, start + UNACHIEVED_ITEMS_PER_PAGE);
 
   const formatItemBadge = (isNotAchieved, rawVal, isApplicable, quartileLabel) => {
-    if (!isApplicable) {
-      return `<span class="badge badge-gray text-gray-400 font-semibold" title="Dikecualikan bagi ${escapeAttr(quartileLabel)}">N/A</span>`;
+    const cleanVal = clean(rawVal);
+    const isNegOne = cleanVal === "-1" || cleanVal === "-1%" || cleanVal.startsWith("-1");
+    if (!isApplicable || isNegOne) {
+      return `<span class="badge badge-gray text-gray-400 font-semibold" title="${escapeAttr(rawVal || 'Dikecualikan')}">N/A</span>`;
     }
     if (isNotAchieved) {
       return `<span class="badge badge-red font-semibold" title="${escapeAttr(rawVal)}"><i class="fa-solid fa-xmark mr-1"></i> Tidak Capai</span>`;
@@ -2708,7 +2774,7 @@ function renderUnachievedGrantsTable() {
         <div class="text-[11px] text-gray-500 mt-0.5 font-bold">${escapeHtml(item.grantCategory)}</div>
       </td>
       <td>${escapeHtml(item.staffName)}</td>
-      <td class="text-center"><span class="badge ${quartileBadgeClass(item.quartile)}">${escapeHtml(item.quartile)}</span></td>
+      ${!isTamat ? `<td class="text-center"><span class="badge ${quartileBadgeClass(item.quartile)}">${escapeHtml(item.quartile)}</span></td>` : `<td class="text-center"><span class="badge ${frBadgeClass(item.frStatus)}">${escapeHtml(item.frStatus || "-")}</span></td>`}
       <td class="text-center">${formatItemBadge(item.milestoneNotAchieved, item.milestone, item.milestoneApplicable, item.quartile)}</td>
       <td class="text-center">${formatItemBadge(item.expenditureNotAchieved, item.expenditure, item.expenditureApplicable, item.quartile)}</td>
       <td class="text-center">${formatItemBadge(item.hcdNotAchieved, item.hcd, item.hcdApplicable, item.quartile)}</td>
@@ -2746,8 +2812,10 @@ function viewGrant(id) {
   const isTamat = currentSource === "Geran Tamat";
 
   const renderKPIStatus = (isNotAchieved, rawVal, isApplicable, quartile) => {
-    if (!isApplicable) {
-      return `<span class="badge badge-gray mt-1 text-gray-400 font-semibold" title="Dikecualikan bagi ${escapeAttr(quartile)}">N/A (Dikecualikan)</span>`;
+    const cleanVal = clean(rawVal);
+    const isNegOne = cleanVal === "-1" || cleanVal === "-1%" || cleanVal.startsWith("-1");
+    if (!isApplicable || isNegOne) {
+      return `<span class="badge badge-gray mt-1 text-gray-400 font-semibold" title="${escapeAttr(rawVal)}">N/A (Dikecualikan / -1)</span>`;
     }
     const text = isNotAchieved ? "Tidak Capai" : "Capai";
     const badge = isNotAchieved ? "badge-red" : "badge-green";
