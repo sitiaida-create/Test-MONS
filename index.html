@@ -508,7 +508,7 @@
         </div>
 
         <div>
-          <label class="filter-label">Verdict (Kolum AG)</label>
+          <label class="filter-label">Verdict</label>
           <select id="filterVerdict" class="filter-select" onchange="applyFilters()">
             <option value="ALL">Semua Verdict</option>
           </select>
@@ -574,35 +574,35 @@
           <div id="kpiTamat2026Card" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat Tahun 2026</div>
             <div id="kpiTamat2026" class="kpi-number text-blue-800">0</div>
-            <div class="text-[11px] text-gray-400">Berdasarkan Kolum K</div>
+           
           </div>
 
           <!-- Geran Tamat: Tamat 2026 Tanpa Ext -->
           <div id="kpiTamat2026NoExtCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat 2026 (Tanpa Ext)</div>
             <div id="kpiTamat2026NoExt" class="kpi-number text-emerald-700">0</div>
-            <div class="text-[11px] text-gray-400">Kolum K 2026 & Kolum L Blank</div>
+           
           </div>
 
           <!-- Geran Tamat: Submit Final Report -->
           <div id="kpiSubmitFRCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Submit Final Report</div>
             <div id="kpiSubmitFR" class="kpi-number text-green-700">0</div>
-            <div class="text-[11px] text-gray-400">Selain Not completed/Draft (Kecuali Terminated)</div>
+           
           </div>
 
           <!-- Geran Tamat: Belum Submit FR -->
           <div id="kpiBelumSubmitFRCard" class="hidden card kpi-card">
-            <div class="text-xs font-bold text-gray-500 uppercase">Belum Submit FR</div>
+            <div class="text-xs font-bold text-gray-500 uppercase">Belum Submit Final Report</div>
             <div id="kpiBelumSubmitFR" class="kpi-number text-red-600">0</div>
-            <div class="text-[11px] text-gray-400">Not completed & Draft sahaja</div>
+            <div class="text-[11px] text-gray-400">FR Status Not completed & Draft</div>
           </div>
 
           <!-- Geran Tamat: Masih Grace Period (Column AJ) -->
           <div id="kpiGracePeriodCard" class="hidden card kpi-card">
-            <div class="text-xs font-bold text-gray-500 uppercase">Masih Grace Period</div>
+            <div class="text-xs font-bold text-gray-500 uppercase">Tempoh Grace Period</div>
             <div id="kpiGracePeriod" class="kpi-number text-purple-700">0</div>
-            <div class="text-[11px] text-gray-400">Kolum AJ: Dalam Grace Period</div>
+            <div class="text-[11px] text-gray-400">Dalam Tempoh Grace Period</div>
           </div>
         </div>
 
@@ -645,7 +645,7 @@
                 Ringkasan Verdict Mengikut Grant Category
               </h3>
               <p id="verdictSummarySubtitle" class="text-xs text-gray-500 mt-0.5">
-                Taburan geran dipantau (Q1 - Q5) mengikut susunan: PW, OS, BS, NCM.
+                Taburan geran dipantau (Q1 - Q5)
               </p>
             </div>
             <span id="verdictMonitoredBadge" class="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full">
@@ -657,10 +657,10 @@
               <thead>
                 <tr>
                   <th>Grant Category</th>
-                  <th id="thVerdictPW" class="text-center text-emerald-700">PW</th>
-                  <th id="thVerdictOS" class="text-center text-blue-700">OS</th>
-                  <th id="thVerdictBS" class="text-center text-amber-700">BS</th>
-                  <th id="thVerdictNCM" class="text-center text-red-700">NCM</th>
+                  <th id="thVerdictPW" class="text-center text-emerald-700">PW - Progressing Well</th>
+                  <th id="thVerdictOS" class="text-center text-blue-700">OS - On Schedule</th>
+                  <th id="thVerdictBS" class="text-center text-amber-700">BS - Behind Schedule</th>
+                  <th id="thVerdictNCM" class="text-center text-red-700">NCM - Need Close Monitoring</th>
                   <th class="text-center font-extrabold bg-gray-100">Jumlah</th>
                 </tr>
               </thead>
@@ -687,12 +687,12 @@
               </div>
 
               <div id="summaryTamat2026Box" class="hidden p-4 bg-blue-50 rounded-xl border border-blue-100">
-                <div class="text-xs font-bold text-blue-800 uppercase">Status Tamat Tahun 2026 (Kolum K)</div>
+                <div class="text-xs font-bold text-blue-800 uppercase">Status Tamat Tahun 2026</div>
                 <div id="summaryTamat2026Text" class="text-sm text-blue-900 mt-2 leading-relaxed">-</div>
               </div>
 
               <div id="summaryFRBox" class="hidden p-4 bg-purple-50 rounded-xl border border-purple-100">
-                <div class="text-xs font-bold text-purple-800 uppercase">Pecahan FR Status (Kolum AN) & Grace Period</div>
+                <div class="text-xs font-bold text-purple-800 uppercase">Pecahan FR Status & Grace Period</div>
                 <div id="summaryFRText" class="text-sm text-purple-900 mt-2 leading-relaxed">-</div>
               </div>
             </div>
