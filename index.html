@@ -570,7 +570,7 @@
             <div class="text-[11px] text-gray-400">Quartile kosong / tidak dipantau</div>
           </div>
 
-          <!-- Geran Tamat: Tamat Tahun 2026 -->
+          <!-- Geran Tamat: Tamat Tahun 2026 (Kolum K) -->
           <div id="kpiTamat2026Card" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat Tahun 2026</div>
             <div id="kpiTamat2026" class="kpi-number text-blue-800">0</div>
@@ -581,12 +581,14 @@
           <div id="kpiTamat2026NoExtCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat 2026 (Tanpa Ext)</div>
             <div id="kpiTamat2026NoExt" class="kpi-number text-emerald-700">0</div>
+            <div class="text-[11px] text-gray-400">&nbsp;</div>
           </div>
 
           <!-- Geran Tamat: Submit Final Report -->
           <div id="kpiSubmitFRCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Submit Final Report</div>
             <div id="kpiSubmitFR" class="kpi-number text-green-700">0</div>
+            <div class="text-[11px] text-gray-400">&nbsp;</div>
           </div>
 
           <!-- Geran Tamat: Belum Submit FR -->
@@ -2086,7 +2088,7 @@ function renderStrategicSummary() {
     });
     const el2026 = document.getElementById("summaryTamat2026Text");
     if (el2026) {
-      el2026.innerHTML = `Terdapat <strong>${count2026}</strong> geran yang tamat pada tahun 2026. Daripada jumlah tersebut, <strong>${count2026NoExt}</strong> geran tamat tanpa sebarang lanjutan tarikh (Kolum L adalah blank).`;
+      el2026.innerHTML = `Terdapat <strong>${count2026}</strong> geran yang tamat pada tahun 2026. Daripada jumlah tersebut, <strong>${count2026NoExt}</strong> geran tamat tanpa sebarang lanjutan tarikh.`;
     }
 
     let sub = 0, notSub = 0, grace = 0;
@@ -2098,7 +2100,7 @@ function renderStrategicSummary() {
     });
     const elFR = document.getElementById("summaryFRText");
     if (elFR) {
-      elFR.innerHTML = `Sebanyak <strong>${sub}</strong> geran telah menghantar Final Report, <strong>${notSub}</strong> geran berstatus Not completed / Draft, dan <strong>${grace}</strong> geran berstatus <strong>Dalam Grace Period</strong> berdasarkan Kolum AJ.`;
+      elFR.innerHTML = `Sebanyak <strong>${sub}</strong> geran telah menghantar Final Report, <strong>${notSub}</strong> geran berstatus Not completed / Draft, dan <strong>${grace}</strong> geran berstatus <strong>Dalam Grace Period</strong>.`;
     }
   }
 }
