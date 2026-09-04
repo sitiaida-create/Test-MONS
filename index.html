@@ -450,7 +450,6 @@
       </div>
     </div>
 
-    <!-- Filter Section -->
     <section class="card p-5 mb-5">
       <div class="flex items-center justify-between mb-4">
         <div>
@@ -548,9 +547,7 @@
     </div>
 
     <div id="dashboardContent" class="hidden">
-      <!-- SUMMARY TAB -->
       <section id="summaryTab">
-        <!-- KPI Cards Grid -->
         <div id="kpiContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-5">
           <!-- Shared KPI 1: Jumlah Geran -->
           <div class="card kpi-card">
@@ -640,7 +637,6 @@
           </div>
         </div>
 
-        <!-- Verdict Summary Matrix -->
         <div class="card mb-5">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <div>
@@ -649,7 +645,7 @@
                 Ringkasan Verdict Mengikut Grant Category
               </h3>
               <p id="verdictSummarySubtitle" class="text-xs text-gray-500 mt-0.5">
-                Taburan geran dipantau (Q1 - Q5) mengikut susunan: Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah.
+                Taburan geran dipantau (Q1 - Q5) mengikut susunan: PW, OS, BS, NCM.
               </p>
             </div>
             <span id="verdictMonitoredBadge" class="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full">
@@ -661,10 +657,10 @@
               <thead>
                 <tr>
                   <th>Grant Category</th>
-                  <th class="text-center text-emerald-700">Cemerlang</th>
-                  <th class="text-center text-blue-700">Memuaskan</th>
-                  <th class="text-center text-amber-700">Kurang Memuaskan</th>
-                  <th class="text-center text-red-700">Bermasalah</th>
+                  <th id="thVerdictPW" class="text-center text-emerald-700">PW</th>
+                  <th id="thVerdictOS" class="text-center text-blue-700">OS</th>
+                  <th id="thVerdictBS" class="text-center text-amber-700">BS</th>
+                  <th id="thVerdictNCM" class="text-center text-red-700">NCM</th>
                   <th class="text-center font-extrabold bg-gray-100">Jumlah</th>
                 </tr>
               </thead>
@@ -754,7 +750,6 @@
         </div>
       </section>
 
-      <!-- VISUAL DASHBOARD TAB -->
       <section id="visualTab" class="hidden space-y-5">
         <div id="visualMonitoredNotice" class="card p-3.5 bg-blue-50/70 border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-blue-900">
           <div class="flex items-center gap-2 font-medium">
@@ -825,7 +820,6 @@
         </div>
       </section>
 
-      <!-- VERDICT STATISTICS TAB -->
       <section id="verdictTab" class="hidden space-y-5">
         <div id="verdictMonitoredNotice" class="card p-3.5 bg-blue-50/70 border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-blue-900">
           <div class="flex items-center gap-2 font-medium">
@@ -864,7 +858,7 @@
           </div>
         </div>
 
-        <!-- Jadual Ringkasan Matriks -->
+        <!-- Jadual Ringkasan Matriks Item Tidak Capai -->
         <div class="card">
           <div class="p-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
@@ -966,7 +960,6 @@
         </div>
       </section>
 
-      <!-- MASTERLIST DIRECTORY TAB -->
       <section id="masterTab" class="hidden">
         <div class="card">
           <div class="p-5 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -1321,11 +1314,31 @@ function updateSourceUI() {
   const quartileSummaryCard = document.getElementById("quartileSummaryCard");
   if (quartileSummaryCard) quartileSummaryCard.classList.toggle("hidden", isTamat);
 
+  // Penyelarasan Lajur Ringkasan Verdict (PW, OS, BS, NCM vs Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah)
+  const thPW = document.getElementById("thVerdictPW");
+  const thOS = document.getElementById("thVerdictOS");
+  const thBS = document.getElementById("thVerdictBS");
+  const thNCM = document.getElementById("thVerdictNCM");
+
+  if (thPW && thOS && thBS && thNCM) {
+    if (isTamat) {
+      thPW.innerText = "Cemerlang";
+      thOS.innerText = "Memuaskan";
+      thBS.innerText = "Kurang Memuaskan";
+      thNCM.innerText = "Bermasalah";
+    } else {
+      thPW.innerText = "PW";
+      thOS.innerText = "OS";
+      thBS.innerText = "BS";
+      thNCM.innerText = "NCM";
+    }
+  }
+
   const verdictSummarySubtitle = document.getElementById("verdictSummarySubtitle");
   if (verdictSummarySubtitle) {
     verdictSummarySubtitle.innerText = isTamat
       ? "Taburan semua geran tamat mengikut susunan: Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah."
-      : "Taburan geran dipantau (Q1 - Q5) mengikut susunan: Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah.";
+      : "Taburan geran dipantau (Q1 - Q5) mengikut susunan: PW, OS, BS, NCM.";
   }
 
   const verdictNoticeText = document.getElementById("verdictNoticeText");
@@ -1387,7 +1400,7 @@ function parseGrantRow(row, sheetRowNumber) {
   const grantTitle = clean(row[COL.GRANT_TITLE]) || "Tiada Tajuk";
   const staffName = clean(row[COL.STAFF_NAME]) || "Tidak Dinyatakan";
 
-  // Dates
+  // Tarikh (Kolum J, K, L, AJ)
   const jRaw = clean(row[COL.PROJECT_START]);
   const kRaw = clean(row[COL.PROJECT_END]);
   const lRaw = clean(row[COL.NEW_END_DATE]);
@@ -1999,11 +2012,8 @@ function renderVerdictMatrix() {
   const tfoot = document.getElementById("verdictMatrixFoot");
   if (!tbody || !tfoot) return;
 
-  const isTamat = currentSource === "Geran Tamat";
-  const monitoredList = ["Q1", "Q2", "Q3", "Q4", "Q5 (Extension)"];
-  const targetData = isTamat
-    ? filteredData
-    : filteredData.filter(d => monitoredList.includes(d.quartile));
+  // Baca data Kolum AG (Verdict) terus dari filteredData
+  const targetData = filteredData;
 
   const categories = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
   if (!categories.length) {
@@ -2012,34 +2022,34 @@ function renderVerdictMatrix() {
     return;
   }
 
-  let totalC = 0, totalM = 0, totalK = 0, totalB = 0, totalAll = 0;
+  let totalPW = 0, totalOS = 0, totalBS = 0, totalNCM = 0, totalAll = 0;
 
   tbody.innerHTML = categories.map(cat => {
     const items = targetData.filter(d => d.grantCategory === cat);
-    let c = 0, m = 0, k = 0, b = 0;
+    let pw = 0, os = 0, bs = 0, ncm = 0;
 
     items.forEach(d => {
       const idx = getVerdictOrderIndex(d.verdict);
-      if (idx === 0) c++;
-      else if (idx === 1) m++;
-      else if (idx === 2) k++;
-      else if (idx === 3) b++;
+      if (idx === 0) pw++;
+      else if (idx === 1) os++;
+      else if (idx === 2) bs++;
+      else if (idx === 3) ncm++;
     });
 
-    const sum = c + m + k + b;
-    totalC += c;
-    totalM += m;
-    totalK += k;
-    totalB += b;
+    const sum = pw + os + bs + ncm;
+    totalPW += pw;
+    totalOS += os;
+    totalBS += bs;
+    totalNCM += ncm;
     totalAll += sum;
 
     return `
       <tr>
         <td class="font-bold text-gray-900">${escapeHtml(cat)}</td>
-        <td class="text-center font-semibold text-emerald-700">${c}</td>
-        <td class="text-center font-semibold text-blue-700">${m}</td>
-        <td class="text-center font-semibold text-amber-700">${k}</td>
-        <td class="text-center font-semibold text-red-700">${b}</td>
+        <td class="text-center font-semibold text-emerald-700">${pw}</td>
+        <td class="text-center font-semibold text-blue-700">${os}</td>
+        <td class="text-center font-semibold text-amber-700">${bs}</td>
+        <td class="text-center font-semibold text-red-700">${ncm}</td>
         <td class="text-center font-extrabold bg-gray-50 text-gray-900">${sum}</td>
       </tr>
     `;
@@ -2048,10 +2058,10 @@ function renderVerdictMatrix() {
   tfoot.innerHTML = `
     <tr>
       <td class="text-gray-900 font-extrabold">JUMLAH KESELURUHAN</td>
-      <td class="text-center text-emerald-700 font-extrabold">${totalC}</td>
-      <td class="text-center text-blue-700 font-extrabold">${totalM}</td>
-      <td class="text-center text-amber-700 font-extrabold">${totalK}</td>
-      <td class="text-center text-red-700 font-extrabold">${totalB}</td>
+      <td class="text-center text-emerald-700 font-extrabold">${totalPW}</td>
+      <td class="text-center text-blue-700 font-extrabold">${totalOS}</td>
+      <td class="text-center text-amber-700 font-extrabold">${totalBS}</td>
+      <td class="text-center text-red-700 font-extrabold">${totalNCM}</td>
       <td class="text-center text-gray-900 font-extrabold bg-gray-100">${totalAll}</td>
     </tr>
   `;
@@ -2453,8 +2463,15 @@ function updateCharts() {
     else if (idx === 2) verdictMap["Kurang Memuaskan"]++;
     else if (idx === 3) verdictMap["Bermasalah"]++;
   });
-  const vLabels = ["Cemerlang", "Memuaskan", "Kurang Memuaskan", "Bermasalah"];
-  const vData = vLabels.map(k => verdictMap[k]);
+  const vLabels = !isTamat 
+    ? ["PW", "OS", "BS", "NCM"] 
+    : ["Cemerlang", "Memuaskan", "Kurang Memuaskan", "Bermasalah"];
+  const vData = [
+    verdictMap["Cemerlang"],
+    verdictMap["Memuaskan"],
+    verdictMap["Kurang Memuaskan"],
+    verdictMap["Bermasalah"]
+  ];
   const vColors = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444"];
   renderOrUpdateDoughnutChart("verdict", "chartVerdict", vLabels, vData, vColors);
 
@@ -2818,10 +2835,10 @@ function quartileBadgeClass(q) {
 
 function verdictBadgeClass(verdict) {
   const idx = getVerdictOrderIndex(verdict);
-  if (idx === 0) return "badge-green";  // Cemerlang
-  if (idx === 1) return "badge-blue";   // Memuaskan
-  if (idx === 2) return "badge-yellow"; // Kurang Memuaskan
-  if (idx === 3) return "badge-red";    // Bermasalah
+  if (idx === 0) return "badge-green";  // PW / Cemerlang
+  if (idx === 1) return "badge-blue";   // OS / Memuaskan
+  if (idx === 2) return "badge-yellow"; // BS / Kurang Memuaskan
+  if (idx === 3) return "badge-red";    // NCM / Bermasalah
   return "badge-gray";
 }
 
