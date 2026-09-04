@@ -890,11 +890,11 @@
                 <tr>
                   <th id="verdictDimHeader">Monitored Quartile</th>
                   <th class="text-center">Jumlah Geran</th>
-                  <th class="text-center text-red-700">Milestone (S)</th>
-                  <th class="text-center text-amber-700">Expenditure (V)</th>
-                  <th class="text-center text-blue-700">HCD (Y)</th>
-                  <th class="text-center text-purple-700">Publication (AB)</th>
-                  <th class="text-center text-pink-700">IPR (AE)</th>
+                  <th class="text-center text-red-700">Milestone</th>
+                  <th class="text-center text-amber-700">Expenditure</th>
+                  <th class="text-center text-blue-700">HCD</th>
+                  <th class="text-center text-purple-700">Publication</th>
+                  <th class="text-center text-pink-700">IPR</th>
                   <th class="text-center font-extrabold bg-gray-100">Geran Terjejas</th>
                   <th class="text-center">% Terjejas</th>
                 </tr>
@@ -1327,10 +1327,10 @@ function updateSourceUI() {
       thBS.innerText = "Kurang Memuaskan";
       thNCM.innerText = "Bermasalah";
     } else {
-      thPW.innerText = "PW";
-      thOS.innerText = "OS";
-      thBS.innerText = "BS";
-      thNCM.innerText = "NCM";
+      thPW.innerText = "PW - Progressing Well";
+      thOS.innerText = "OS - On Schedule";
+      thBS.innerText = "BS - Behind Schedule";
+      thNCM.innerText = "NCM - Need Close Monitoring";
     }
   }
 
