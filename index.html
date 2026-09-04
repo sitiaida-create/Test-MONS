@@ -2714,7 +2714,7 @@ function renderUnachievedGrantsTable() {
       <td class="text-center">${formatItemBadge(item.hcdNotAchieved, item.hcd, item.hcdApplicable, item.quartile)}</td>
       <td class="text-center">${formatItemBadge(item.publicationNotAchieved, item.publication, item.publicationApplicable, item.quartile)}</td>
       <td class="text-center">${formatItemBadge(item.iprNotAchieved, item.ipr, item.iprApplicable, item.quartile)}</td>
-      <td><span class="badge ${verdictBadgeClass(item.newVerdict || item.verdict)}">${escapeHtml(item.newVerdict || item.verdict)}</span></td>
+      <td><span class="badge ${verdictBadgeClass(item.verdict)}">${escapeHtml(item.verdict)}</span></td>
       <td>
         <button class="btn btn-light text-xs py-1 px-2.5" onclick="viewGrant('${escapeAttr(item.id)}')">
           <i class="fa-solid fa-eye mr-1"></i> Butiran
@@ -2771,8 +2771,7 @@ function viewGrant(id) {
       ${detailItem("2. Project End (Kolum K)", item.projectEndKDisplay)}
       ${detailItem("3. New End Date (Kolum L)", item.newEndDateDisplay)}
       ${!isTamat ? detailItem("Quartile", item.quartile) : ""}
-      ${detailItem("Verdict Asal (Kolum AG)", item.verdict)}
-      ${detailItem("New Verdict (Kolum AQ)", item.newVerdict || "-")}
+      ${detailItem("Verdict (Kolum AG)", item.verdict)}
       ${isTamat ? detailItem("FR Status (Kolum AN)", item.frStatus || "-") : ""}
       ${isTamat ? detailItem("Grace Period (Kolum AJ)", item.gracePeriodRaw || "-") : ""}
     </div>
@@ -2901,8 +2900,7 @@ function exportCSV() {
       "Project Start (J)": item.projectStartDisplay,
       "Project End (K)": item.projectEndKDisplay,
       "New End Date (L)": item.newEndDateDisplay,
-      "Verdict": item.verdict,
-      "New Verdict (AQ)": item.newVerdict || item.verdict
+      "Verdict (AG)": item.verdict
     };
     if (!isTamat) row["Quartile"] = item.quartile;
     if (isTamat) {
