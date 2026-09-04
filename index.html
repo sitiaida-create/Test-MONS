@@ -508,7 +508,7 @@
         </div>
 
         <div>
-          <label class="filter-label">Verdict</label>
+          <label class="filter-label">Verdict (Kolum AG)</label>
           <select id="filterVerdict" class="filter-select" onchange="applyFilters()">
             <option value="ALL">Semua Verdict</option>
           </select>
@@ -570,25 +570,25 @@
             <div class="text-[11px] text-gray-400">Quartile kosong / tidak dipantau</div>
           </div>
 
-          <!-- Geran Tamat: Tamat Tahun 2026 (Kolum K) -->
+          <!-- Geran Tamat: Tamat Tahun 2026 -->
           <div id="kpiTamat2026Card" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat Tahun 2026</div>
             <div id="kpiTamat2026" class="kpi-number text-blue-800">0</div>
-          
+            <div class="text-[11px] text-gray-400">&nbsp;</div>
           </div>
 
           <!-- Geran Tamat: Tamat 2026 Tanpa Ext -->
           <div id="kpiTamat2026NoExtCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat 2026 (Tanpa Ext)</div>
             <div id="kpiTamat2026NoExt" class="kpi-number text-emerald-700">0</div>
-          
+            <div class="text-[11px] text-gray-400">Kolum K 2026 & Kolum L Blank</div>
           </div>
 
           <!-- Geran Tamat: Submit Final Report -->
           <div id="kpiSubmitFRCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Submit Final Report</div>
             <div id="kpiSubmitFR" class="kpi-number text-green-700">0</div>
-          
+            <div class="text-[11px] text-gray-400">Selain Not completed/Draft (Kecuali Terminated)</div>
           </div>
 
           <!-- Geran Tamat: Belum Submit FR -->
@@ -602,7 +602,7 @@
           <div id="kpiGracePeriodCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tempoh Grace Period</div>
             <div id="kpiGracePeriod" class="kpi-number text-purple-700">0</div>
-            <div class="text-[11px] text-gray-400">Dalam Tempoh Grace Period</div>
+            <div class="text-[11px] text-gray-400">Kolum AJ: Dalam Grace Period</div>
           </div>
         </div>
 
@@ -645,11 +645,11 @@
                 Ringkasan Verdict Mengikut Grant Category
               </h3>
               <p id="verdictSummarySubtitle" class="text-xs text-gray-500 mt-0.5">
-                Taburan geran dipantau (Q1 - Q5)
+                Taburan geran mengikut Kolum AG (Verdict).
               </p>
             </div>
             <span id="verdictMonitoredBadge" class="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full">
-              Monitored Quartile Sahaja
+              Kolum AG (Verdict)
             </span>
           </div>
           <div class="table-wrapper">
@@ -687,7 +687,7 @@
               </div>
 
               <div id="summaryTamat2026Box" class="hidden p-4 bg-blue-50 rounded-xl border border-blue-100">
-                <div class="text-xs font-bold text-blue-800 uppercase">Status Tamat Tahun 2026</div>
+                <div class="text-xs font-bold text-blue-800 uppercase">Status Tamat Tahun 2026 (Kolum K)</div>
                 <div id="summaryTamat2026Text" class="text-sm text-blue-900 mt-2 leading-relaxed">-</div>
               </div>
 
@@ -1338,7 +1338,7 @@ function updateSourceUI() {
   if (verdictSummarySubtitle) {
     verdictSummarySubtitle.innerText = isTamat
       ? "Taburan semua geran tamat mengikut susunan: Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah."
-      : "Taburan geran dipantau (Q1 - Q5) mengikut susunan: PW, OS, BS, NCM.";
+      : "Taburan geran mengikut Kolum AG (Verdict).";
   }
 
   const verdictNoticeText = document.getElementById("verdictNoticeText");
@@ -1699,10 +1699,10 @@ function compareGrantCategories(a, b) {
 
 function getVerdictOrderIndex(verdict) {
   const t = String(verdict || "").toUpperCase().trim();
-  if (t.includes("KURANG MEMUASKAN") || t === "BS" || t.includes("BEHIND")) return 2;
-  if (t.includes("CEMERLANG") || t === "PW" || t.includes("PROGRESSING WELL") || t.includes("EXCELLENT")) return 0;
-  if (t.includes("MEMUASKAN") || t === "OS" || t.includes("ON SCHEDULE") || t.includes("SATISFACTORY")) return 1;
-  if (t.includes("BERMASALAH") || t.includes("NCM") || t.includes("NEED CLOSER MONITORING") || t.includes("KRITIKAL") || t.includes("GAGAL")) return 3;
+  if (t.includes("KURANG MEMUASKAN") || /\bBS\b/.test(t) || t.includes("BEHIND")) return 2;
+  if (t.includes("CEMERLANG") || /\bPW\b/.test(t) || t.includes("PROGRESSING WELL") || t.includes("EXCELLENT")) return 0;
+  if (t.includes("MEMUASKAN") || /\bOS\b/.test(t) || t.includes("ON SCHEDULE") || t.includes("SATISFACTORY")) return 1;
+  if (t.includes("BERMASALAH") || /\bNCM\b/.test(t) || t.includes("NEED CLOSER MONITORING") || t.includes("NEED CLOSE MONITORING") || t.includes("KRITIKAL") || t.includes("GAGAL")) return 3;
   return 4;
 }
 
@@ -2088,7 +2088,7 @@ function renderStrategicSummary() {
     });
     const el2026 = document.getElementById("summaryTamat2026Text");
     if (el2026) {
-      el2026.innerHTML = `Terdapat <strong>${count2026}</strong> geran yang tamat pada tahun 2026 berdasarkan Kolum K. Daripada jumlah tersebut, <strong>${count2026NoExt}</strong> geran tamat tanpa sebarang lanjutan tarikh (Kolum L adalah blank).`;
+      el2026.innerHTML = `Terdapat <strong>${count2026}</strong> geran yang tamat pada tahun 2026. Daripada jumlah tersebut, <strong>${count2026NoExt}</strong> geran tamat tanpa sebarang lanjutan tarikh (Kolum L adalah blank).`;
     }
 
     let sub = 0, notSub = 0, grace = 0;
