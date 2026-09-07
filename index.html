@@ -1232,7 +1232,7 @@ let unachievedCurrentPage = 1;
 const UNACHIEVED_ITEMS_PER_PAGE = 15;
 
 let verdictDisplayMode = "quartile"; // 'quartile' or 'category'
-let graceChartFilter = "in";         // 'in', 'all', or 'out'
+let graceChartFilter = "all";        // 'all', 'in', or 'out'
 
 let charts = {
   quartile: null,
@@ -1709,6 +1709,7 @@ async function selectSource(source) {
   currentPage = 1;
   warningCurrentPage = 1;
   unachievedCurrentPage = 1;
+  graceChartFilter = "all";
   resetFilters(false);
   updateSourceButtons();
   updateSourceUI();
@@ -2613,19 +2614,19 @@ function setGraceChartFilter(mode) {
     }
   });
 
-  if (mode === "in" && btnIn) {
-    btnIn.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition";
-  } else if (mode === "all" && btnAll) {
+  if (mode === "all" && btnAll) {
     btnAll.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition";
+  } else if (mode === "in" && btnIn) {
+    btnIn.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition";
   } else if (mode === "out" && btnOut) {
     btnOut.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition";
   }
 
   const sub = document.getElementById("graceVerdictSubtitle");
   if (sub) {
-    if (mode === "in") sub.innerText = "Pecahan status verdict (Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah) bagi setiap Grant Category bagi geran berstatus Dalam Grace Period (Kolum AJ).";
-    else if (mode === "out") sub.innerText = "Pecahan status verdict bagi geran yang berada di Luar Grace Period.";
-    else sub.innerText = "Pecahan status verdict bagi Semua rekod Geran Tamat.";
+    if (mode === "all") sub.innerText = "Pecahan status verdict (Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah) bagi setiap Grant Category bagi Semua rekod Geran Tamat.";
+    else if (mode === "in") sub.innerText = "Pecahan status verdict bagi setiap Grant Category bagi geran berstatus Dalam Grace Period (Kolum AJ).";
+    else sub.innerText = "Pecahan status verdict bagi geran yang berada di Luar Grace Period.";
   }
 
   updateGraceVerdictChart();
