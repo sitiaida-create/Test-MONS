@@ -652,7 +652,7 @@
               </p>
             </div>
             <span id="verdictMonitoredBadge" class="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full">
-              Kolum AG (Verdict)
+              Verdict
             </span>
           </div>
           <div class="table-wrapper">
@@ -729,7 +729,7 @@
                   <th>Staff Name</th>
                   <th>Project End</th>
                   <th id="warningQuartileHeader">Quartile</th>
-                  <th>Verdict (AG)</th>
+                  <th>Verdict</th>
                   <th id="warningFRHeader" class="hidden">FR Status</th>
                   <th>Tindakan</th>
                 </tr>
@@ -936,12 +936,12 @@
                   <th>Grant Title & Category</th>
                   <th>Staff Name</th>
                   <th id="unachievedQuartileHeader">Quartile</th>
-                  <th class="text-center">Milestone (S)</th>
-                  <th class="text-center">Expenditure (V)</th>
-                  <th class="text-center">HCD (Y)</th>
-                  <th class="text-center">Publication (AB)</th>
-                  <th class="text-center">IPR (AE)</th>
-                  <th>Verdict (AG)</th>
+                  <th class="text-center">Milestone</th>
+                  <th class="text-center">Expenditure</th>
+                  <th class="text-center">HCD</th>
+                  <th class="text-center">Publication</th>
+                  <th class="text-center">IPR</th>
+                  <th>Verdict</th>
                   <th>Tindakan</th>
                 </tr>
               </thead>
@@ -992,7 +992,7 @@
                   <th>Staff Name</th>
                   <th>Project End</th>
                   <th id="masterQuartileHeader">Quartile</th>
-                  <th>Verdict (AG)</th>
+                  <th>Verdict</th>
                   <th id="masterFRHeader" class="hidden">FR Status</th>
                   <th>Tindakan</th>
                 </tr>
@@ -2940,15 +2940,15 @@ function exportCSV() {
       "Grant Type": item.grantType,
       "Grant Category": item.grantCategory,
       "Staff Name": item.staffName,
-      "Project Start (J)": item.projectStartDisplay,
-      "Project End (K)": item.projectEndKDisplay,
-      "New End Date (L)": item.newEndDateDisplay,
-      "Verdict (AG)": item.verdict
+      "Project Start": item.projectStartDisplay,
+      "Project End": item.projectEndKDisplay,
+      "New End Date": item.newEndDateDisplay,
+      "Verdict": item.verdict
     };
     if (!isTamat) row["Quartile"] = item.quartile;
     if (isTamat) {
-      row["FR Status (AN)"] = item.frStatus;
-      row["Grace Period (AJ)"] = item.gracePeriodRaw;
+      row["FR Status"] = item.frStatus;
+      row["Grace Period"] = item.gracePeriodRaw;
     }
     return row;
   });
