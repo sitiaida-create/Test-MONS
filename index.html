@@ -450,6 +450,7 @@
       </div>
     </div>
 
+    <!-- Filter Section -->
     <section class="card p-5 mb-5">
       <div class="flex items-center justify-between mb-4">
         <div>
@@ -522,7 +523,7 @@
         </div>
 
         <div id="graceFilterWrap" class="hidden">
-          <label class="filter-label">Grace Period</label>
+          <label class="filter-label">Grace Period (Kolum AJ)</label>
           <select id="filterGracePeriod" class="filter-select" onchange="applyFilters()">
             <option value="ALL">Semua Grace Period</option>
           </select>
@@ -767,6 +768,86 @@
             <span>Visual bagi <strong>Geran Aktif</strong> memaparkan analisis berdasarkan <strong>Total Grant by Monitored Quartile (Q1 – Q5)</strong> sahaja.</span>
           </div>
           <span id="visualMonitoredTotalBadge" class="self-start sm:self-auto font-bold bg-blue-600 text-white px-2.5 py-0.5 rounded-full text-[11px] whitespace-nowrap">0 Geran</span>
+        </div>
+
+        <!-- Geran Tamat Sahaja: Analisis Verdict Mengikut Grant Category Berasaskan Grace Period -->
+        <div id="graceVerdictChartCard" class="hidden card p-5">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4 pb-3 border-b border-gray-100">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-sm md:text-base text-gray-900">
+                  <i class="fa-solid fa-chart-simple mr-2 text-purple-600"></i>
+                  Taburan Verdict Mengikut Grant Category Berasaskan Grace Period
+                </h3>
+                <span class="text-[11px] text-purple-700 bg-purple-50 font-bold px-2.5 py-0.5 rounded-full">Kolum AJ</span>
+              </div>
+              <p id="graceVerdictSubtitle" class="text-xs text-gray-500 mt-1">
+                Pecahan status verdict (Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah) bagi setiap Grant Category.
+              </p>
+            </div>
+
+            <!-- Butang Penapis Pantas Grace Period -->
+            <div class="flex items-center gap-2">
+              <div class="inline-flex bg-gray-100 p-1 rounded-lg border border-gray-200 text-xs">
+                <button id="btnGraceFilterIn" class="px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition" onclick="setGraceChartFilter('in')">
+                  Dalam Grace Period
+                </button>
+                <button id="btnGraceFilterAll" class="px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900 transition" onclick="setGraceChartFilter('all')">
+                  Semua
+                </button>
+                <button id="btnGraceFilterOut" class="px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900 transition" onclick="setGraceChartFilter('out')">
+                  Luar Grace Period
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ringkasan Metrik Pantas Status Verdict Grace Period -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+            <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100 flex items-center justify-between">
+              <div>
+                <div class="text-[10px] font-bold text-emerald-800 uppercase">Cemerlang</div>
+                <div id="statGraceCemerlang" class="text-lg font-extrabold text-emerald-700 leading-tight mt-0.5">0</div>
+              </div>
+              <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs">
+                <i class="fa-solid fa-check"></i>
+              </div>
+            </div>
+
+            <div class="p-3 bg-blue-50 rounded-xl border border-blue-100 flex items-center justify-between">
+              <div>
+                <div class="text-[10px] font-bold text-blue-800 uppercase">Memuaskan</div>
+                <div id="statGraceMemuaskan" class="text-lg font-extrabold text-blue-700 leading-tight mt-0.5">0</div>
+              </div>
+              <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+            </div>
+
+            <div class="p-3 bg-amber-50 rounded-xl border border-amber-100 flex items-center justify-between">
+              <div>
+                <div class="text-[10px] font-bold text-amber-800 uppercase">Kurang Memuaskan</div>
+                <div id="statGraceKurang" class="text-lg font-extrabold text-amber-700 leading-tight mt-0.5">0</div>
+              </div>
+              <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+            </div>
+
+            <div class="p-3 bg-red-50 rounded-xl border border-red-100 flex items-center justify-between">
+              <div>
+                <div class="text-[10px] font-bold text-red-800 uppercase">Bermasalah</div>
+                <div id="statGraceBermasalah" class="text-lg font-extrabold text-red-700 leading-tight mt-0.5">0</div>
+              </div>
+              <div class="w-8 h-8 rounded-lg bg-red-100 text-red-700 flex items-center justify-center text-xs">
+                <i class="fa-solid fa-circle-exclamation"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-container" style="height: 360px;">
+            <canvas id="chartGraceVerdictCategory"></canvas>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -1116,11 +1197,13 @@ let unachievedCurrentPage = 1;
 const UNACHIEVED_ITEMS_PER_PAGE = 15;
 
 let verdictDisplayMode = "quartile"; // 'quartile' or 'category'
+let graceChartFilter = "in";         // 'in', 'all', or 'out'
 
 let charts = {
   quartile: null,
   grantCategory: null,
-  verdict: null
+  verdict: null,
+  graceVerdictCategory: null
 };
 
 // Urutan Kategori Geran Khusus
@@ -1259,6 +1342,9 @@ function updateSourceUI() {
   const quartileChartCard = document.getElementById("quartileChartCard");
   if (quartileChartCard) quartileChartCard.classList.toggle("hidden", isTamat);
 
+  const graceVerdictChartCard = document.getElementById("graceVerdictChartCard");
+  if (graceVerdictChartCard) graceVerdictChartCard.classList.toggle("hidden", !isTamat);
+
   const visualMonitoredNotice = document.getElementById("visualMonitoredNotice");
   if (visualMonitoredNotice) visualMonitoredNotice.classList.toggle("hidden", isTamat);
 
@@ -1281,7 +1367,7 @@ function updateSourceUI() {
   const kpiSubHCD = document.getElementById("kpiSubHCD");
   const kpiSubPub = document.getElementById("kpiSubPub");
   const kpiSubIPR = document.getElementById("kpiSubIPR");
-  if (kpiSubHCD) kpiSubHCD.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q2 – Q5)";
+  if (kpiSubHCD) kpiSubHCD.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Geran)";
   if (kpiSubPub) kpiSubPub.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
   if (kpiSubIPR) kpiSubIPR.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
 
