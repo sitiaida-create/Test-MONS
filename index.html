@@ -9,16 +9,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   
-  <!-- Chart.js -->
+  <!-- Chart.js & PapaParse -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- PapaParse with secondary CDN fallback -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-  <script>
-    if (typeof Papa === 'undefined') {
-      document.write('<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.3/papaparse.min.js"><\/script>');
-    }
-  </script>
 
   <style>
     * {
@@ -802,44 +795,60 @@
             </div>
           </div>
 
-          <!-- Ringkasan Metrik Pantas Status Verdict Grace Period -->
+          <!-- Ringkasan Metrik Pantas Status Verdict Grace Period (Boleh Diklik untuk Pop-up) -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-            <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100 flex items-center justify-between">
+            <div class="p-3 bg-emerald-50 hover:bg-emerald-100/70 rounded-xl border border-emerald-200 flex items-center justify-between cursor-pointer transition shadow-sm hover:shadow-md group" onclick="showGraceVerdictBreakdown('Cemerlang')" title="Klik untuk lihat maklumat geran">
               <div>
-                <div class="text-[10px] font-bold text-emerald-800 uppercase">Cemerlang</div>
+                <div class="text-[10px] font-bold text-emerald-800 uppercase flex items-center gap-1">
+                  Cemerlang
+                  <i class="fa-solid fa-circle-info text-[9px] text-emerald-600 opacity-60 group-hover:opacity-100"></i>
+                </div>
                 <div id="statGraceCemerlang" class="text-lg font-extrabold text-emerald-700 leading-tight mt-0.5">0</div>
+                <div class="text-[10px] text-emerald-600 font-medium">Klik untuk butiran &rarr;</div>
               </div>
-              <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs">
+              <div class="w-8 h-8 rounded-lg bg-emerald-200/70 text-emerald-800 flex items-center justify-center text-xs group-hover:scale-110 transition">
                 <i class="fa-solid fa-check"></i>
               </div>
             </div>
 
-            <div class="p-3 bg-blue-50 rounded-xl border border-blue-100 flex items-center justify-between">
+            <div class="p-3 bg-blue-50 hover:bg-blue-100/70 rounded-xl border border-blue-200 flex items-center justify-between cursor-pointer transition shadow-sm hover:shadow-md group" onclick="showGraceVerdictBreakdown('Memuaskan')" title="Klik untuk lihat maklumat geran">
               <div>
-                <div class="text-[10px] font-bold text-blue-800 uppercase">Memuaskan</div>
+                <div class="text-[10px] font-bold text-blue-800 uppercase flex items-center gap-1">
+                  Memuaskan
+                  <i class="fa-solid fa-circle-info text-[9px] text-blue-600 opacity-60 group-hover:opacity-100"></i>
+                </div>
                 <div id="statGraceMemuaskan" class="text-lg font-extrabold text-blue-700 leading-tight mt-0.5">0</div>
+                <div class="text-[10px] text-blue-600 font-medium">Klik untuk butiran &rarr;</div>
               </div>
-              <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs">
+              <div class="w-8 h-8 rounded-lg bg-blue-200/70 text-blue-800 flex items-center justify-center text-xs group-hover:scale-110 transition">
                 <i class="fa-solid fa-clock"></i>
               </div>
             </div>
 
-            <div class="p-3 bg-amber-50 rounded-xl border border-amber-100 flex items-center justify-between">
+            <div class="p-3 bg-amber-50 hover:bg-amber-100/70 rounded-xl border border-amber-200 flex items-center justify-between cursor-pointer transition shadow-sm hover:shadow-md group" onclick="showGraceVerdictBreakdown('Kurang Memuaskan')" title="Klik untuk lihat maklumat geran">
               <div>
-                <div class="text-[10px] font-bold text-amber-800 uppercase">Kurang Memuaskan</div>
+                <div class="text-[10px] font-bold text-amber-800 uppercase flex items-center gap-1">
+                  Kurang Memuaskan
+                  <i class="fa-solid fa-circle-info text-[9px] text-amber-600 opacity-60 group-hover:opacity-100"></i>
+                </div>
                 <div id="statGraceKurang" class="text-lg font-extrabold text-amber-700 leading-tight mt-0.5">0</div>
+                <div class="text-[10px] text-amber-700 font-medium">Klik untuk butiran &rarr;</div>
               </div>
-              <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs">
+              <div class="w-8 h-8 rounded-lg bg-amber-200/70 text-amber-800 flex items-center justify-center text-xs group-hover:scale-110 transition">
                 <i class="fa-solid fa-triangle-exclamation"></i>
               </div>
             </div>
 
-            <div class="p-3 bg-red-50 rounded-xl border border-red-100 flex items-center justify-between">
+            <div class="p-3 bg-red-50 hover:bg-red-100/70 rounded-xl border border-red-200 flex items-center justify-between cursor-pointer transition shadow-sm hover:shadow-md group" onclick="showGraceVerdictBreakdown('Bermasalah')" title="Klik untuk lihat maklumat geran">
               <div>
-                <div class="text-[10px] font-bold text-red-800 uppercase">Bermasalah</div>
+                <div class="text-[10px] font-bold text-red-800 uppercase flex items-center gap-1">
+                  Bermasalah
+                  <i class="fa-solid fa-circle-info text-[9px] text-red-600 opacity-60 group-hover:opacity-100"></i>
+                </div>
                 <div id="statGraceBermasalah" class="text-lg font-extrabold text-red-700 leading-tight mt-0.5">0</div>
+                <div class="text-[10px] text-red-600 font-medium">Klik untuk butiran &rarr;</div>
               </div>
-              <div class="w-8 h-8 rounded-lg bg-red-100 text-red-700 flex items-center justify-center text-xs">
+              <div class="w-8 h-8 rounded-lg bg-red-200/70 text-red-800 flex items-center justify-center text-xs group-hover:scale-110 transition">
                 <i class="fa-solid fa-circle-exclamation"></i>
               </div>
             </div>
@@ -914,7 +923,7 @@
           <div class="card p-4 border-l-4 border-l-blue-500">
             <div class="text-[11px] font-bold text-gray-500 uppercase">HCD</div>
             <div id="kpiUnachievedHCD" class="text-2xl font-extrabold text-blue-600 mt-1">0</div>
-            <div id="kpiSubHCD" class="text-[11px] text-gray-400">&lt; 100% (Q2 – Q5)</div>
+            <div id="kpiSubHCD" class="text-[11px] text-gray-400">&lt; 100% (Semua Geran)</div>
           </div>
           <div class="card p-4 border-l-4 border-l-purple-500">
             <div class="text-[11px] font-bold text-gray-500 uppercase">Publication</div>
@@ -1115,6 +1124,28 @@
   </div>
 </div>
 
+<!-- Modal Pop-up Pecahan Status Verdict Mengikut Grace Period -->
+<div id="graceVerdictModal" class="modal-overlay" onclick="closeModalOnOverlay(event,'graceVerdictModal')">
+  <div class="modal max-w-5xl">
+    <div class="p-5 border-b border-gray-200 flex items-center justify-between">
+      <div>
+        <div class="flex items-center gap-2">
+          <h2 id="graceVerdictModalTitle" class="text-lg font-extrabold text-gray-900">Pecahan Status Verdict</h2>
+          <span id="graceVerdictModalBadge" class="badge badge-green font-bold">0 Geran</span>
+        </div>
+        <p id="graceVerdictModalSubtitle" class="text-xs text-gray-500 mt-1">Senarai maklumat geran mengikut Grant Category berasaskan Grace Period.</p>
+      </div>
+      <button class="btn btn-light text-sm" onclick="closeModal('graceVerdictModal')">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div id="graceVerdictModalBody" class="p-5 space-y-4"></div>
+    <div class="p-5 border-t border-gray-200 flex justify-end">
+      <button class="btn btn-light text-sm" onclick="closeModal('graceVerdictModal')">Tutup</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal Konfigurasi -->
 <div id="configModal" class="modal-overlay" onclick="closeModalOnOverlay(event,'configModal')">
   <div class="modal max-w-2xl">
@@ -1209,7 +1240,12 @@ let charts = {
 // Urutan Kategori Geran Khusus
 const CATEGORY_ORDER = ["MOHE", "MOSTI", "RUG", "JTNCPI", "GERAN LUAR", "ICC", "CCIN", "CRAEG"];
 
-// RFC-4180 compliant CSV parser fallback
+let activeGraceModalState = {
+  verdictName: "",
+  grants: [],
+  selectedCategory: "ALL"
+};
+
 function parseCSVText(text) {
   const lines = [];
   let row = [];
@@ -1264,310 +1300,6 @@ function unparseCSV(rows) {
   const headerLine = headers.map(escape).join(",");
   const bodyLines = rows.map(r => headers.map(h => escape(r[h])).join(","));
   return [headerLine, ...bodyLines].join("\r\n");
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  initDashboard();
-});
-
-async function initDashboard() {
-  updateSourceButtons();
-  updateSourceUI();
-  await fetchCurrentSource();
-}
-
-async function selectSource(source) {
-  if (source === currentSource) return;
-  currentSource = source;
-  currentPage = 1;
-  warningCurrentPage = 1;
-  unachievedCurrentPage = 1;
-  resetFilters(false);
-  updateSourceButtons();
-  updateSourceUI();
-  closeMobileSidebar();
-  await fetchCurrentSource();
-}
-
-function updateSourceButtons() {
-  const aktifBtn = document.getElementById("sourceAktifBtn");
-  const tamatBtn = document.getElementById("sourceTamatBtn");
-  if (aktifBtn) aktifBtn.classList.toggle("active", currentSource === "Geran Aktif");
-  if (tamatBtn) tamatBtn.classList.toggle("active", currentSource === "Geran Tamat");
-}
-
-function updateSourceUI() {
-  const badge = document.getElementById("sourceBadge");
-  if (badge) badge.innerText = currentSource;
-
-  const isTamat = currentSource === "Geran Tamat";
-
-  // KPI Toggles
-  const kpiMonitoredCard = document.getElementById("kpiMonitoredCard");
-  const kpiNotMonitoredCard = document.getElementById("kpiNotMonitoredCard");
-  if (kpiMonitoredCard) kpiMonitoredCard.classList.toggle("hidden", isTamat);
-  if (kpiNotMonitoredCard) kpiNotMonitoredCard.classList.toggle("hidden", isTamat);
-
-  const kpiTamat2026Card = document.getElementById("kpiTamat2026Card");
-  const kpiTamat2026NoExtCard = document.getElementById("kpiTamat2026NoExtCard");
-  const kpiSubmitFRCard = document.getElementById("kpiSubmitFRCard");
-  const kpiBelumSubmitFRCard = document.getElementById("kpiBelumSubmitFRCard");
-  const kpiGracePeriodCard = document.getElementById("kpiGracePeriodCard");
-
-  if (kpiTamat2026Card) kpiTamat2026Card.classList.toggle("hidden", !isTamat);
-  if (kpiTamat2026NoExtCard) kpiTamat2026NoExtCard.classList.toggle("hidden", !isTamat);
-  if (kpiSubmitFRCard) kpiSubmitFRCard.classList.toggle("hidden", !isTamat);
-  if (kpiBelumSubmitFRCard) kpiBelumSubmitFRCard.classList.toggle("hidden", !isTamat);
-  if (kpiGracePeriodCard) kpiGracePeriodCard.classList.toggle("hidden", !isTamat);
-
-  // Filters & Table Headers
-  const quartileFilterWrap = document.getElementById("quartileFilterWrap");
-  if (quartileFilterWrap) quartileFilterWrap.classList.toggle("hidden", isTamat);
-
-  const frFilterWrap = document.getElementById("frFilterWrap");
-  if (frFilterWrap) frFilterWrap.classList.toggle("hidden", !isTamat);
-
-  const graceFilterWrap = document.getElementById("graceFilterWrap");
-  if (graceFilterWrap) graceFilterWrap.classList.toggle("hidden", !isTamat);
-
-  const summaryFRBox = document.getElementById("summaryFRBox");
-  if (summaryFRBox) summaryFRBox.classList.toggle("hidden", !isTamat);
-
-  const summaryMonitoredBox = document.getElementById("summaryMonitoredBox");
-  if (summaryMonitoredBox) summaryMonitoredBox.classList.toggle("hidden", isTamat);
-
-  const summaryTamat2026Box = document.getElementById("summaryTamat2026Box");
-  if (summaryTamat2026Box) summaryTamat2026Box.classList.toggle("hidden", !isTamat);
-
-  const quartileChartCard = document.getElementById("quartileChartCard");
-  if (quartileChartCard) quartileChartCard.classList.toggle("hidden", isTamat);
-
-  const graceVerdictChartCard = document.getElementById("graceVerdictChartCard");
-  if (graceVerdictChartCard) graceVerdictChartCard.classList.toggle("hidden", !isTamat);
-
-  const visualMonitoredNotice = document.getElementById("visualMonitoredNotice");
-  if (visualMonitoredNotice) visualMonitoredNotice.classList.toggle("hidden", isTamat);
-
-  const verdictMonitoredNotice = document.getElementById("verdictMonitoredNotice");
-  if (verdictMonitoredNotice) verdictMonitoredNotice.classList.toggle("hidden", isTamat);
-
-  const verdictModeToggleWrap = document.getElementById("verdictModeToggleWrap");
-  if (verdictModeToggleWrap) verdictModeToggleWrap.classList.toggle("hidden", isTamat);
-
-  const verdictTabSourceBadge = document.getElementById("verdictTabSourceBadge");
-  if (verdictTabSourceBadge) {
-    verdictTabSourceBadge.innerText = isTamat ? "FR Status Selain Not Completed, Draft & Terminated" : "Monitored Quartile (Q1 – Q5)";
-  }
-
-  const kpiSubMilestone = document.getElementById("kpiSubMilestone");
-  const kpiSubExpenditure = document.getElementById("kpiSubExpenditure");
-  if (kpiSubMilestone) kpiSubMilestone.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Quartile)";
-  if (kpiSubExpenditure) kpiSubExpenditure.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Quartile)";
-
-  const kpiSubHCD = document.getElementById("kpiSubHCD");
-  const kpiSubPub = document.getElementById("kpiSubPub");
-  const kpiSubIPR = document.getElementById("kpiSubIPR");
-  if (kpiSubHCD) kpiSubHCD.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Geran)";
-  if (kpiSubPub) kpiSubPub.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
-  if (kpiSubIPR) kpiSubIPR.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
-
-  const unachievedQuartileHeader = document.getElementById("unachievedQuartileHeader");
-  if (unachievedQuartileHeader) unachievedQuartileHeader.classList.toggle("hidden", isTamat);
-
-  const warningQuartileHeader = document.getElementById("warningQuartileHeader");
-  if (warningQuartileHeader) warningQuartileHeader.classList.toggle("hidden", isTamat);
-
-  const warningFRHeader = document.getElementById("warningFRHeader");
-  if (warningFRHeader) warningFRHeader.classList.toggle("hidden", !isTamat);
-
-  const masterQuartileHeader = document.getElementById("masterQuartileHeader");
-  if (masterQuartileHeader) masterQuartileHeader.classList.toggle("hidden", isTamat);
-
-  const masterFRHeader = document.getElementById("masterFRHeader");
-  if (masterFRHeader) masterFRHeader.classList.toggle("hidden", !isTamat);
-
-  const quartileSummaryCard = document.getElementById("quartileSummaryCard");
-  if (quartileSummaryCard) quartileSummaryCard.classList.toggle("hidden", isTamat);
-
-  // Penyelarasan Lajur Ringkasan Verdict (PW, OS, BS, NCM vs Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah)
-  const thPW = document.getElementById("thVerdictPW");
-  const thOS = document.getElementById("thVerdictOS");
-  const thBS = document.getElementById("thVerdictBS");
-  const thNCM = document.getElementById("thVerdictNCM");
-
-  if (thPW && thOS && thBS && thNCM) {
-    if (isTamat) {
-      thPW.innerText = "Cemerlang";
-      thOS.innerText = "Memuaskan";
-      thBS.innerText = "Kurang Memuaskan";
-      thNCM.innerText = "Bermasalah";
-    } else {
-      thPW.innerText = "PW - Progressing Well";
-      thOS.innerText = "OS - On Schedule";
-      thBS.innerText = "BS - Behind Schedule";
-      thNCM.innerText = "NCM - Need Close Monitoring";
-    }
-  }
-
-  const verdictSummarySubtitle = document.getElementById("verdictSummarySubtitle");
-  if (verdictSummarySubtitle) {
-    verdictSummarySubtitle.innerText = isTamat
-      ? "Taburan semua geran tamat berasaskan Kolum AG (Verdict)."
-      : "Taburan geran berasaskan Kolum AG (Verdict): PW, OS, BS, NCM.";
-  }
-
-  const verdictNoticeText = document.getElementById("verdictNoticeText");
-  if (verdictNoticeText) {
-    verdictNoticeText.innerHTML = isTamat
-      ? "Analisis statistik bagi <strong>Geran Tamat</strong> memaparkan geran dengan <strong>FR Status selain Not Completed, Draft, dan Terminated</strong> (kesemua 5 item dinilai)."
-      : "Analisis statistik bagi <strong>Geran Aktif</strong> memaparkan rekod berdasarkan <strong>Monitored Quartile (Q1 – Q5)</strong> dengan syarat kelayakan item.";
-  }
-}
-
-async function fetchCurrentSource() {
-  const loading = document.getElementById("loadingPanel");
-  const dashboard = document.getElementById("dashboardContent");
-  const errorPanel = document.getElementById("errorPanel");
-
-  loading.classList.remove("hidden");
-  dashboard.classList.add("hidden");
-  errorPanel.classList.add("hidden");
-
-  document.getElementById("loadingText").innerText = `Sedang memuatkan data ${currentSource}...`;
-  document.getElementById("recordStatus").innerText = "Memuatkan data...";
-
-  try {
-    const url = sourceUrls[currentSource];
-    if (!url) throw new Error("URL Google Sheet tidak ditetapkan.");
-
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Ralat pelayan: ${res.status} ${res.statusText}`);
-    const csvString = await res.text();
-
-    let rows = [];
-    if (typeof Papa !== 'undefined' && Papa && typeof Papa.parse === 'function') {
-      const parsed = Papa.parse(csvString, { skipEmptyLines: true });
-      rows = parsed.data || [];
-    } else {
-      rows = parseCSVText(csvString);
-    }
-
-    if (rows.length < 2) throw new Error("Google Sheet tidak mengandungi data yang mencukupi.");
-
-    grantsData = rows.slice(1)
-      .map((row, index) => parseGrantRow(row, index + 2))
-      .filter(item => item.costCentre || item.grantTitle || item.staffName || item.projectEndKRaw);
-
-    populateFilters();
-    applyFilters();
-
-    loading.classList.add("hidden");
-    dashboard.classList.remove("hidden");
-    document.getElementById("recordStatus").innerText = `${grantsData.length.toLocaleString()} rekod`;
-  } catch (error) {
-    showError(error.message || "Gagal memproses fail data.");
-  }
-}
-
-function parseGrantRow(row, sheetRowNumber) {
-  const costCentre = clean(row[COL.COST_CENTRE]);
-  const grantType = clean(row[COL.GRANT_TYPE]) || "Tidak Dinyatakan";
-  const grantTitle = clean(row[COL.GRANT_TITLE]) || "Tiada Tajuk";
-  const staffName = clean(row[COL.STAFF_NAME]) || "Tidak Dinyatakan";
-
-  // Tarikh (Kolum J, K, L, AJ)
-  const jRaw = clean(row[COL.PROJECT_START]);
-  const kRaw = clean(row[COL.PROJECT_END]);
-  const lRaw = clean(row[COL.NEW_END_DATE]);
-  const ajRaw = clean(row[COL.GRACE_PERIOD]);
-
-  const startDate = parseDateValue(jRaw);
-  const kDate = parseDateValue(kRaw);
-  const lDate = parseDateValue(lRaw);
-
-  const isColLBlank = isColumnLBlank(lRaw, kRaw);
-  const hasExtension = !isColLBlank && isMeaningfulDateValue(lRaw) && lDate !== null;
-  const effectiveEndRaw = hasExtension ? lRaw : kRaw;
-  const effectiveEndDate = hasExtension ? lDate : kDate;
-
-  const quartile = normalizeQuartile(row[COL.QUARTILE]);
-  const verdict = clean(row[COL.VERDICT]) || "Tidak Dinyatakan";
-  const grantCategory = clean(row[COL.GRANT_CATEGORY]) || "Tidak Dinyatakan";
-
-  // Item Pencapaian: S, V, Y, AB, AE
-  const milestone = clean(row[COL.MILESTONE]);
-  const expenditure = clean(row[COL.EXPENDITURE]);
-  const hcd = clean(row[COL.HCD]);
-  const publication = clean(row[COL.PUBLICATION]);
-  const ipr = clean(row[COL.IPR]);
-
-  // Syarat Kelayakan Item mengikut Quartile
-  const milestoneApplicable = isItemApplicable(quartile, "MILESTONE");
-  const expenditureApplicable = isItemApplicable(quartile, "EXPENDITURE");
-  const hcdApplicable = isItemApplicable(quartile, "HCD");
-  const publicationApplicable = isItemApplicable(quartile, "PUBLICATION");
-  const iprApplicable = isItemApplicable(quartile, "IPR");
-
-  const milestoneNotAchieved = milestoneApplicable && isItemNotAchieved(milestone, quartile, "MILESTONE", verdict);
-  const expenditureNotAchieved = expenditureApplicable && isItemNotAchieved(expenditure, quartile, "EXPENDITURE", verdict);
-  const hcdNotAchieved = hcdApplicable && isItemNotAchieved(hcd, quartile, "HCD", verdict);
-  const publicationNotAchieved = publicationApplicable && isItemNotAchieved(publication, quartile, "PUBLICATION", verdict);
-  const iprNotAchieved = iprApplicable && isItemNotAchieved(ipr, quartile, "IPR", verdict);
-
-  const hasUnachievedItem = milestoneNotAchieved || expenditureNotAchieved || hcdNotAchieved || publicationNotAchieved || iprNotAchieved;
-
-  let frStatus = "";
-  if (currentSource === "Geran Tamat") {
-    frStatus = clean(row[COL.FR_STATUS]) || "Tidak Dinyatakan";
-  }
-
-  const kYear = getColKYear(kRaw, kDate);
-  const isEnded2026InColK = kYear === "2026" || (Boolean(kRaw) && /\b2026\b/.test(kRaw));
-
-  return {
-    id: `${currentSource}-${sheetRowNumber}`,
-    sheetRow: sheetRowNumber,
-    costCentre,
-    grantType,
-    grantTitle,
-    staffName,
-    projectStartRaw: jRaw,
-    projectStartDisplay: formatDate(startDate, jRaw),
-    projectEndKRaw: kRaw,
-    projectEndKDate: kDate,
-    projectEndKDisplay: formatDate(kDate, kRaw),
-    kYear,
-    isEnded2026InColK,
-    newEndDateRaw: lRaw,
-    newEndDateDisplay: hasExtension ? formatDate(lDate, lRaw) : (lRaw || "-"),
-    isColLBlank,
-    hasExtension,
-    effectiveEndDisplay: formatDate(effectiveEndDate, effectiveEndRaw),
-    projectEnd: effectiveEndDate,
-    month: effectiveEndDate ? String(effectiveEndDate.getMonth() + 1).padStart(2, "0") : "",
-    year: effectiveEndDate ? String(effectiveEndDate.getFullYear()) : "",
-    quartile,
-    verdict,
-    grantCategory,
-    frStatus,
-    gracePeriodRaw: ajRaw,
-    milestone,
-    expenditure,
-    hcd,
-    publication,
-    ipr,
-    milestoneApplicable,
-    expenditureApplicable,
-    hcdApplicable,
-    publicationApplicable,
-    iprApplicable,
-    milestoneNotAchieved,
-    expenditureNotAchieved,
-    hcdNotAchieved,
-    publicationNotAchieved,
-    iprNotAchieved,
-    hasUnachievedItem
-  };
 }
 
 function clean(value) {
@@ -1821,6 +1553,300 @@ function compareVerdicts(a, b) {
   return String(a).localeCompare(String(b), "ms", { numeric: true });
 }
 
+function parseGrantRow(row, sheetRowNumber) {
+  const costCentre = clean(row[COL.COST_CENTRE]);
+  const grantType = clean(row[COL.GRANT_TYPE]) || "Tidak Dinyatakan";
+  const grantTitle = clean(row[COL.GRANT_TITLE]) || "Tiada Tajuk";
+  const staffName = clean(row[COL.STAFF_NAME]) || "Tidak Dinyatakan";
+
+  // Tarikh (Kolum J, K, L, AJ)
+  const jRaw = clean(row[COL.PROJECT_START]);
+  const kRaw = clean(row[COL.PROJECT_END]);
+  const lRaw = clean(row[COL.NEW_END_DATE]);
+  const ajRaw = clean(row[COL.GRACE_PERIOD]);
+
+  const startDate = parseDateValue(jRaw);
+  const kDate = parseDateValue(kRaw);
+  const lDate = parseDateValue(lRaw);
+
+  const isColLBlank = isColumnLBlank(lRaw, kRaw);
+  const hasExtension = !isColLBlank && isMeaningfulDateValue(lRaw) && lDate !== null;
+  const effectiveEndRaw = hasExtension ? lRaw : kRaw;
+  const effectiveEndDate = hasExtension ? lDate : kDate;
+
+  const quartile = normalizeQuartile(row[COL.QUARTILE]);
+  const verdict = clean(row[COL.VERDICT]) || "Tidak Dinyatakan";
+  const grantCategory = clean(row[COL.GRANT_CATEGORY]) || "Tidak Dinyatakan";
+
+  // Item Pencapaian: S, V, Y, AB, AE
+  const milestone = clean(row[COL.MILESTONE]);
+  const expenditure = clean(row[COL.EXPENDITURE]);
+  const hcd = clean(row[COL.HCD]);
+  const publication = clean(row[COL.PUBLICATION]);
+  const ipr = clean(row[COL.IPR]);
+
+  // Syarat Kelayakan Item mengikut Quartile
+  const milestoneApplicable = isItemApplicable(quartile, "MILESTONE");
+  const expenditureApplicable = isItemApplicable(quartile, "EXPENDITURE");
+  const hcdApplicable = isItemApplicable(quartile, "HCD");
+  const publicationApplicable = isItemApplicable(quartile, "PUBLICATION");
+  const iprApplicable = isItemApplicable(quartile, "IPR");
+
+  const milestoneNotAchieved = milestoneApplicable && isItemNotAchieved(milestone, quartile, "MILESTONE", verdict);
+  const expenditureNotAchieved = expenditureApplicable && isItemNotAchieved(expenditure, quartile, "EXPENDITURE", verdict);
+  const hcdNotAchieved = hcdApplicable && isItemNotAchieved(hcd, quartile, "HCD", verdict);
+  const publicationNotAchieved = publicationApplicable && isItemNotAchieved(publication, quartile, "PUBLICATION", verdict);
+  const iprNotAchieved = iprApplicable && isItemNotAchieved(ipr, quartile, "IPR", verdict);
+
+  const hasUnachievedItem = milestoneNotAchieved || expenditureNotAchieved || hcdNotAchieved || publicationNotAchieved || iprNotAchieved;
+
+  let frStatus = "";
+  if (currentSource === "Geran Tamat") {
+    frStatus = clean(row[COL.FR_STATUS]) || "Tidak Dinyatakan";
+  }
+
+  const kYear = getColKYear(kRaw, kDate);
+  const isEnded2026InColK = kYear === "2026" || (Boolean(kRaw) && /\b2026\b/.test(kRaw));
+
+  return {
+    id: `${currentSource}-${sheetRowNumber}`,
+    sheetRow: sheetRowNumber,
+    costCentre,
+    grantType,
+    grantTitle,
+    staffName,
+    projectStartRaw: jRaw,
+    projectStartDisplay: formatDate(startDate, jRaw),
+    projectEndKRaw: kRaw,
+    projectEndKDate: kDate,
+    projectEndKDisplay: formatDate(kDate, kRaw),
+    kYear,
+    isEnded2026InColK,
+    newEndDateRaw: lRaw,
+    newEndDateDisplay: hasExtension ? formatDate(lDate, lRaw) : (lRaw || "-"),
+    isColLBlank,
+    hasExtension,
+    effectiveEndDisplay: formatDate(effectiveEndDate, effectiveEndRaw),
+    projectEnd: effectiveEndDate,
+    month: effectiveEndDate ? String(effectiveEndDate.getMonth() + 1).padStart(2, "0") : "",
+    year: effectiveEndDate ? String(effectiveEndDate.getFullYear()) : "",
+    quartile,
+    verdict,
+    grantCategory,
+    frStatus,
+    gracePeriodRaw: ajRaw,
+    milestone,
+    expenditure,
+    hcd,
+    publication,
+    ipr,
+    milestoneApplicable,
+    expenditureApplicable,
+    hcdApplicable,
+    publicationApplicable,
+    iprApplicable,
+    milestoneNotAchieved,
+    expenditureNotAchieved,
+    hcdNotAchieved,
+    publicationNotAchieved,
+    iprNotAchieved,
+    hasUnachievedItem
+  };
+}
+
+async function fetchCurrentSource() {
+  const loading = document.getElementById("loadingPanel");
+  const dashboard = document.getElementById("dashboardContent");
+  const errorPanel = document.getElementById("errorPanel");
+
+  loading.classList.remove("hidden");
+  dashboard.classList.add("hidden");
+  errorPanel.classList.add("hidden");
+
+  document.getElementById("loadingText").innerText = `Sedang memuatkan data ${currentSource}...`;
+  document.getElementById("recordStatus").innerText = "Memuatkan data...";
+
+  try {
+    const url = sourceUrls[currentSource];
+    if (!url) throw new Error("URL Google Sheet tidak ditetapkan.");
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Ralat pelayan: ${res.status} ${res.statusText}`);
+    const csvString = await res.text();
+
+    let rows = [];
+    if (typeof Papa !== 'undefined' && Papa && typeof Papa.parse === 'function') {
+      const parsed = Papa.parse(csvString, { skipEmptyLines: true });
+      rows = parsed.data || [];
+    } else {
+      rows = parseCSVText(csvString);
+    }
+
+    if (rows.length < 2) throw new Error("Google Sheet tidak mengandungi data yang mencukupi.");
+
+    grantsData = rows.slice(1)
+      .map((row, index) => parseGrantRow(row, index + 2))
+      .filter(item => item.costCentre || item.grantTitle || item.staffName || item.projectEndKRaw);
+
+    populateFilters();
+    applyFilters();
+
+    loading.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    document.getElementById("recordStatus").innerText = `${grantsData.length.toLocaleString()} rekod`;
+  } catch (error) {
+    showError(error.message || "Gagal memproses fail data.");
+  }
+}
+
+async function selectSource(source) {
+  if (source === currentSource) return;
+  currentSource = source;
+  currentPage = 1;
+  warningCurrentPage = 1;
+  unachievedCurrentPage = 1;
+  resetFilters(false);
+  updateSourceButtons();
+  updateSourceUI();
+  closeMobileSidebar();
+  await fetchCurrentSource();
+}
+
+function updateSourceButtons() {
+  const aktifBtn = document.getElementById("sourceAktifBtn");
+  const tamatBtn = document.getElementById("sourceTamatBtn");
+  if (aktifBtn) aktifBtn.classList.toggle("active", currentSource === "Geran Aktif");
+  if (tamatBtn) tamatBtn.classList.toggle("active", currentSource === "Geran Tamat");
+}
+
+function updateSourceUI() {
+  const badge = document.getElementById("sourceBadge");
+  if (badge) badge.innerText = currentSource;
+
+  const isTamat = currentSource === "Geran Tamat";
+
+  // KPI Toggles
+  const kpiMonitoredCard = document.getElementById("kpiMonitoredCard");
+  const kpiNotMonitoredCard = document.getElementById("kpiNotMonitoredCard");
+  if (kpiMonitoredCard) kpiMonitoredCard.classList.toggle("hidden", isTamat);
+  if (kpiNotMonitoredCard) kpiNotMonitoredCard.classList.toggle("hidden", isTamat);
+
+  const kpiTamat2026Card = document.getElementById("kpiTamat2026Card");
+  const kpiTamat2026NoExtCard = document.getElementById("kpiTamat2026NoExtCard");
+  const kpiSubmitFRCard = document.getElementById("kpiSubmitFRCard");
+  const kpiBelumSubmitFRCard = document.getElementById("kpiBelumSubmitFRCard");
+  const kpiGracePeriodCard = document.getElementById("kpiGracePeriodCard");
+
+  if (kpiTamat2026Card) kpiTamat2026Card.classList.toggle("hidden", !isTamat);
+  if (kpiTamat2026NoExtCard) kpiTamat2026NoExtCard.classList.toggle("hidden", !isTamat);
+  if (kpiSubmitFRCard) kpiSubmitFRCard.classList.toggle("hidden", !isTamat);
+  if (kpiBelumSubmitFRCard) kpiBelumSubmitFRCard.classList.toggle("hidden", !isTamat);
+  if (kpiGracePeriodCard) kpiGracePeriodCard.classList.toggle("hidden", !isTamat);
+
+  // Filters & Table Headers
+  const quartileFilterWrap = document.getElementById("quartileFilterWrap");
+  if (quartileFilterWrap) quartileFilterWrap.classList.toggle("hidden", isTamat);
+
+  const frFilterWrap = document.getElementById("frFilterWrap");
+  if (frFilterWrap) frFilterWrap.classList.toggle("hidden", !isTamat);
+
+  const graceFilterWrap = document.getElementById("graceFilterWrap");
+  if (graceFilterWrap) graceFilterWrap.classList.toggle("hidden", !isTamat);
+
+  const summaryFRBox = document.getElementById("summaryFRBox");
+  if (summaryFRBox) summaryFRBox.classList.toggle("hidden", !isTamat);
+
+  const summaryMonitoredBox = document.getElementById("summaryMonitoredBox");
+  if (summaryMonitoredBox) summaryMonitoredBox.classList.toggle("hidden", isTamat);
+
+  const summaryTamat2026Box = document.getElementById("summaryTamat2026Box");
+  if (summaryTamat2026Box) summaryTamat2026Box.classList.toggle("hidden", !isTamat);
+
+  const quartileChartCard = document.getElementById("quartileChartCard");
+  if (quartileChartCard) quartileChartCard.classList.toggle("hidden", isTamat);
+
+  const graceVerdictChartCard = document.getElementById("graceVerdictChartCard");
+  if (graceVerdictChartCard) graceVerdictChartCard.classList.toggle("hidden", !isTamat);
+
+  const visualMonitoredNotice = document.getElementById("visualMonitoredNotice");
+  if (visualMonitoredNotice) visualMonitoredNotice.classList.toggle("hidden", isTamat);
+
+  const verdictMonitoredNotice = document.getElementById("verdictMonitoredNotice");
+  if (verdictMonitoredNotice) verdictMonitoredNotice.classList.toggle("hidden", isTamat);
+
+  const verdictModeToggleWrap = document.getElementById("verdictModeToggleWrap");
+  if (verdictModeToggleWrap) verdictModeToggleWrap.classList.toggle("hidden", isTamat);
+
+  const verdictTabSourceBadge = document.getElementById("verdictTabSourceBadge");
+  if (verdictTabSourceBadge) {
+    verdictTabSourceBadge.innerText = isTamat ? "FR Status Selain Not Completed, Draft & Terminated" : "Monitored Quartile (Q1 – Q5)";
+  }
+
+  const kpiSubMilestone = document.getElementById("kpiSubMilestone");
+  const kpiSubExpenditure = document.getElementById("kpiSubExpenditure");
+  if (kpiSubMilestone) kpiSubMilestone.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Quartile)";
+  if (kpiSubExpenditure) kpiSubExpenditure.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Quartile)";
+
+  const kpiSubHCD = document.getElementById("kpiSubHCD");
+  const kpiSubPub = document.getElementById("kpiSubPub");
+  const kpiSubIPR = document.getElementById("kpiSubIPR");
+  if (kpiSubHCD) kpiSubHCD.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Geran)";
+  if (kpiSubPub) kpiSubPub.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
+  if (kpiSubIPR) kpiSubIPR.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
+
+  const unachievedQuartileHeader = document.getElementById("unachievedQuartileHeader");
+  if (unachievedQuartileHeader) unachievedQuartileHeader.classList.toggle("hidden", isTamat);
+
+  const warningQuartileHeader = document.getElementById("warningQuartileHeader");
+  if (warningQuartileHeader) warningQuartileHeader.classList.toggle("hidden", isTamat);
+
+  const warningFRHeader = document.getElementById("warningFRHeader");
+  if (warningFRHeader) warningFRHeader.classList.toggle("hidden", !isTamat);
+
+  const masterQuartileHeader = document.getElementById("masterQuartileHeader");
+  if (masterQuartileHeader) masterQuartileHeader.classList.toggle("hidden", isTamat);
+
+  const masterFRHeader = document.getElementById("masterFRHeader");
+  if (masterFRHeader) masterFRHeader.classList.toggle("hidden", !isTamat);
+
+  const quartileSummaryCard = document.getElementById("quartileSummaryCard");
+  if (quartileSummaryCard) quartileSummaryCard.classList.toggle("hidden", isTamat);
+
+  // Penyelarasan Lajur Ringkasan Verdict (PW, OS, BS, NCM vs Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah)
+  const thPW = document.getElementById("thVerdictPW");
+  const thOS = document.getElementById("thVerdictOS");
+  const thBS = document.getElementById("thVerdictBS");
+  const thNCM = document.getElementById("thVerdictNCM");
+
+  if (thPW && thOS && thBS && thNCM) {
+    if (isTamat) {
+      thPW.innerText = "Cemerlang";
+      thOS.innerText = "Memuaskan";
+      thBS.innerText = "Kurang Memuaskan";
+      thNCM.innerText = "Bermasalah";
+    } else {
+      thPW.innerText = "PW - Progressing Well";
+      thOS.innerText = "OS - On Schedule";
+      thBS.innerText = "BS - Behind Schedule";
+      thNCM.innerText = "NCM - Need Close Monitoring";
+    }
+  }
+
+  const verdictSummarySubtitle = document.getElementById("verdictSummarySubtitle");
+  if (verdictSummarySubtitle) {
+    verdictSummarySubtitle.innerText = isTamat
+      ? "Taburan semua geran tamat berasaskan Kolum AG (Verdict)."
+      : "Taburan geran berasaskan Kolum AG (Verdict): PW, OS, BS, NCM.";
+  }
+
+  const verdictNoticeText = document.getElementById("verdictNoticeText");
+  if (verdictNoticeText) {
+    verdictNoticeText.innerHTML = isTamat
+      ? "Analisis statistik bagi <strong>Geran Tamat</strong> memaparkan geran dengan <strong>FR Status selain Not Completed, Draft, dan Terminated</strong> (kesemua 5 item dinilai)."
+      : "Analisis statistik bagi <strong>Geran Aktif</strong> memaparkan rekod berdasarkan <strong>Monitored Quartile (Q1 – Q5)</strong> dengan syarat kelayakan item.";
+  }
+}
+
 function populateFilters() {
   populateSelect("filterGrantType", grantsData.map(d => d.grantType), "Semua Grant Type");
 
@@ -1968,19 +1994,11 @@ function setVerdictDisplayMode(mode) {
   const cBtn = document.getElementById("verdictModeCategoryBtn");
 
   if (mode === "quartile") {
-    if (qBtn) {
-      qBtn.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm";
-    }
-    if (cBtn) {
-      cBtn.className = "px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900";
-    }
+    if (qBtn) qBtn.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm";
+    if (cBtn) cBtn.className = "px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900";
   } else {
-    if (cBtn) {
-      cBtn.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm";
-    }
-    if (qBtn) {
-      qBtn.className = "px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900";
-    }
+    if (cBtn) cBtn.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm";
+    if (qBtn) qBtn.className = "px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900";
   }
   renderVerdictCategoryMatrix();
 }
@@ -2123,9 +2141,7 @@ function renderVerdictMatrix() {
   const tfoot = document.getElementById("verdictMatrixFoot");
   if (!tbody || !tfoot) return;
 
-  // Baca data Kolum AG (Verdict) terus dari filteredData
   const targetData = filteredData;
-
   const categories = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
   if (!categories.length) {
     tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-gray-400 italic">Tiada data</td></tr>`;
@@ -2586,30 +2602,32 @@ function setGraceChartFilter(mode) {
   const btnIn = document.getElementById("btnGraceFilterIn");
   const btnAll = document.getElementById("btnGraceFilterAll");
   const btnOut = document.getElementById("btnGraceFilterOut");
-  const subtitle = document.getElementById("graceVerdictSubtitle");
 
-  const activeClass = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition";
-  const inactiveClass = "px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900 transition";
-
-  if (btnIn) btnIn.className = mode === "in" ? activeClass : inactiveClass;
-  if (btnAll) btnAll.className = mode === "all" ? activeClass : inactiveClass;
-  if (btnOut) btnOut.className = mode === "out" ? activeClass : inactiveClass;
-
-  if (subtitle) {
-    if (mode === "in") {
-      subtitle.innerText = "Pecahan verdict bagi setiap Grant Category bagi geran berstatus Dalam Grace Period (Kolum AJ).";
-    } else if (mode === "all") {
-      subtitle.innerText = "Pecahan verdict bagi setiap Grant Category bagi semua geran tamat.";
-    } else {
-      subtitle.innerText = "Pecahan verdict bagi setiap Grant Category bagi geran di luar tempoh Grace Period.";
+  [btnIn, btnAll, btnOut].forEach(btn => {
+    if (btn) {
+      btn.className = "px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900 transition";
     }
+  });
+
+  if (mode === "in" && btnIn) {
+    btnIn.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition";
+  } else if (mode === "all" && btnAll) {
+    btnAll.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition";
+  } else if (mode === "out" && btnOut) {
+    btnOut.className = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition";
+  }
+
+  const sub = document.getElementById("graceVerdictSubtitle");
+  if (sub) {
+    if (mode === "in") sub.innerText = "Pecahan status verdict (Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah) bagi setiap Grant Category bagi geran berstatus Dalam Grace Period (Kolum AJ).";
+    else if (mode === "out") sub.innerText = "Pecahan status verdict bagi geran yang berada di Luar Grace Period.";
+    else sub.innerText = "Pecahan status verdict bagi Semua rekod Geran Tamat.";
   }
 
   updateGraceVerdictChart();
 }
 
 function updateGraceVerdictChart() {
-  if (currentSource !== "Geran Tamat") return;
   const ctx = document.getElementById("chartGraceVerdictCategory");
   if (!ctx) return;
 
@@ -2620,45 +2638,54 @@ function updateGraceVerdictChart() {
     targetData = filteredData.filter(d => !hasGracePeriod(d.gracePeriodRaw));
   }
 
-  // Kiraan 4 metrik status verdict
-  let cemerlang = 0, memuaskan = 0, kurang = 0, bermasalah = 0;
+  let totalCemerlang = 0, totalMemuaskan = 0, totalKurang = 0, totalBermasalah = 0;
   targetData.forEach(d => {
     const idx = getVerdictOrderIndex(d.verdict);
-    if (idx === 0) cemerlang++;
-    else if (idx === 1) memuaskan++;
-    else if (idx === 2) kurang++;
-    else if (idx === 3) bermasalah++;
+    if (idx === 0) totalCemerlang++;
+    else if (idx === 1) totalMemuaskan++;
+    else if (idx === 2) totalKurang++;
+    else if (idx === 3) totalBermasalah++;
   });
 
-  const elC = document.getElementById("statGraceCemerlang");
-  const elM = document.getElementById("statGraceMemuaskan");
-  const elK = document.getElementById("statGraceKurang");
-  const elB = document.getElementById("statGraceBermasalah");
+  const statC = document.getElementById("statGraceCemerlang");
+  const statM = document.getElementById("statGraceMemuaskan");
+  const statK = document.getElementById("statGraceKurang");
+  const statB = document.getElementById("statGraceBermasalah");
 
-  if (elC) elC.innerText = cemerlang.toLocaleString();
-  if (elM) elM.innerText = memuaskan.toLocaleString();
-  if (elK) elK.innerText = kurang.toLocaleString();
-  if (elB) elB.innerText = bermasalah.toLocaleString();
+  if (statC) statC.innerText = totalCemerlang.toLocaleString();
+  if (statM) statM.innerText = totalMemuaskan.toLocaleString();
+  if (statK) statK.innerText = totalKurang.toLocaleString();
+  if (statB) statB.innerText = totalBermasalah.toLocaleString();
 
-  // Susunan Grant Category
-  const activeCats = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
-  const displayCats = activeCats.length > 0 ? activeCats : CATEGORY_ORDER;
+  const categories = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
 
-  const dataCemerlang = displayCats.map(cat => targetData.filter(d => d.grantCategory === cat && getVerdictOrderIndex(d.verdict) === 0).length);
-  const dataMemuaskan = displayCats.map(cat => targetData.filter(d => d.grantCategory === cat && getVerdictOrderIndex(d.verdict) === 1).length);
-  const dataKurang = displayCats.map(cat => targetData.filter(d => d.grantCategory === cat && getVerdictOrderIndex(d.verdict) === 2).length);
-  const dataBermasalah = displayCats.map(cat => targetData.filter(d => d.grantCategory === cat && getVerdictOrderIndex(d.verdict) === 3).length);
+  const seriesCemerlang = [];
+  const seriesMemuaskan = [];
+  const seriesKurang = [];
+  const seriesBermasalah = [];
 
-  const datasets = [
-    { label: "Cemerlang", data: dataCemerlang, backgroundColor: "#10b981", borderRadius: 4 },
-    { label: "Memuaskan", data: dataMemuaskan, backgroundColor: "#3b82f6", borderRadius: 4 },
-    { label: "Kurang Memuaskan", data: dataKurang, backgroundColor: "#f59e0b", borderRadius: 4 },
-    { label: "Bermasalah", data: dataBermasalah, backgroundColor: "#ef4444", borderRadius: 4 }
-  ];
+  categories.forEach(cat => {
+    const recs = targetData.filter(d => d.grantCategory === cat);
+    let c = 0, m = 0, k = 0, b = 0;
+    recs.forEach(d => {
+      const idx = getVerdictOrderIndex(d.verdict);
+      if (idx === 0) c++;
+      else if (idx === 1) m++;
+      else if (idx === 2) k++;
+      else if (idx === 3) b++;
+    });
+    seriesCemerlang.push(c);
+    seriesMemuaskan.push(m);
+    seriesKurang.push(k);
+    seriesBermasalah.push(b);
+  });
 
   if (charts.graceVerdictCategory) {
-    charts.graceVerdictCategory.data.labels = displayCats;
-    charts.graceVerdictCategory.data.datasets = datasets;
+    charts.graceVerdictCategory.data.labels = categories;
+    charts.graceVerdictCategory.data.datasets[0].data = seriesCemerlang;
+    charts.graceVerdictCategory.data.datasets[1].data = seriesMemuaskan;
+    charts.graceVerdictCategory.data.datasets[2].data = seriesKurang;
+    charts.graceVerdictCategory.data.datasets[3].data = seriesBermasalah;
     charts.graceVerdictCategory.update();
     return;
   }
@@ -2666,21 +2693,48 @@ function updateGraceVerdictChart() {
   charts.graceVerdictCategory = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: displayCats,
-      datasets: datasets
+      labels: categories,
+      datasets: [
+        {
+          label: "Cemerlang",
+          data: seriesCemerlang,
+          backgroundColor: "#10b981",
+          borderRadius: 4
+        },
+        {
+          label: "Memuaskan",
+          data: seriesMemuaskan,
+          backgroundColor: "#3b82f6",
+          borderRadius: 4
+        },
+        {
+          label: "Kurang Memuaskan",
+          data: seriesKurang,
+          backgroundColor: "#f59e0b",
+          borderRadius: 4
+        },
+        {
+          label: "Bermasalah",
+          data: seriesBermasalah,
+          backgroundColor: "#ef4444",
+          borderRadius: 4
+        }
+      ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { top: 20 } },
       scales: {
         x: {
           stacked: true,
-          grid: { display: false },
-          ticks: { font: { size: 11, weight: "bold" } }
+          ticks: { font: { size: 11, weight: "bold" } },
+          grid: { display: false }
         },
         y: {
           stacked: true,
           beginAtZero: true,
+          grace: "10%",
           ticks: { precision: 0, font: { size: 11 } },
           grid: { color: "#f3f4f6" }
         }
@@ -2688,16 +2742,201 @@ function updateGraceVerdictChart() {
       plugins: {
         legend: {
           position: "top",
-          labels: { boxWidth: 12, padding: 14, font: { size: 11, weight: "600" } }
+          labels: { boxWidth: 12, padding: 14, font: { size: 11, weight: "bold" } }
         },
         tooltip: {
-          callbacks: {
-            label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} geran`
-          }
+          mode: "index",
+          intersect: false
         }
       }
     }
   });
+}
+
+function showGraceVerdictBreakdown(verdictName) {
+  let targetData = filteredData;
+  if (graceChartFilter === "in") {
+    targetData = filteredData.filter(d => hasGracePeriod(d.gracePeriodRaw));
+  } else if (graceChartFilter === "out") {
+    targetData = filteredData.filter(d => !hasGracePeriod(d.gracePeriodRaw));
+  }
+
+  const verdictIndexMap = {
+    "Cemerlang": 0,
+    "Memuaskan": 1,
+    "Kurang Memuaskan": 2,
+    "Bermasalah": 3
+  };
+
+  const targetIdx = verdictIndexMap[verdictName] ?? 0;
+  const matchedGrants = targetData.filter(d => getVerdictOrderIndex(d.verdict) === targetIdx);
+  const totalCount = matchedGrants.length;
+
+  const titleEl = document.getElementById("graceVerdictModalTitle");
+  const badgeEl = document.getElementById("graceVerdictModalBadge");
+  const subEl = document.getElementById("graceVerdictModalSubtitle");
+
+  if (titleEl) titleEl.innerText = `Pecahan Status Verdict: ${verdictName}`;
+  
+  if (badgeEl) {
+    badgeEl.innerText = `${totalCount} Geran`;
+    const colorClasses = {
+      "Cemerlang": "badge-green",
+      "Memuaskan": "badge-blue",
+      "Kurang Memuaskan": "badge-yellow",
+      "Bermasalah": "badge-red"
+    };
+    badgeEl.className = `badge ${colorClasses[verdictName] || 'badge-dark'} font-bold`;
+  }
+
+  const graceScopeText = graceChartFilter === "in" 
+    ? "Dalam Grace Period (Kolum AJ)" 
+    : (graceChartFilter === "out" ? "Luar Grace Period" : "Semua Rekod Grace Period");
+
+  if (subEl) {
+    subEl.innerText = `Menunjukkan pecahan kategori dan maklumat terperinci geran bagi status ${verdictName} (${graceScopeText}).`;
+  }
+
+  activeGraceModalState = {
+    verdictName,
+    grants: matchedGrants,
+    selectedCategory: "ALL"
+  };
+
+  renderGraceModalContent();
+  openModal("graceVerdictModal");
+}
+
+function filterGraceModalCategory(category) {
+  activeGraceModalState.selectedCategory = category;
+  renderGraceModalContent();
+}
+
+function renderGraceModalContent() {
+  const bodyEl = document.getElementById("graceVerdictModalBody");
+  if (!bodyEl) return;
+
+  const { verdictName, grants, selectedCategory } = activeGraceModalState;
+  const totalCount = grants.length;
+
+  if (!totalCount) {
+    bodyEl.innerHTML = `
+      <div class="py-12 text-center">
+        <div class="w-12 h-12 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center mx-auto mb-3">
+          <i class="fa-solid fa-folder-open text-lg"></i>
+        </div>
+        <div class="font-bold text-gray-700">Tiada Geran Ditemui</div>
+        <p class="text-xs text-gray-500 mt-1">Tiada rekod geran tamat dengan status ${escapeHtml(verdictName)} bagi skop pilihan ini.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const catCountMap = {};
+  grants.forEach(d => {
+    const cat = d.grantCategory || "Tidak Dinyatakan";
+    catCountMap[cat] = (catCountMap[cat] || 0) + 1;
+  });
+
+  const activeCategories = Object.keys(catCountMap).sort(compareGrantCategories);
+  const displayedGrants = selectedCategory === "ALL" 
+    ? grants 
+    : grants.filter(d => (d.grantCategory || "Tidak Dinyatakan") === selectedCategory);
+
+  const categoryExplanation = selectedCategory === 'ALL'
+    ? 'Memaparkan semua geran bagi status ini'
+    : 'Ditapis mengikut kategori: <strong>' + escapeHtml(selectedCategory) + '</strong>';
+
+  bodyEl.innerHTML = `
+    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200/80">
+      <div class="text-xs font-bold text-gray-500 uppercase mb-2.5 flex items-center justify-between">
+        <span>Pilih Kategori Geran Untuk Tapis Maklumat:</span>
+        <span class="text-gray-400 font-normal">Klik kategori di bawah</span>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button 
+          onclick="filterGraceModalCategory('ALL')" 
+          class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${selectedCategory === 'ALL' ? 'bg-gray-900 text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'}">
+          <span>Semua Kategori</span>
+          <span class="px-1.5 py-0.2 rounded-full text-[10px] ${selectedCategory === 'ALL' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-600'}">${totalCount}</span>
+        </button>
+
+        ${activeCategories.map(cat => {
+          const count = catCountMap[cat];
+          const isSelected = selectedCategory === cat;
+          return `
+            <button 
+              onclick="filterGraceModalCategory('${escapeAttr(cat)}')" 
+              class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${isSelected ? 'bg-blue-600 text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-200 hover:bg-blue-50 hover:text-blue-700'}">
+              <span>${escapeHtml(cat)}</span>
+              <span class="px-1.5 py-0.2 rounded-full text-[10px] ${isSelected ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-600'}">${count}</span>
+            </button>
+          `;
+        }).join("")}
+      </div>
+    </div>
+
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h4 class="font-bold text-gray-900 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-list text-blue-600"></i>
+            Maklumat Geran Penyelidikan (${displayedGrants.length} rekod)
+          </h4>
+          <p class="text-xs text-gray-500 mt-0.5">
+            ${categoryExplanation}
+          </p>
+        </div>
+      </div>
+
+      <div class="table-wrapper border border-gray-200 rounded-xl max-h-[380px] overflow-y-auto">
+        <table>
+          <thead class="sticky top-0 z-10 bg-gray-50 shadow-sm">
+            <tr>
+              <th style="width: 45px;">No.</th>
+              <th style="width: 130px;">Cost Centre</th>
+              <th>Grant Title</th>
+              <th style="width: 110px;">Category</th>
+              <th>Staff Name</th>
+              <th style="width: 105px;">Project End</th>
+              <th style="width: 120px;">FR Status</th>
+              <th style="width: 85px;" class="text-center">Tindakan</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${displayedGrants.map((item, idx) => `
+              <tr class="hover:bg-gray-50 transition">
+                <td class="text-xs text-gray-400 font-medium">${idx + 1}</td>
+                <td class="font-bold text-gray-900 text-xs font-mono">${escapeHtml(item.costCentre || "-")}</td>
+                <td>
+                  <div class="font-semibold text-gray-900 text-xs line-clamp-2" title="${escapeAttr(item.grantTitle)}">
+                    ${escapeHtml(item.grantTitle)}
+                  </div>
+                  <div class="text-[11px] text-gray-500 mt-0.5">${escapeHtml(item.grantType)}</div>
+                </td>
+                <td>
+                  <span class="badge badge-gray text-[10px] font-bold">${escapeHtml(item.grantCategory)}</span>
+                </td>
+                <td class="text-xs text-gray-700">${escapeHtml(item.staffName)}</td>
+                <td class="text-xs text-gray-700 whitespace-nowrap">${escapeHtml(item.effectiveEndDisplay)}</td>
+                <td>
+                  <span class="badge ${frBadgeClass(item.frStatus)} text-[10px]">${escapeHtml(item.frStatus || "-")}</span>
+                </td>
+                <td class="text-center">
+                  <button 
+                    class="btn btn-light text-xs py-1 px-2.5 shadow-sm hover:bg-gray-200" 
+                    onclick="viewGrant('${escapeAttr(item.id)}')" 
+                    title="Lihat butiran lengkap geran">
+                    <i class="fa-solid fa-eye mr-1"></i> Butiran
+                  </button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
 }
 
 function getVerdictTabData() {
@@ -2725,9 +2964,10 @@ function renderVerdictCategoryMatrix() {
   const isTamat = currentSource === "Geran Tamat";
 
   const totalBadge = document.getElementById("verdictMonitoredTotalBadge");
-  if (totalBadge) totalBadge.innerText = `${targetData.length.toLocaleString()} Geran ${isTamat ? 'Layak' : 'Dipantau'}`;
+  if (totalBadge) {
+    totalBadge.innerText = `${targetData.length.toLocaleString()} Geran ` + (isTamat ? 'Layak' : 'Dipantau');
+  }
 
-  // Hitung jumlah keseluruhan bagi 5 kad metrik
   let totalMilestone = 0;
   let totalExpenditure = 0;
   let totalHCD = 0;
@@ -3061,11 +3301,13 @@ function frBadgeClass(status) {
 }
 
 function openModal(id) {
-  document.getElementById(id).classList.add("show");
+  const m = document.getElementById(id);
+  if (m) m.classList.add("show");
 }
 
 function closeModal(id) {
-  document.getElementById(id).classList.remove("show");
+  const m = document.getElementById(id);
+  if (m) m.classList.remove("show");
 }
 
 function closeModalOnOverlay(e, id) {
@@ -3174,6 +3416,37 @@ function escapeHtml(str) {
 function escapeAttr(str) {
   return escapeHtml(str);
 }
+
+window.selectSource = selectSource;
+window.switchTab = switchTab;
+window.applyFilters = applyFilters;
+window.resetFilters = resetFilters;
+window.setVerdictDisplayMode = setVerdictDisplayMode;
+window.setGraceChartFilter = setGraceChartFilter;
+window.showGraceVerdictBreakdown = showGraceVerdictBreakdown;
+window.filterGraceModalCategory = filterGraceModalCategory;
+window.viewGrant = viewGrant;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.closeModalOnOverlay = closeModalOnOverlay;
+window.openConfigModal = openConfigModal;
+window.saveConfig = saveConfig;
+window.reloadData = reloadData;
+window.exportCSV = exportCSV;
+window.toggleMobileSidebar = toggleMobileSidebar;
+window.closeMobileSidebar = closeMobileSidebar;
+window.prevPage = prevPage;
+window.nextPage = nextPage;
+window.prevWarningPage = prevWarningPage;
+window.nextWarningPage = nextWarningPage;
+window.prevUnachievedPage = prevUnachievedPage;
+window.nextUnachievedPage = nextUnachievedPage;
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateSourceButtons();
+  updateSourceUI();
+  fetchCurrentSource();
+});
 </script>
 </body>
 </html>
