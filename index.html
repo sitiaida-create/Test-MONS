@@ -2810,36 +2810,36 @@ function viewGrant(id) {
       ${detailItem("Grant Type", item.grantType)}
       ${detailItem("Grant Category", item.grantCategory)}
       ${detailItem("Staff Name", item.staffName)}
-      ${detailItem("1. Project Start (Kolum J)", item.projectStartDisplay)}
-      ${detailItem("2. Project End (Kolum K)", item.projectEndKDisplay)}
-      ${detailItem("3. New End Date (Kolum L)", item.newEndDateDisplay)}
+      ${detailItem("1. Project Start", item.projectStartDisplay)}
+      ${detailItem("2. Project End", item.projectEndKDisplay)}
+      ${detailItem("3. New End Date", item.newEndDateDisplay)}
       ${!isTamat ? detailItem("Quartile", item.quartile) : ""}
-      ${detailItem("Verdict (Kolum AG)", item.verdict)}
-      ${isTamat ? detailItem("FR Status (Kolum AN)", item.frStatus || "-") : ""}
-      ${isTamat ? detailItem("Grace Period (Kolum AJ)", item.gracePeriodRaw || "-") : ""}
+      ${detailItem("Verdict", item.verdict)}
+      ${isTamat ? detailItem("FR Status", item.frStatus || "-") : ""}
+      ${isTamat ? detailItem("Grace Period", item.gracePeriodRaw || "-") : ""}
     </div>
 
     <div class="border-t border-gray-200 pt-4">
       <div class="text-xs font-bold text-gray-600 uppercase mb-3">Status Pencapaian Item KPI (&lt; 100%):</div>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
-          <div class="text-[10px] font-bold text-gray-500 uppercase">Milestone (S)</div>
+          <div class="text-[10px] font-bold text-gray-500 uppercase">Milestone</div>
           ${renderKPIStatus(item.milestoneApplicable, item.milestoneNotAchieved, item.milestone)}
         </div>
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
-          <div class="text-[10px] font-bold text-gray-500 uppercase">Expenditure (V)</div>
+          <div class="text-[10px] font-bold text-gray-500 uppercase">Expenditure</div>
           ${renderKPIStatus(item.expenditureApplicable, item.expenditureNotAchieved, item.expenditure)}
         </div>
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
-          <div class="text-[10px] font-bold text-gray-500 uppercase">HCD (Y)</div>
+          <div class="text-[10px] font-bold text-gray-500 uppercase">HCD</div>
           ${renderKPIStatus(item.hcdApplicable, item.hcdNotAchieved, item.hcd)}
         </div>
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
-          <div class="text-[10px] font-bold text-gray-500 uppercase">Publication (AB)</div>
+          <div class="text-[10px] font-bold text-gray-500 uppercase">Publication</div>
           ${renderKPIStatus(item.publicationApplicable, item.publicationNotAchieved, item.publication)}
         </div>
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
-          <div class="text-[10px] font-bold text-gray-500 uppercase">IPR (AE)</div>
+          <div class="text-[10px] font-bold text-gray-500 uppercase">IPR</div>
           ${renderKPIStatus(item.iprApplicable, item.iprNotAchieved, item.ipr)}
         </div>
       </div>
