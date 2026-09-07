@@ -275,6 +275,10 @@
       padding: 20px;
     }
 
+    #detailModal {
+      z-index: 110;
+    }
+
     .modal-overlay.show { display: flex; }
 
     .modal {
@@ -1106,7 +1110,7 @@
 </div>
 
 <!-- Modal Butiran Lengkap Geran -->
-<div id="detailModal" class="modal-overlay" onclick="closeModalOnOverlay(event,'detailModal')">
+<div id="detailModal" class="modal-overlay" style="z-index: 110;" onclick="closeModalOnOverlay(event,'detailModal')">
   <div class="modal max-w-3xl">
     <div class="p-5 border-b border-gray-200 flex items-center justify-between">
       <div>
