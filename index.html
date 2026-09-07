@@ -778,17 +778,6 @@
             </div>
           </div>
 
-          <!-- Grant Type Chart -->
-          <div class="card p-5">
-            <h3 class="font-bold text-sm mb-4">
-              <i class="fa-solid fa-chart-pie mr-2 text-blue-600"></i>
-              Bilangan Geran Mengikut Grant Type
-            </h3>
-            <div class="chart-container">
-              <canvas id="chartGrantType"></canvas>
-            </div>
-          </div>
-
           <!-- Grant Category Chart -->
           <div class="card p-5">
             <h3 class="font-bold text-sm mb-4">
@@ -1135,10 +1124,8 @@ let verdictDisplayMode = "quartile"; // 'quartile' or 'category'
 
 let charts = {
   quartile: null,
-  grantType: null,
   grantCategory: null,
-  verdict: null,
-  frStatus: null
+  verdict: null
 };
 
 // Urutan Kategori Geran Khusus
@@ -1261,9 +1248,6 @@ function updateSourceUI() {
 
   const frFilterWrap = document.getElementById("frFilterWrap");
   if (frFilterWrap) frFilterWrap.classList.toggle("hidden", !isTamat);
-
-  const frChartCard = document.getElementById("frChartCard");
-  if (frChartCard) frChartCard.classList.toggle("hidden", !isTamat);
 
   const summaryFRBox = document.getElementById("summaryFRBox");
   if (summaryFRBox) summaryFRBox.classList.toggle("hidden", !isTamat);
@@ -2050,9 +2034,7 @@ function renderVerdictMatrix() {
   const tfoot = document.getElementById("verdictMatrixFoot");
   if (!tbody || !tfoot) return;
 
-  // Baca data Kolum AG (Verdict) terus dari filteredData
   const targetData = filteredData;
-
   const categories = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
   if (!categories.length) {
     tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-gray-400 italic">Tiada data</td></tr>`;
@@ -2476,16 +2458,7 @@ function updateCharts() {
     renderOrUpdateBarChart("quartile", "chartQuartile", qLabels, qData, qColors);
   }
 
-  const typeMap = {};
-  visualData.forEach(d => {
-    const t = d.grantType || "Tidak Dinyatakan";
-    typeMap[t] = (typeMap[t] || 0) + 1;
-  });
-  const typeLabels = Object.keys(typeMap).sort((a,b) => typeMap[b] - typeMap[a]);
-  const typeData = typeLabels.map(k => typeMap[k]);
   const basePalette = ["#1e40af", "#0284c7", "#0d9488", "#16a34a", "#ca8a04", "#ea580c", "#dc2626", "#7c3aed", "#c026d3", "#64748b"];
-  const typeColors = typeLabels.map((_, i) => basePalette[i % basePalette.length]);
-  renderOrUpdateDoughnutChart("grantType", "chartGrantType", typeLabels, typeData, typeColors);
 
   const catSet = [...new Set(visualData.map(d => d.grantCategory))].sort(compareGrantCategories);
   const catData = catSet.map(c => visualData.filter(d => d.grantCategory === c).length);
@@ -2511,18 +2484,6 @@ function updateCharts() {
   ];
   const vColors = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444"];
   renderOrUpdateDoughnutChart("verdict", "chartVerdict", vLabels, vData, vColors);
-
-  if (isTamat) {
-    const frMap = {};
-    filteredData.forEach(d => {
-      const fr = d.frStatus || "Tidak Dinyatakan";
-      frMap[fr] = (frMap[fr] || 0) + 1;
-    });
-    const frLabels = Object.keys(frMap).sort((a,b) => frMap[b] - frMap[a]);
-    const frData = frLabels.map(k => frMap[k]);
-    const frColors = frLabels.map((_, i) => basePalette[i % basePalette.length]);
-    renderOrUpdateBarChart("frStatus", "chartFRStatus", frLabels, frData, frColors);
-  }
 }
 
 function getVerdictTabData() {
