@@ -360,7 +360,6 @@
   </style>
 </head>
 <body>
-
 <aside id="sidebar" class="sidebar">
   <div class="sidebar-logo">
     <div class="flex items-center gap-3">
@@ -576,6 +575,20 @@
             <div class="text-[11px] text-gray-400">Quartile kosong / tidak dipantau</div>
           </div>
 
+          <!-- Geran Aktif: PI (Kolum B = Y) -->
+          <div id="kpiPICard" class="card kpi-card">
+            <div class="text-xs font-bold text-emerald-800 uppercase">PI</div>
+            <div id="kpiPI" class="kpi-number text-emerald-700">0</div>
+            <div class="text-[11px] text-gray-400">Principal Investigator (Y)</div>
+          </div>
+
+          <!-- Geran Aktif: Non PI (Kolum B = Y/N, N) -->
+          <div id="kpiNonPICard" class="card kpi-card">
+            <div class="text-xs font-bold text-amber-800 uppercase">Non PI</div>
+            <div id="kpiNonPI" class="kpi-number text-amber-700">0</div>
+            <div class="text-[11px] text-gray-400">Non-PI (Y/N, N)</div>
+          </div>
+
           <!-- Geran Tamat: Tamat Tahun 2026 -->
           <div id="kpiTamat2026Card" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat Tahun 2026</div>
@@ -779,18 +792,18 @@
                 <span class="text-[11px] text-purple-700 bg-purple-50 font-bold px-2.5 py-0.5 rounded-full">Kolum AJ</span>
               </div>
               <p id="graceVerdictSubtitle" class="text-xs text-gray-500 mt-1">
-                Pecahan status verdict (Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah) bagi setiap Grant Category.
+                Pecahan status verdict (Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah) bagi setiap Grant Category bagi semua geran tamat.
               </p>
             </div>
 
-            <!-- Butang Penapis Pantas Grace Period -->
+            <!-- Butang Penapis Pantas Grace Period (Susunan: Semua, Dalam Grace Period, Luar Grace Period) -->
             <div class="flex items-center gap-2">
               <div class="inline-flex bg-gray-100 p-1 rounded-lg border border-gray-200 text-xs">
-                <button id="btnGraceFilterIn" class="px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition" onclick="setGraceChartFilter('in')">
-                  Dalam Grace Period
-                </button>
-                <button id="btnGraceFilterAll" class="px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900 transition" onclick="setGraceChartFilter('all')">
+                <button id="btnGraceFilterAll" class="px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition" onclick="setGraceChartFilter('all')">
                   Semua
+                </button>
+                <button id="btnGraceFilterIn" class="px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900 transition" onclick="setGraceChartFilter('in')">
+                  Dalam Grace Period
                 </button>
                 <button id="btnGraceFilterOut" class="px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900 transition" onclick="setGraceChartFilter('out')">
                   Luar Grace Period
@@ -1173,7 +1186,7 @@
       </div>
       <div class="bg-gray-50 p-4 rounded-lg text-xs text-gray-600 space-y-1">
         <div class="font-bold text-gray-800 mb-2">Pemetaan Kolum Google Sheet:</div>
-        <div>C → Cost Centre No | D → Grant Type | E → Grant Title | F → Staff Name</div>
+        <div>B → PI Status (Y = PI, N/YN = Non PI) | C → Cost Centre No | D → Grant Type | E → Grant Title | F → Staff Name</div>
         <div>J → Project Start | K → Project End | L → New End Date / Ext | P → Quartile</div>
         <div>S → Milestone | V → Expenditure | Y → HCD | AB → Publication | AE → IPR</div>
         <div>AG → Verdict | AJ → Grace Period | AK → Grant Category | AN → FR Status</div>
@@ -1195,6 +1208,7 @@ const DEFAULT_URLS = {
 };
 
 const COL = {
+  PI_STATUS: 1,       // B (PI or Non-PI)
   COST_CENTRE: 2,     // C
   GRANT_TYPE: 3,      // D
   GRANT_TITLE: 4,     // E
@@ -1558,6 +1572,10 @@ function compareVerdicts(a, b) {
 }
 
 function parseGrantRow(row, sheetRowNumber) {
+  // Status PI (Kolum B): Y adalah PI, manakala Y/N, N atau kosong adalah Non-PI
+  const bRaw = clean(row[COL.PI_STATUS]).toUpperCase();
+  const isPI = bRaw === "Y";
+
   const costCentre = clean(row[COL.COST_CENTRE]);
   const grantType = clean(row[COL.GRANT_TYPE]) || "Tidak Dinyatakan";
   const grantTitle = clean(row[COL.GRANT_TITLE]) || "Tiada Tajuk";
@@ -1615,6 +1633,8 @@ function parseGrantRow(row, sheetRowNumber) {
   return {
     id: `${currentSource}-${sheetRowNumber}`,
     sheetRow: sheetRowNumber,
+    isPI,
+    piRaw: bRaw,
     costCentre,
     grantType,
     grantTitle,
@@ -1733,8 +1753,12 @@ function updateSourceUI() {
   // KPI Toggles
   const kpiMonitoredCard = document.getElementById("kpiMonitoredCard");
   const kpiNotMonitoredCard = document.getElementById("kpiNotMonitoredCard");
+  const kpiPICard = document.getElementById("kpiPICard");
+  const kpiNonPICard = document.getElementById("kpiNonPICard");
   if (kpiMonitoredCard) kpiMonitoredCard.classList.toggle("hidden", isTamat);
   if (kpiNotMonitoredCard) kpiNotMonitoredCard.classList.toggle("hidden", isTamat);
+  if (kpiPICard) kpiPICard.classList.toggle("hidden", isTamat);
+  if (kpiNonPICard) kpiNonPICard.classList.toggle("hidden", isTamat);
 
   const kpiTamat2026Card = document.getElementById("kpiTamat2026Card");
   const kpiTamat2026NoExtCard = document.getElementById("kpiTamat2026NoExtCard");
@@ -1878,6 +1902,7 @@ function populateFilters() {
       const opt = document.createElement("option");
       opt.value = v;
       opt.textContent = v;
+      catSelect ? null : null;
       verdictSelect.appendChild(opt);
     });
   }
@@ -2040,10 +2065,18 @@ function renderKPIs() {
     const monitored = filteredData.filter(d => monitoredList.includes(d.quartile)).length;
     const notMonitored = total - monitored;
 
+    const countPI = filteredData.filter(d => d.isPI).length;
+    const countNonPI = filteredData.filter(d => !d.isPI).length;
+
     const kpiMonitored = document.getElementById("kpiMonitored");
     const kpiNotMonitored = document.getElementById("kpiNotMonitored");
+    const elPI = document.getElementById("kpiPI");
+    const elNonPI = document.getElementById("kpiNonPI");
+
     if (kpiMonitored) kpiMonitored.innerText = monitored.toLocaleString();
     if (kpiNotMonitored) kpiNotMonitored.innerText = notMonitored.toLocaleString();
+    if (elPI) elPI.innerText = countPI.toLocaleString();
+    if (elNonPI) elNonPI.innerText = countNonPI.toLocaleString();
   } else {
     let count2026 = 0;
     let count2026NoExt = 0;
@@ -2401,6 +2434,7 @@ function nextPage() {
   }
 }
 
+// Chart Value Labels Plugin
 const chartValueLabelsPlugin = {
   id: "chartValueLabelsPlugin",
   afterDatasetsDraw(chart) {
@@ -2624,9 +2658,9 @@ function setGraceChartFilter(mode) {
 
   const sub = document.getElementById("graceVerdictSubtitle");
   if (sub) {
-    if (mode === "all") sub.innerText = "Pecahan status verdict (Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah) bagi setiap Grant Category bagi Semua rekod Geran Tamat.";
+    if (mode === "all") sub.innerText = "Pecahan status verdict (Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah) bagi setiap Grant Category bagi semua geran tamat.";
     else if (mode === "in") sub.innerText = "Pecahan status verdict bagi setiap Grant Category bagi geran berstatus Dalam Grace Period (Kolum AJ).";
-    else sub.innerText = "Pecahan status verdict bagi geran yang berada di Luar Grace Period.";
+    else sub.innerText = "Pecahan status verdict bagi geran yang berada di luar tempoh Grace Period.";
   }
 
   updateGraceVerdictChart();
@@ -3226,6 +3260,7 @@ function viewGrant(id) {
 
     <div class="detail-grid mb-4">
       ${detailItem("Sumber", currentSource)}
+      ${detailItem("Status Peranan", item.isPI ? "PI (Y)" : `Non PI (${item.piRaw || "N"})`)}
       ${detailItem("Cost Centre No", item.costCentre || "-")}
       ${detailItem("Grant Type", item.grantType)}
       ${detailItem("Grant Category", item.grantCategory)}
@@ -3422,6 +3457,7 @@ function escapeAttr(str) {
   return escapeHtml(str);
 }
 
+// Global window bindings for HTML inline events
 window.selectSource = selectSource;
 window.switchTab = switchTab;
 window.applyFilters = applyFilters;
