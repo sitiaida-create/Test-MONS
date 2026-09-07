@@ -450,7 +450,6 @@
       </div>
     </div>
 
-    <!-- Filter Section -->
     <section class="card p-5 mb-5">
       <div class="flex items-center justify-between mb-4">
         <div>
@@ -519,6 +518,13 @@
           <label class="filter-label">FR Status</label>
           <select id="filterFRStatus" class="filter-select" onchange="applyFilters()">
             <option value="ALL">Semua FR Status</option>
+          </select>
+        </div>
+
+        <div id="graceFilterWrap" class="hidden">
+          <label class="filter-label">Grace Period</label>
+          <select id="filterGracePeriod" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Grace Period</option>
           </select>
         </div>
 
@@ -652,7 +658,7 @@
               </p>
             </div>
             <span id="verdictMonitoredBadge" class="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full">
-              Verdict
+              Kolum AG (Verdict)
             </span>
           </div>
           <div class="table-wrapper">
@@ -797,17 +803,6 @@
             </h3>
             <div class="chart-container">
               <canvas id="chartVerdict"></canvas>
-            </div>
-          </div>
-
-          <!-- FR Status Chart (Geran Tamat Sahaja) -->
-          <div id="frChartCard" class="hidden card p-5 lg:col-span-2">
-            <h3 class="font-bold text-sm mb-4">
-              <i class="fa-solid fa-file-circle-check mr-2 text-purple-600"></i>
-              Bilangan Geran Mengikut FR Status
-            </h3>
-            <div class="chart-container">
-              <canvas id="chartFRStatus"></canvas>
             </div>
           </div>
         </div>
@@ -1249,6 +1244,9 @@ function updateSourceUI() {
   const frFilterWrap = document.getElementById("frFilterWrap");
   if (frFilterWrap) frFilterWrap.classList.toggle("hidden", !isTamat);
 
+  const graceFilterWrap = document.getElementById("graceFilterWrap");
+  if (graceFilterWrap) graceFilterWrap.classList.toggle("hidden", !isTamat);
+
   const summaryFRBox = document.getElementById("summaryFRBox");
   if (summaryFRBox) summaryFRBox.classList.toggle("hidden", !isTamat);
 
@@ -1328,8 +1326,8 @@ function updateSourceUI() {
   const verdictSummarySubtitle = document.getElementById("verdictSummarySubtitle");
   if (verdictSummarySubtitle) {
     verdictSummarySubtitle.innerText = isTamat
-      ? "Taburan semua geran tamat mengikut susunan: Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah."
-      : "Taburan geran dipantau (Q1 - Q5) mengikut susunan: PW, OS, BS, NCM.";
+      ? "Taburan semua geran tamat berasaskan Kolum AG (Verdict)."
+      : "Taburan geran berasaskan Kolum AG (Verdict): PW, OS, BS, NCM.";
   }
 
   const verdictNoticeText = document.getElementById("verdictNoticeText");
@@ -1769,6 +1767,7 @@ function populateFilters() {
 
   if (currentSource === "Geran Tamat") {
     populateSelect("filterFRStatus", grantsData.map(d => d.frStatus), "Semua FR Status");
+    populateSelect("filterGracePeriod", grantsData.map(d => d.gracePeriodRaw), "Semua Grace Period");
   }
 }
 
@@ -1795,8 +1794,11 @@ function applyFilters() {
   const search = clean(document.getElementById("filterSearch").value).toLowerCase();
 
   let frStatus = "ALL";
+  let gracePeriod = "ALL";
   if (currentSource === "Geran Tamat") {
     frStatus = document.getElementById("filterFRStatus").value;
+    const graceEl = document.getElementById("filterGracePeriod");
+    if (graceEl) gracePeriod = graceEl.value;
   }
 
   filteredData = grantsData.filter(item => {
@@ -1807,11 +1809,12 @@ function applyFilters() {
     if (quartile !== "ALL" && item.quartile !== quartile) return false;
     if (verdict !== "ALL" && item.verdict !== verdict) return false;
     if (currentSource === "Geran Tamat" && frStatus !== "ALL" && item.frStatus !== frStatus) return false;
+    if (currentSource === "Geran Tamat" && gracePeriod !== "ALL" && item.gracePeriodRaw !== gracePeriod) return false;
 
     if (search) {
       const searchable = [
         item.costCentre, item.grantTitle, item.grantType, item.grantCategory,
-        item.staffName, item.quartile, item.verdict, item.frStatus
+        item.staffName, item.quartile, item.verdict, item.frStatus, item.gracePeriodRaw
       ].join(" ").toLowerCase();
       if (!searchable.includes(search)) return false;
     }
@@ -1825,7 +1828,7 @@ function applyFilters() {
 }
 
 function resetFilters(render = true) {
-  const ids = ["filterGrantType", "filterGrantCategory", "filterMonth", "filterYear", "filterQuartile", "filterVerdict", "filterFRStatus", "filterSearch"];
+  const ids = ["filterGrantType", "filterGrantCategory", "filterMonth", "filterYear", "filterQuartile", "filterVerdict", "filterFRStatus", "filterGracePeriod", "filterSearch"];
   ids.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -1906,7 +1909,7 @@ function checkFRSubmission(status) {
 function hasGracePeriod(ajRaw) {
   if (!ajRaw) return false;
   const val = clean(ajRaw).toUpperCase();
-  return val.includes("DALAM GRACE PERIOD");
+  return val.includes("DALAM GRACE PERIOD") || (val.includes("GRACE PERIOD") && !val.includes("TAMAT") && !val.includes("EXPIRED") && !val.includes("TIADA") && !val.includes("BUKAN"));
 }
 
 function getWarningList() {
@@ -2034,7 +2037,9 @@ function renderVerdictMatrix() {
   const tfoot = document.getElementById("verdictMatrixFoot");
   if (!tbody || !tfoot) return;
 
+  // Baca data Kolum AG (Verdict) terus dari filteredData
   const targetData = filteredData;
+
   const categories = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
   if (!categories.length) {
     tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-gray-400 italic">Tiada data</td></tr>`;
