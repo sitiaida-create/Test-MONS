@@ -450,6 +450,7 @@
       </div>
     </div>
 
+    <!-- Filter Section -->
     <section class="card p-5 mb-5">
       <div class="flex items-center justify-between mb-4">
         <div>
@@ -547,7 +548,9 @@
     </div>
 
     <div id="dashboardContent" class="hidden">
+      <!-- SUMMARY TAB -->
       <section id="summaryTab">
+        <!-- KPI Cards Grid -->
         <div id="kpiContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-5">
           <!-- Shared KPI 1: Jumlah Geran -->
           <div class="card kpi-card">
@@ -570,7 +573,7 @@
             <div class="text-[11px] text-gray-400">Quartile kosong / tidak dipantau</div>
           </div>
 
-          <!-- Geran Tamat: Tamat Tahun 2026 (Kolum K) -->
+          <!-- Geran Tamat: Tamat Tahun 2026 -->
           <div id="kpiTamat2026Card" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat Tahun 2026</div>
             <div id="kpiTamat2026" class="kpi-number text-blue-800">0</div>
@@ -598,7 +601,7 @@
             <div class="text-[11px] text-gray-400">FR Status Not completed & Draft</div>
           </div>
 
-          <!-- Geran Tamat: Masih Grace Period (Column AJ) -->
+          <!-- Geran Tamat: Tempoh Grace Period -->
           <div id="kpiGracePeriodCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tempoh Grace Period</div>
             <div id="kpiGracePeriod" class="kpi-number text-purple-700">0</div>
@@ -637,6 +640,7 @@
           </div>
         </div>
 
+        <!-- Verdict Summary Matrix -->
         <div class="card mb-5">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <div>
@@ -645,11 +649,11 @@
                 Ringkasan Verdict Mengikut Grant Category
               </h3>
               <p id="verdictSummarySubtitle" class="text-xs text-gray-500 mt-0.5">
-                Taburan geran dipantau (Q1 - Q5) mengikut susunan: PW, OS, BS, NCM.
+                Taburan geran dipantau (Q1 - Q5)
               </p>
             </div>
             <span id="verdictMonitoredBadge" class="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full">
-            Verdict
+              Kolum AG (Verdict)
             </span>
           </div>
           <div class="table-wrapper">
@@ -1139,7 +1143,6 @@ let charts = {
 // Urutan Kategori Geran Khusus
 const CATEGORY_ORDER = ["MOHE", "MOSTI", "RUG", "JTNCPI", "GERAN LUAR", "ICC", "CCIN", "CRAEG"];
 
-// RFC-4180 compliant CSV parser fallback
 function parseCSVText(text) {
   const lines = [];
   let row = [];
@@ -1286,15 +1289,14 @@ function updateSourceUI() {
     verdictTabSourceBadge.innerText = isTamat ? "FR Status Selain Not Completed, Draft & Terminated" : "Monitored Quartile (Q1 – Q5)";
   }
 
-  // Dinamik Subteks Kad KPI Rekod Statistik New Verdict
   const kpiSubMilestone = document.getElementById("kpiSubMilestone");
   const kpiSubExpenditure = document.getElementById("kpiSubExpenditure");
+  if (kpiSubMilestone) kpiSubMilestone.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Quartile)";
+  if (kpiSubExpenditure) kpiSubExpenditure.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Quartile)";
+
   const kpiSubHCD = document.getElementById("kpiSubHCD");
   const kpiSubPub = document.getElementById("kpiSubPub");
   const kpiSubIPR = document.getElementById("kpiSubIPR");
-
-  if (kpiSubMilestone) kpiSubMilestone.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Quartile)";
-  if (kpiSubExpenditure) kpiSubExpenditure.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Semua Quartile)";
   if (kpiSubHCD) kpiSubHCD.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q2 – Q5)";
   if (kpiSubPub) kpiSubPub.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
   if (kpiSubIPR) kpiSubIPR.innerText = isTamat ? "< 100% (Semua Geran)" : "< 100% (Q4 & Q5)";
@@ -1387,7 +1389,7 @@ async function fetchCurrentSource() {
 
     grantsData = rows.slice(1)
       .map((row, index) => parseGrantRow(row, index + 2))
-      .filter(item => item.costCentre || item.grantTitle || item.staffName);
+      .filter(item => item.costCentre || item.grantTitle || item.staffName || item.projectEndKRaw);
 
     populateFilters();
     applyFilters();
@@ -1416,8 +1418,8 @@ function parseGrantRow(row, sheetRowNumber) {
   const kDate = parseDateValue(kRaw);
   const lDate = parseDateValue(lRaw);
 
-  const isColLBlank = !lRaw || clean(lRaw) === "" || clean(lRaw) === "-" || clean(lRaw) === "--";
-  const hasExtension = !isColLBlank && isMeaningfulDateValue(lRaw) && lDate !== null;
+  const isColLBlank = isColumnLBlank(lRaw, kRaw);
+  const hasExtension = !isColLBlank && isMeaningfulDateValue(lRaw) && lDate !== null && (!kDate || lDate.getTime() > kDate.getTime());
   const effectiveEndRaw = hasExtension ? lRaw : kRaw;
   const effectiveEndDate = hasExtension ? lDate : kDate;
 
@@ -1452,13 +1454,8 @@ function parseGrantRow(row, sheetRowNumber) {
     frStatus = clean(row[COL.FR_STATUS]) || "Tidak Dinyatakan";
   }
 
-  let kYear = "";
-  if (kDate) {
-    kYear = String(kDate.getFullYear());
-  } else if (kRaw) {
-    const yearMatch = kRaw.match(/\b(19\d\d|20\d\d)\b/);
-    if (yearMatch) kYear = yearMatch[1];
-  }
+  const kYearNum = getColKYear({ projectEndKRaw: kRaw, projectEndKDate: kDate });
+  const kYear = kYearNum !== null ? String(kYearNum) : "";
 
   return {
     id: `${currentSource}-${sheetRowNumber}`,
@@ -1471,6 +1468,7 @@ function parseGrantRow(row, sheetRowNumber) {
     projectStartDisplay: formatDate(startDate, jRaw),
     projectEndKRaw: kRaw,
     projectEndKDisplay: formatDate(kDate, kRaw),
+    projectEndKDate: kDate,
     kYear,
     newEndDateRaw: lRaw,
     newEndDateDisplay: hasExtension ? formatDate(lDate, lRaw) : (lRaw || "-"),
@@ -1506,7 +1504,95 @@ function parseGrantRow(row, sheetRowNumber) {
 
 function clean(value) {
   if (value === null || value === undefined) return "";
-  return String(value).trim();
+  return String(value)
+    .replace(/[\u200B-\u200D\uFEFF\u00A0]/g, " ")
+    .trim();
+}
+
+function isColumnLBlank(lRaw, kRaw = "") {
+  if (lRaw === null || lRaw === undefined) return true;
+  const s = clean(lRaw).replace(/[\u200B-\u200D\uFEFF\u00A0]/g, " ").trim();
+
+  // 1. Sel kosong sepenuhnya
+  if (s === "") return true;
+
+  // 2. Simbol tanda baca mewakili sel kosong
+  if (s === "-" || s === "--" || s === "---" || s === "–" || s === "—" || s === "." || s === "/") {
+    return true;
+  }
+
+  // 3. Teks mewakili tiada lanjutan / bukan nilai tarikh
+  const upper = s.toUpperCase();
+  if (
+    upper === "N/A" || upper === "NA" || upper === "#N/A" || upper === "#VALUE!" || upper === "#REF!" ||
+    upper === "TIADA" || upper === "NONE" || upper === "NO" || upper === "NULL" || upper === "NIL" ||
+    upper === "TIDAK" || upper === "TIDAK BERKENAAN" || upper === "TIADA LANJUTAN" || upper === "TIADA EXTENSION" ||
+    upper === "TIADA EXT" || upper === "TANPA EXT" || upper === "TANPA EXTENSION" || upper === "0" || upper === "0.0" || upper === "-1"
+  ) {
+    return true;
+  }
+
+  // 4. Jika nilai Kolum L sama dengan tarikh Kolum K (tiada pelanjutan dibuat)
+  if (kRaw && clean(kRaw)) {
+    const kClean = clean(kRaw).replace(/[\u200B-\u200D\uFEFF\u00A0]/g, " ").trim();
+    if (s === kClean) return true;
+
+    const dL = parseDateValue(s);
+    const dK = parseDateValue(kClean);
+    if (dL && dK && dL.getTime() <= dK.getTime()) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function getColKYear(item) {
+  if (!item) return null;
+
+  const raw = clean(item.projectEndKRaw || "").toUpperCase();
+  if (!raw || raw === "-" || raw === "--" || raw === "N/A" || raw === "TIADA") return null;
+
+  // Bersihkan bahagian masa jika wujud (contoh: "31/12/2026 00:00:00" -> "31/12/2026")
+  const dateOnly = raw.replace(/\s+\d{1,2}:\d{2}(?::\d{2})?(?:\s*[AP]M)?$/i, "").trim();
+
+  // 1. Keutamaan: Semak kewujudan tahun 4-digit 19xx atau 20xx secara tepat pada Kolum K
+  const y4Match = dateOnly.match(/\b(19\d\d|20\d\d)\b/);
+  if (y4Match) {
+    return parseInt(y4Match[1], 10);
+  }
+
+  // 2. Semak jika objek Date sah telah dihuraikan daripada Kolum K
+  if (item.projectEndKDate instanceof Date && !isNaN(item.projectEndKDate.getTime())) {
+    return item.projectEndKDate.getFullYear();
+  }
+
+  // 3. Format 2 digit tahun di hujung tarikh DD/MM/YY atau DD-MM-YY (jika tiada tahun 4-digit)
+  const y2Match = dateOnly.match(/[\/\-\.\s](\d{2})$/);
+  if (y2Match) {
+    const yy = parseInt(y2Match[1], 10);
+    return yy < 70 ? 2000 + yy : 1900 + yy;
+  }
+
+  // 4. Semak jika nilai tahun sahaja ditulis (contoh: "2026" atau "26")
+  if (/^26$/.test(dateOnly)) {
+    return 2026;
+  }
+
+  // 5. Tarikh bersiri Excel / Google Sheets (contoh: 46023 hingga 46387 adalah tahun 2026)
+  if (/^\d{5}(?:\.\d+)?$/.test(dateOnly)) {
+    const serial = Number(dateOnly);
+    if (serial > 20000) {
+      const d = new Date(Date.UTC(1899, 11, 30) + serial * 86400000);
+      return d.getUTCFullYear();
+    }
+  }
+
+  return null;
+}
+
+function isEnded2026(item) {
+  return getColKYear(item) === 2026;
 }
 
 function isItemApplicable(quartile, itemType) {
@@ -1705,10 +1791,10 @@ function compareGrantCategories(a, b) {
 
 function getVerdictOrderIndex(verdict) {
   const t = String(verdict || "").toUpperCase().trim();
-  if (t.includes("KURANG MEMUASKAN") || t === "BS" || t.includes("BEHIND")) return 2;
-  if (t.includes("CEMERLANG") || t === "PW" || t.includes("PROGRESSING WELL") || t.includes("EXCELLENT")) return 0;
-  if (t.includes("MEMUASKAN") || t === "OS" || t.includes("ON SCHEDULE") || t.includes("SATISFACTORY")) return 1;
-  if (t.includes("BERMASALAH") || t.includes("NCM") || t.includes("NEED CLOSER MONITORING") || t.includes("KRITIKAL") || t.includes("GAGAL")) return 3;
+  if (/\bBS\b/.test(t) || t.includes("BEHIND SCHEDULE") || t.includes("KURANG MEMUASKAN")) return 2;
+  if (/\bPW\b/.test(t) || t.includes("PROGRESSING WELL") || t.includes("CEMERLANG") || t.includes("EXCELLENT")) return 0;
+  if (/\bOS\b/.test(t) || t.includes("ON SCHEDULE") || t.includes("MEMUASKAN") || t.includes("SATISFACTORY")) return 1;
+  if (/\bNCM\b/.test(t) || t.includes("NEED CLOSE MONITORING") || t.includes("NEED CLOSER MONITORING") || t.includes("BERMASALAH") || t.includes("KRITIKAL") || t.includes("GAGAL")) return 3;
   return 4;
 }
 
@@ -1922,9 +2008,10 @@ function renderKPIs() {
     let countGracePeriod = 0;
 
     filteredData.forEach(d => {
-      const isEnded2026InColK = d.kYear === "2026" || (d.projectEndKRaw && /\b2026\b/.test(d.projectEndKRaw));
+      // Bacaan khusus tarikh tamat pada Kolum K bagi tahun 2026
+      const isEnd26 = isEnded2026(d);
 
-      if (isEnded2026InColK) {
+      if (isEnd26) {
         count2026++;
         if (d.isColLBlank) {
           count2026NoExt++;
@@ -2086,8 +2173,7 @@ function renderStrategicSummary() {
     let count2026 = 0;
     let count2026NoExt = 0;
     filteredData.forEach(d => {
-      const isEnded2026InColK = d.kYear === "2026" || (d.projectEndKRaw && /\b2026\b/.test(d.projectEndKRaw));
-      if (isEnded2026InColK) {
+      if (isEnded2026(d)) {
         count2026++;
         if (d.isColLBlank) count2026NoExt++;
       }
@@ -2723,7 +2809,6 @@ function renderUnachievedGrantsTable() {
       <td class="text-center">${formatItemBadge(item.publicationApplicable, item.publicationNotAchieved, item.publication)}</td>
       <td class="text-center">${formatItemBadge(item.iprApplicable, item.iprNotAchieved, item.ipr)}</td>
       <td><span class="badge ${verdictBadgeClass(item.verdict)}">${escapeHtml(item.verdict)}</span></td>
-      ${isTamat ? `<td><span class="badge ${frBadgeClass(item.frStatus)}">${escapeHtml(item.frStatus || "-")}</span></td>` : ""}
       <td>
         <button class="btn btn-light text-xs py-1 px-2.5" onclick="viewGrant('${escapeAttr(item.id)}')">
           <i class="fa-solid fa-eye mr-1"></i> Butiran
