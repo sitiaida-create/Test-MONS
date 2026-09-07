@@ -2489,6 +2489,129 @@ function updateCharts() {
   ];
   const vColors = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444"];
   renderOrUpdateDoughnutChart("verdict", "chartVerdict", vLabels, vData, vColors);
+
+  if (isTamat) {
+    updateGraceVerdictChart();
+  }
+}
+
+function setGraceChartFilter(mode) {
+  graceChartFilter = mode;
+  const btnIn = document.getElementById("btnGraceFilterIn");
+  const btnAll = document.getElementById("btnGraceFilterAll");
+  const btnOut = document.getElementById("btnGraceFilterOut");
+  const subtitle = document.getElementById("graceVerdictSubtitle");
+
+  const activeClass = "px-3 py-1 font-semibold rounded-md bg-white text-gray-900 shadow-sm transition";
+  const inactiveClass = "px-3 py-1 font-semibold rounded-md text-gray-500 hover:text-gray-900 transition";
+
+  if (btnIn) btnIn.className = mode === "in" ? activeClass : inactiveClass;
+  if (btnAll) btnAll.className = mode === "all" ? activeClass : inactiveClass;
+  if (btnOut) btnOut.className = mode === "out" ? activeClass : inactiveClass;
+
+  if (subtitle) {
+    if (mode === "in") {
+      subtitle.innerText = "Pecahan verdict bagi setiap Grant Category bagi geran berstatus Dalam Grace Period (Kolum AJ).";
+    } else if (mode === "all") {
+      subtitle.innerText = "Pecahan verdict bagi setiap Grant Category bagi semua geran tamat.";
+    } else {
+      subtitle.innerText = "Pecahan verdict bagi setiap Grant Category bagi geran di luar tempoh Grace Period.";
+    }
+  }
+
+  updateGraceVerdictChart();
+}
+
+function updateGraceVerdictChart() {
+  if (currentSource !== "Geran Tamat") return;
+  const ctx = document.getElementById("chartGraceVerdictCategory");
+  if (!ctx) return;
+
+  let targetData = filteredData;
+  if (graceChartFilter === "in") {
+    targetData = filteredData.filter(d => hasGracePeriod(d.gracePeriodRaw));
+  } else if (graceChartFilter === "out") {
+    targetData = filteredData.filter(d => !hasGracePeriod(d.gracePeriodRaw));
+  }
+
+  // Kiraan 4 metrik status verdict
+  let cemerlang = 0, memuaskan = 0, kurang = 0, bermasalah = 0;
+  targetData.forEach(d => {
+    const idx = getVerdictOrderIndex(d.verdict);
+    if (idx === 0) cemerlang++;
+    else if (idx === 1) memuaskan++;
+    else if (idx === 2) kurang++;
+    else if (idx === 3) bermasalah++;
+  });
+
+  const elC = document.getElementById("statGraceCemerlang");
+  const elM = document.getElementById("statGraceMemuaskan");
+  const elK = document.getElementById("statGraceKurang");
+  const elB = document.getElementById("statGraceBermasalah");
+
+  if (elC) elC.innerText = cemerlang.toLocaleString();
+  if (elM) elM.innerText = memuaskan.toLocaleString();
+  if (elK) elK.innerText = kurang.toLocaleString();
+  if (elB) elB.innerText = bermasalah.toLocaleString();
+
+  // Susunan Grant Category
+  const activeCats = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
+  const displayCats = activeCats.length > 0 ? activeCats : CATEGORY_ORDER;
+
+  const dataCemerlang = displayCats.map(cat => targetData.filter(d => d.grantCategory === cat && getVerdictOrderIndex(d.verdict) === 0).length);
+  const dataMemuaskan = displayCats.map(cat => targetData.filter(d => d.grantCategory === cat && getVerdictOrderIndex(d.verdict) === 1).length);
+  const dataKurang = displayCats.map(cat => targetData.filter(d => d.grantCategory === cat && getVerdictOrderIndex(d.verdict) === 2).length);
+  const dataBermasalah = displayCats.map(cat => targetData.filter(d => d.grantCategory === cat && getVerdictOrderIndex(d.verdict) === 3).length);
+
+  const datasets = [
+    { label: "Cemerlang", data: dataCemerlang, backgroundColor: "#10b981", borderRadius: 4 },
+    { label: "Memuaskan", data: dataMemuaskan, backgroundColor: "#3b82f6", borderRadius: 4 },
+    { label: "Kurang Memuaskan", data: dataKurang, backgroundColor: "#f59e0b", borderRadius: 4 },
+    { label: "Bermasalah", data: dataBermasalah, backgroundColor: "#ef4444", borderRadius: 4 }
+  ];
+
+  if (charts.graceVerdictCategory) {
+    charts.graceVerdictCategory.data.labels = displayCats;
+    charts.graceVerdictCategory.data.datasets = datasets;
+    charts.graceVerdictCategory.update();
+    return;
+  }
+
+  charts.graceVerdictCategory = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: displayCats,
+      datasets: datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          stacked: true,
+          grid: { display: false },
+          ticks: { font: { size: 11, weight: "bold" } }
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          ticks: { precision: 0, font: { size: 11 } },
+          grid: { color: "#f3f4f6" }
+        }
+      },
+      plugins: {
+        legend: {
+          position: "top",
+          labels: { boxWidth: 12, padding: 14, font: { size: 11, weight: "600" } }
+        },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} geran`
+          }
+        }
+      }
+    }
+  });
 }
 
 function getVerdictTabData() {
