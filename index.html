@@ -945,21 +945,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <!-- Quartile Chart (Geran Aktif Sahaja) -->
-          <div id="quartileChartCard" class="card p-5">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="font-bold text-sm">
-                <i class="fa-solid fa-chart-column mr-2 text-blue-600"></i>
-                Bilangan Geran Mengikut Monitored Quartile
-              </h3>
-              <span class="text-[11px] text-blue-700 bg-blue-50 font-semibold px-2 py-0.5 rounded-full">Q1 - Q5</span>
-            </div>
-            <div class="chart-container">
-              <canvas id="chartQuartile"></canvas>
-            </div>
-          </div>
-
-          <!-- Grant Category Chart -->
+          <!-- 1. Grant Category Chart -->
           <div class="card p-5">
             <h3 class="font-bold text-sm mb-4">
               <i class="fa-solid fa-layer-group mr-2 text-emerald-600"></i>
@@ -970,7 +956,7 @@
             </div>
           </div>
 
-          <!-- Verdict Chart -->
+          <!-- 2. Verdict Chart -->
           <div class="card p-5">
             <h3 class="font-bold text-sm mb-4">
               <i class="fa-solid fa-scale-balanced mr-2 text-amber-600"></i>
@@ -978,6 +964,20 @@
             </h3>
             <div class="chart-container">
               <canvas id="chartVerdict"></canvas>
+            </div>
+          </div>
+
+          <!-- 3. Quartile Chart (Geran Aktif Sahaja) -->
+          <div id="quartileChartCard" class="card p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-bold text-sm">
+                <i class="fa-solid fa-chart-column mr-2 text-blue-600"></i>
+                Bilangan Geran Mengikut Monitored Quartile
+              </h3>
+              <span class="text-[11px] text-blue-700 bg-blue-50 font-semibold px-2 py-0.5 rounded-full">Q1 - Q5</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="chartQuartile"></canvas>
             </div>
           </div>
         </div>
@@ -1453,6 +1453,14 @@ function updateSourceUI() {
   if (badge) badge.innerText = currentSource;
 
   const isTamat = currentSource === "Geran Tamat";
+
+  // Selaraskan grid kontena KPI: 5 lajur bagi Geran Aktif, 6 lajur bagi Geran Tamat
+  const kpiContainer = document.getElementById("kpiContainer");
+  if (kpiContainer) {
+    kpiContainer.className = isTamat
+      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-5"
+      : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-5";
+  }
 
   // KPI Toggles
   const kpiMonitoredCard = document.getElementById("kpiMonitoredCard");
@@ -2191,6 +2199,42 @@ function getWarningList() {
   });
 }
 
+// Fungsi pengiraan berpusat bagi Geran Tamat untuk memastikan 100% konsistensi
+function computeTamatMetrics(data) {
+  let count2026 = 0;
+  let count2026NoExt = 0;
+  let countSubmitFR = 0;
+  let countBelumFR = 0;
+  let countGracePeriod = 0;
+
+  data.forEach(d => {
+    if (d.isEnded2026InColK) {
+      count2026++;
+      if (d.isColLBlank) {
+        count2026NoExt++;
+      }
+    }
+    const frState = checkFRSubmission(d.frStatus);
+    if (frState === "SUBMITTED") {
+      countSubmitFR++;
+    } else if (frState === "NOT_SUBMITTED") {
+      countBelumFR++;
+    }
+
+    if (hasGracePeriod(d.gracePeriodRaw)) {
+      countGracePeriod++;
+    }
+  });
+
+  return {
+    count2026,
+    count2026NoExt,
+    countSubmitFR,
+    countBelumFR,
+    countGracePeriod
+  };
+}
+
 function renderKPIs() {
   const total = filteredData.length;
   document.getElementById("kpiTotal").innerText = total.toLocaleString();
@@ -2213,30 +2257,8 @@ function renderKPIs() {
     if (kpiPI) kpiPI.innerText = piCount.toLocaleString();
     if (kpiNonPI) kpiNonPI.innerText = nonPICount.toLocaleString();
   } else {
-    let count2026 = 0;
-    let count2026NoExt = 0;
-    let countSubmitFR = 0;
-    let countBelumFR = 0;
-    let countGracePeriod = 0;
-
-    filteredData.forEach(d => {
-      if (d.isEnded2026InColK) {
-        count2026++;
-        if (d.isColLBlank) {
-          count2026NoExt++;
-        }
-      }
-      const frState = checkFRSubmission(d.frStatus);
-      if (frState === "SUBMITTED") {
-        countSubmitFR++;
-      } else if (frState === "NOT_SUBMITTED") {
-        countBelumFR++;
-      }
-
-      if (hasGracePeriod(d.gracePeriodRaw)) {
-        countGracePeriod++;
-      }
-    });
+    // Gunakan fungsi pengiraan berpusat
+    const metrics = computeTamatMetrics(filteredData);
 
     const el2026 = document.getElementById("kpiTamat2026");
     const el2026NoExt = document.getElementById("kpiTamat2026NoExt");
@@ -2244,11 +2266,11 @@ function renderKPIs() {
     const elBelumFR = document.getElementById("kpiBelumSubmitFR");
     const elGrace = document.getElementById("kpiGracePeriod");
 
-    if (el2026) el2026.innerText = count2026.toLocaleString();
-    if (el2026NoExt) el2026.innerText = count2026NoExt.toLocaleString();
-    if (elSubmitFR) elSubmitFR.innerText = countSubmitFR.toLocaleString();
-    if (elBelumFR) elBelumFR.innerText = countBelumFR.toLocaleString();
-    if (elGrace) elGrace.innerText = countGracePeriod.toLocaleString();
+    if (el2026) el2026.innerText = metrics.count2026.toLocaleString();
+    if (el2026NoExt) el2026.innerText = metrics.count2026NoExt.toLocaleString();
+    if (elSubmitFR) elSubmitFR.innerText = metrics.countSubmitFR.toLocaleString();
+    if (elBelumFR) elBelumFR.innerText = metrics.countBelumFR.toLocaleString();
+    if (elGrace) elGrace.innerText = metrics.countGracePeriod.toLocaleString();
   }
 }
 
@@ -2378,29 +2400,17 @@ function renderStrategicSummary() {
       el.innerHTML = `Daripada <strong>${filteredData.length}</strong> geran yang ditapis, sebanyak <strong>${mon}</strong> geran (${filteredData.length > 0 ? ((mon / filteredData.length) * 100).toFixed(1) : 0}%) berada dalam pemantauan rapi (Q1 – Q5), manakala <strong>${notMon}</strong> geran tidak dipantau secara berjadual.`;
     }
   } else {
-    let count2026 = 0;
-    let count2026NoExt = 0;
-    filteredData.forEach(d => {
-      if (d.isEnded2026InColK) {
-        count2026++;
-        if (d.isColLBlank) count2026NoExt++;
-      }
-    });
+    // Menggunakan metrik pengiraan berpusat yang sama dengan kad KPI
+    const metrics = computeTamatMetrics(filteredData);
+
     const el2026 = document.getElementById("summaryTamat2026Text");
     if (el2026) {
-      el2026.innerHTML = `Terdapat <strong>${count2026}</strong> geran yang tamat pada tahun 2026. Daripada jumlah tersebut, <strong>${count2026NoExt}</strong> geran tamat tanpa sebarang lanjutan tarikh.`;
+      el2026.innerHTML = `Terdapat <strong>${metrics.count2026.toLocaleString()}</strong> geran yang tamat pada tahun 2026. Daripada jumlah tersebut, <strong>${metrics.count2026NoExt.toLocaleString()}</strong> geran tamat tanpa sebarang lanjutan tarikh.`;
     }
 
-    let sub = 0, notSub = 0, grace = 0;
-    filteredData.forEach(d => {
-      const state = checkFRSubmission(d.frStatus);
-      if (state === "SUBMITTED") sub++;
-      else if (state === "NOT_SUBMITTED") notSub++;
-      if (hasGracePeriod(d.gracePeriodRaw)) grace++;
-    });
     const elFR = document.getElementById("summaryFRText");
     if (elFR) {
-      elFR.innerHTML = `Sebanyak <strong>${sub}</strong> geran telah menghantar Final Report, <strong>${notSub}</strong> geran berstatus Not completed / Draft, dan <strong>${grace}</strong> geran berstatus <strong>Dalam Grace Period</strong>.`;
+      elFR.innerHTML = `Sebanyak <strong>${metrics.countSubmitFR.toLocaleString()}</strong> geran telah menghantar Final Report, <strong>${metrics.countBelumFR.toLocaleString()}</strong> geran berstatus Not completed / Draft, dan <strong>${metrics.countGracePeriod.toLocaleString()}</strong> geran berstatus <strong>Dalam Grace Period</strong>.`;
     }
   }
 }
