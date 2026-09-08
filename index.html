@@ -489,6 +489,7 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <!-- 1. Grant Type -->
         <div>
           <label class="filter-label">Grant Type</label>
           <select id="filterGrantType" class="filter-select" onchange="applyFilters()">
@@ -496,6 +497,7 @@
           </select>
         </div>
 
+        <!-- 2. Grant Category -->
         <div>
           <label class="filter-label">Grant Category</label>
           <select id="filterGrantCategory" class="filter-select" onchange="applyFilters()">
@@ -503,21 +505,17 @@
           </select>
         </div>
 
-        <div>
-          <label class="filter-label">Bulan Project End</label>
-          <select id="filterMonth" class="filter-select" onchange="applyFilters()">
-            <option value="ALL">Semua Bulan</option>
+        <!-- 3. Status Penyelidik (Geran Aktif Sahaja) -->
+        <div id="piFilterWrap">
+          <label class="filter-label">Status Penyelidik (PI / Non PI)</label>
+          <select id="filterPIStatus" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Status PI</option>
+            <option value="PI">PI (Principal Investigator)</option>
+            <option value="NON_PI">Non PI</option>
           </select>
         </div>
 
-        <div>
-          <label class="filter-label">Tahun Project End</label>
-          <select id="filterYear" class="filter-select" onchange="applyFilters()">
-            <option value="ALL">Semua Tahun</option>
-          </select>
-        </div>
-
-        <!-- Filter Quartile (Geran Aktif Sahaja) -->
+        <!-- 4. Quartile (Geran Aktif Sahaja) -->
         <div id="quartileFilterWrap">
           <label class="filter-label">Quartile</label>
           <select id="filterQuartile" class="filter-select" onchange="applyFilters()">
@@ -531,16 +529,7 @@
           </select>
         </div>
 
-        <!-- Filter Status PI (Geran Aktif Sahaja) -->
-        <div id="piFilterWrap">
-          <label class="filter-label">Status Penyelidik (PI / Non PI)</label>
-          <select id="filterPIStatus" class="filter-select" onchange="applyFilters()">
-            <option value="ALL">Semua Status PI</option>
-            <option value="PI">PI (Principal Investigator)</option>
-            <option value="NON_PI">Non PI</option>
-          </select>
-        </div>
-
+        <!-- 5. Verdict -->
         <div>
           <label class="filter-label">Verdict</label>
           <select id="filterVerdict" class="filter-select" onchange="applyFilters()">
@@ -548,6 +537,7 @@
           </select>
         </div>
 
+        <!-- Penapis Khas Geran Tamat: FR Status & Grace Period -->
         <div id="frFilterWrap" class="hidden">
           <label class="filter-label">FR Status</label>
           <select id="filterFRStatus" class="filter-select" onchange="applyFilters()">
@@ -562,6 +552,23 @@
           </select>
         </div>
 
+        <!-- 6. Bulan Project End -->
+        <div>
+          <label class="filter-label">Bulan Project End</label>
+          <select id="filterMonth" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Bulan</option>
+          </select>
+        </div>
+
+        <!-- 7. Tahun Project End -->
+        <div>
+          <label class="filter-label">Tahun Project End</label>
+          <select id="filterYear" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Tahun</option>
+          </select>
+        </div>
+
+        <!-- 8. Carian Bebas -->
         <div class="xl:col-span-2">
           <label class="filter-label">Carian Bebas</label>
           <input id="filterSearch" class="search-input" type="text" placeholder="Cost Centre, tajuk, nama staf..." oninput="applyFilters()">
