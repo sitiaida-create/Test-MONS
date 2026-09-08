@@ -517,6 +517,7 @@
           </select>
         </div>
 
+        <!-- Filter Quartile (Geran Aktif Sahaja) -->
         <div id="quartileFilterWrap">
           <label class="filter-label">Quartile</label>
           <select id="filterQuartile" class="filter-select" onchange="applyFilters()">
@@ -527,6 +528,16 @@
             <option value="Q4">Q4</option>
             <option value="Q5 (Extension)">Q5 (Extension)</option>
             <option value="Grant Not Monitored">Grant Not Monitored</option>
+          </select>
+        </div>
+
+        <!-- Filter Status PI (Geran Aktif Sahaja) -->
+        <div id="piFilterWrap">
+          <label class="filter-label">Status Penyelidik (PI / Non PI)</label>
+          <select id="filterPIStatus" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">Semua Status PI</option>
+            <option value="PI">PI (Principal Investigator)</option>
+            <option value="NON_PI">Non PI</option>
           </select>
         </div>
 
@@ -830,7 +841,7 @@
                 <span class="text-[11px] text-purple-700 bg-purple-50 font-bold px-2.5 py-0.5 rounded-full">Kolum AJ</span>
               </div>
               <p id="graceVerdictSubtitle" class="text-xs text-gray-500 mt-1">
-                Pecahan status verdict (Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah) bagi setiap Grant Category.
+                Pecahan status verdict bagi setiap Grant Category bagi semua geran tamat.
               </p>
             </div>
 
@@ -1463,6 +1474,10 @@ function updateSourceUI() {
   const quartileFilterWrap = document.getElementById("quartileFilterWrap");
   if (quartileFilterWrap) quartileFilterWrap.classList.toggle("hidden", isTamat);
 
+  // Filter PI khusus bagi Geran Aktif
+  const piFilterWrap = document.getElementById("piFilterWrap");
+  if (piFilterWrap) piFilterWrap.classList.toggle("hidden", isTamat);
+
   const frFilterWrap = document.getElementById("frFilterWrap");
   if (frFilterWrap) frFilterWrap.classList.toggle("hidden", !isTamat);
 
@@ -1528,7 +1543,7 @@ function updateSourceUI() {
   const quartileSummaryCard = document.getElementById("quartileSummaryCard");
   if (quartileSummaryCard) quartileSummaryCard.classList.toggle("hidden", isTamat);
 
-  // Penyelarasan Lajur Ringkasan Verdict (PW, OS, BS, NCM vs Cemerlang, Memuaskan, Kurang Memuaskan, Bermasalah)
+  // Penyelarasan Lajur Ringkasan Verdict
   const thPW = document.getElementById("thVerdictPW");
   const thOS = document.getElementById("thVerdictOS");
   const thBS = document.getElementById("thVerdictBS");
@@ -1826,14 +1841,14 @@ function isItemNotAchieved(rawVal, quartile = "", itemType = "", verdict = "") {
     return false;
   }
 
-  // Semakan format peratusan (contoh: 80%, 50%, 0%)
+  // Semakan format peratusan
   const pctMatch = val.match(/^(\d+(?:\.\d+)?)\s*%$/);
   if (pctMatch) {
     const num = parseFloat(pctMatch[1]);
     return num < 100;
   }
 
-  // Semakan format pecahan sasaran (contoh: 0/1, 1/2)
+  // Semakan format pecahan sasaran
   const fracMatch = val.match(/^(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)$/);
   if (fracMatch) {
     const num = parseFloat(fracMatch[1]);
@@ -2027,6 +2042,12 @@ function applyFilters() {
   const verdict = document.getElementById("filterVerdict").value;
   const search = clean(document.getElementById("filterSearch").value).toLowerCase();
 
+  let piFilter = "ALL";
+  if (currentSource === "Geran Aktif") {
+    const piEl = document.getElementById("filterPIStatus");
+    if (piEl) piFilter = piEl.value;
+  }
+
   let frStatus = "ALL";
   let gracePeriod = "ALL";
   if (currentSource === "Geran Tamat") {
@@ -2042,6 +2063,13 @@ function applyFilters() {
     if (year !== "ALL" && item.year !== year) return false;
     if (quartile !== "ALL" && item.quartile !== quartile) return false;
     if (verdict !== "ALL" && item.verdict !== verdict) return false;
+
+    // Filter Status PI (Geran Aktif)
+    if (currentSource === "Geran Aktif" && piFilter !== "ALL") {
+      if (piFilter === "PI" && !item.isPI) return false;
+      if (piFilter === "NON_PI" && item.isPI) return false;
+    }
+
     if (currentSource === "Geran Tamat" && frStatus !== "ALL" && item.frStatus !== frStatus) return false;
     if (currentSource === "Geran Tamat" && gracePeriod !== "ALL" && item.gracePeriodRaw !== gracePeriod) return false;
 
@@ -2062,7 +2090,7 @@ function applyFilters() {
 }
 
 function resetFilters(render = true) {
-  const ids = ["filterGrantType", "filterGrantCategory", "filterMonth", "filterYear", "filterQuartile", "filterVerdict", "filterFRStatus", "filterGracePeriod", "filterSearch"];
+  const ids = ["filterGrantType", "filterGrantCategory", "filterMonth", "filterYear", "filterQuartile", "filterPIStatus", "filterVerdict", "filterFRStatus", "filterGracePeriod", "filterSearch"];
   ids.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -2279,7 +2307,6 @@ function renderVerdictMatrix() {
   const tfoot = document.getElementById("verdictMatrixFoot");
   if (!tbody || !tfoot) return;
 
-  // Baca data Kolum AG (Verdict) terus dari filteredData
   const targetData = filteredData;
 
   const categories = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
@@ -2413,13 +2440,11 @@ function formatVerdictHTML(verdict) {
   const raw = clean(verdict);
   const upper = raw.toUpperCase();
 
-  // Pisahkan jika format sedia ada mengandungi tanda pemisah " - "
   if (raw.includes(" - ")) {
     const parts = raw.split(" - ");
     return `${escapeHtml(parts[0])}<br><span class="text-[10px] font-normal opacity-90">${escapeHtml(parts.slice(1).join(" - "))}</span>`;
   }
 
-  // Pisahkan jika format sedia ada mengandungi tanda kurung " ("
   if (raw.includes(" (") && raw.endsWith(")")) {
     const idx = raw.indexOf(" (");
     const p1 = raw.substring(0, idx);
@@ -2427,7 +2452,6 @@ function formatVerdictHTML(verdict) {
     return `${escapeHtml(p1)}<br><span class="text-[10px] font-normal opacity-90">${escapeHtml(p2)}</span>`;
   }
 
-  // Padanan kategori piawai Geran Aktif
   if (upper === "PW" || upper.includes("PROGRESSING WELL")) {
     return `PW<br><span class="text-[10px] font-normal opacity-90">Progressing Well</span>`;
   }
@@ -2441,7 +2465,6 @@ function formatVerdictHTML(verdict) {
     return `NCM<br><span class="text-[10px] font-normal opacity-90">Need Close Monitoring</span>`;
   }
 
-  // Padanan kategori piawai Geran Tamat
   if (upper === "CEMERLANG") {
     return `Cemerlang<br><span class="text-[10px] font-normal opacity-90">Excellent</span>`;
   }
@@ -2874,7 +2897,6 @@ function updateGraceVerdictChart() {
 
   const targetData = getGraceFilteredGrants();
 
-  // Kiraan 4 metrik status verdict
   let cemerlang = 0, memuaskan = 0, kurang = 0, bermasalah = 0;
   targetData.forEach(d => {
     const idx = getVerdictOrderIndex(d.verdict);
@@ -2894,7 +2916,6 @@ function updateGraceVerdictChart() {
   if (elK) elK.innerText = kurang.toLocaleString();
   if (elB) elB.innerText = bermasalah.toLocaleString();
 
-  // Susunan Grant Category
   const activeCats = [...new Set(targetData.map(d => d.grantCategory))].sort(compareGrantCategories);
   const displayCats = activeCats.length > 0 ? activeCats : CATEGORY_ORDER;
 
@@ -2984,7 +3005,6 @@ function showGraceVerdictBreakdown(verdictName) {
     subtitleEl.innerText = `Menunjukkan bilangan geran mengikut Grant Category bagi status ${verdictName} (${filterDesc}).`;
   }
 
-  // Bina Butang Tab Kategori
   renderGraceModalCategoryPills(baseData);
   renderGraceModalGrants(baseData);
 
@@ -3090,7 +3110,6 @@ function renderVerdictCategoryMatrix() {
   const totalBadge = document.getElementById("verdictMonitoredTotalBadge");
   if (totalBadge) totalBadge.innerText = `${targetData.length.toLocaleString()} Geran ${isTamat ? 'Layak' : 'Dipantau'}`;
 
-  // Hitung jumlah keseluruhan bagi 5 kad metrik
   let totalMilestone = 0;
   let totalExpenditure = 0;
   let totalHCD = 0;
