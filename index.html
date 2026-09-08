@@ -525,7 +525,7 @@
           <label class="filter-label">Status Penyelidik</label>
           <select id="filterPIStatus" class="filter-select" onchange="applyFilters()">
             <option value="ALL">Semua Status (PI & Non PI)</option>
-            <option value="PI">PI (Principal Investigator)</option>
+            <option value="PI">PI</option>
             <option value="NON_PI">Non PI</option>
           </select>
         </div>
@@ -562,7 +562,7 @@
 
         <!-- Penapis Khas Geran Tamat: Grace Period (Kolum AJ) -->
         <div id="graceFilterWrap" class="hidden">
-          <label class="filter-label">Grace Period (Kolum AJ)</label>
+          <label class="filter-label">Grace Period</label>
           <select id="filterGracePeriod" class="filter-select" onchange="applyFilters()">
             <option value="ALL">Semua Grace Period</option>
           </select>
@@ -632,35 +632,35 @@
           <div id="kpiNotMonitoredCard" class="card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Grant Not Monitored</div>
             <div id="kpiNotMonitored" class="kpi-number text-gray-600">0</div>
-            <div class="text-[11px] text-gray-400">Quartile kosong / tidak dipantau</div>
+            
           </div>
 
           <!-- Geran Aktif: PI Card (Kolum B) -->
           <div id="kpiPICard" class="card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Principal Investigator (PI)</div>
             <div id="kpiPI" class="kpi-number text-indigo-700">0</div>
-            <div class="text-[11px] text-gray-400">Kolum B: Nilai Y</div>
+            
           </div>
 
           <!-- Geran Aktif: Non PI Card (Kolum B) -->
           <div id="kpiNonPICard" class="card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Non PI</div>
             <div id="kpiNonPI" class="kpi-number text-slate-600">0</div>
-            <div class="text-[11px] text-gray-400">Kolum B: Nilai Y/N & N</div>
+            
           </div>
 
           <!-- Geran Tamat: Tamat Tahun 2026 -->
           <div id="kpiTamat2026Card" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat Tahun 2026</div>
             <div id="kpiTamat2026" class="kpi-number text-blue-800">0</div>
-            <div class="text-[11px] text-gray-400">Tamat Projek Tahun 2026</div>
+            <div class="text-[11px] text-gray-400">Geran Tamat Tahun 2026</div>
           </div>
 
           <!-- Geran Tamat: Tamat 2026 Tanpa Ext -->
           <div id="kpiTamat2026NoExtCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tamat 2026 (Tanpa Ext)</div>
             <div id="kpiTamat2026NoExt" class="kpi-number text-emerald-700">0</div>
-            <div class="text-[11px] text-gray-400">Kolum L: Kosong / Tiada Lanjutan</div>
+            <div class="text-[11px] text-gray-400">Geran Tanpa Pelanjutan</div>
           </div>
 
           <!-- Geran Tamat: Submit Final Report -->
@@ -672,7 +672,7 @@
 
           <!-- Geran Tamat: Belum Submit FR -->
           <div id="kpiBelumSubmitFRCard" class="hidden card kpi-card">
-            <div class="text-xs font-bold text-gray-500 uppercase">Belum Submit Final Report</div>
+            <div class="text-xs font-bold text-gray-500 uppercase">Not Submitted Final Report</div>
             <div id="kpiBelumSubmitFR" class="kpi-number text-red-600">0</div>
             <div class="text-[11px] text-gray-400">FR Not completed & Draft</div>
           </div>
@@ -681,7 +681,7 @@
           <div id="kpiGracePeriodCard" class="hidden card kpi-card">
             <div class="text-xs font-bold text-gray-500 uppercase">Tempoh Grace Period</div>
             <div id="kpiGracePeriod" class="kpi-number text-purple-700">0</div>
-            <div class="text-[11px] text-gray-400">Kolum AJ: Dalam Grace Period</div>
+            <div class="text-[11px] text-gray-400">Geran Dalam Grace Period</div>
           </div>
         </div>
 
@@ -729,7 +729,7 @@
               </p>
             </div>
             <span id="verdictMonitoredBadge" class="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full">
-              Kolum AG (Verdict)
+              Verdict
             </span>
           </div>
           <div class="table-wrapper">
@@ -928,7 +928,7 @@
             <div class="p-3 bg-red-50 rounded-xl border border-red-100 flex items-center justify-between cursor-pointer hover:shadow-md transition group" onclick="showGraceVerdictBreakdown('Bermasalah')" title="Klik untuk lihat maklumat geran Bermasalah">
               <div>
                 <div class="text-[10px] font-bold text-red-800 uppercase">Bermasalah</div>
-                <div class="text-[9px] text-red-600 font-semibold italic">Critical</div>
+                <div class="text-[9px] text-red-600 font-semibold italic">Problematic</div>
                 <div id="statGraceBermasalah" class="text-lg font-extrabold text-red-700 leading-tight mt-0.5">0</div>
                 <div class="text-[9px] text-red-600 mt-1 font-medium group-hover:underline">Klik butiran &rarr;</div>
               </div>
@@ -1572,8 +1572,8 @@ function updateSourceUI() {
   const verdictSummarySubtitle = document.getElementById("verdictSummarySubtitle");
   if (verdictSummarySubtitle) {
     verdictSummarySubtitle.innerText = isTamat
-      ? "Taburan semua geran tamat berasaskan Kolum AG (Verdict)."
-      : "Taburan geran berasaskan Kolum AG (Verdict): PW, OS, BS, NCM.";
+      ? "Taburan semua geran tamat berasaskan Verdict."
+      : "Taburan geran berasaskanVerdict: PW, OS, BS, NCM.";
   }
 
   const verdictNoticeText = document.getElementById("verdictNoticeText");
